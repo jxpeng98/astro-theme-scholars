@@ -42,9 +42,10 @@ export const siteConfig: SiteConfig = {
 	// copy icon name as the following style 'i+<icon-name>'
 	socialLinks: [
 		{ label: 'Google Scholar', href: 'https://scholar.google.com', icon: 'i-academicons:google-scholar'},
-		{ label: 'GitHub', href: 'https://github.com/your-handle', icon: 'i-logos:github-icon'},
+		{ label: 'GitHub', href: 'https://github.com/your-handle', icon: 'i-mdi:github'},
 		{ label: 'ORCID', href: 'https://orcid.org/0000-0000-0000-0000', icon: 'i-academicons:orcid'},
-		{ label: 'Email', href: 'mailto:you.name@example.com', icon: 'i-mdi:email-outline'}
+		{ label: 'Email', href: 'mailto:you.name@example.com', icon: 'i-mdi:email-outline'},
+		{ label: 'LinkedIn', href: 'https://www.linkedin.com/in/your-handle', icon: 'i-mdi:linkedin'},
 	],
 	navLinks: [
 		{ href: '/', label: 'Home' },
