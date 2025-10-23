@@ -52,8 +52,7 @@ export const siteConfig: SiteConfig = {
 		{ href: '/researches', label: 'Researches' },
 		{ href: '/teaching', label: 'Teaching' },
 		{ href: '/projects', label: 'Projects' },
-		{ href: '/posts', label: 'Posts' },
-		{ href: '/teaching', label: 'Teaching' }
+		{ href: '/posts', label: 'Posts' }
 	],
 	footer: {
 		copyright: 'All rights reserved.'
