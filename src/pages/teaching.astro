@@ -1,0 +1,95 @@
+---
+import Layout from '../layouts/Layout.astro';
+import teachingRaw from '../data/teaching.yml?raw';
+import { parse } from 'yaml';
+
+interface TeachingSection {
+	term: string;
+	modules: Array<{
+		title: string;
+		code: string;
+		summary: string;
+		tags?: string[];
+	}>;
+}
+
+interface TeachingData {
+	current: TeachingSection[];
+	past: TeachingSection[];
+}
+
+const teachingData = parse(teachingRaw) as TeachingData;
+const { current = [], past = [] } = teachingData;
+---
+
+<Layout>
+	<section class="flex flex-col gap-3 mb-8">
+		<h1 class="font-heading text-[clamp(2rem,3vw,2.6rem)] font-semibold text-slate-900">Teaching</h1>
+		<p class="m-0 text-slate-600 max-w-[65ch]">
+			Summary of current and past modules taught by Riley Ashford. Each listing includes a short
+			description and topical tags to help students find relevant courses quickly.
+		</p>
+	</section>
+
+	{current.length > 0 && (
+		<section class="flex flex-col gap-5">
+			<h2 class="font-heading text-xl font-semibold text-slate-900">Current Modules</h2>
+			{current.map((section) => (
+				<div>
+					<h3 class="font-heading text-lg font-semibold text-slate-900 mb-3">{section.term}</h3>
+					<div class="grid gap-4">
+						{section.modules.map((module) => (
+							<article class="flex flex-col gap-3 border border-slate-200 rounded-2xl bg-white px-5 py-5 shadow-[0_12px_24px_rgba(15,23,42,0.08)]">
+								<header class="flex flex-col gap-1">
+									<h4 class="font-heading text-base font-semibold text-slate-900">
+										{module.title}
+									</h4>
+									<p class="text-sm text-slate-500 m-0">{module.code}</p>
+								</header>
+								<p class="m-0 text-slate-600">{module.summary}</p>
+								{module.tags?.length ? (
+									<ul class="chips-row mt-1">
+										{module.tags.map((tag) => (
+											<li class="chips-item">{tag}</li>
+										))}
+									</ul>
+								) : null}
+							</article>
+						))}
+					</div>
+				</div>
+			))}
+		</section>
+	)}
+
+	{past.length > 0 && (
+		<section class="flex flex-col gap-5 mt-10">
+			<h2 class="font-heading text-xl font-semibold text-slate-900">Past Modules</h2>
+			{past.map((section) => (
+				<div>
+					<h3 class="font-heading text-lg font-semibold text-slate-900 mb-3">{section.term}</h3>
+					<div class="grid gap-4">
+						{section.modules.map((module) => (
+							<article class="flex flex-col gap-3 border border-slate-200 rounded-2xl bg-slate-50 px-5 py-5 shadow-[0_12px_24px_rgba(15,23,42,0.08)]">
+								<header class="flex flex-col gap-1">
+									<h4 class="font-heading text-base font-semibold text-slate-900">
+										{module.title}
+									</h4>
+									<p class="text-sm text-slate-500 m-0">{module.code}</p>
+								</header>
+								<p class="m-0 text-slate-600">{module.summary}</p>
+								{module.tags?.length ? (
+									<ul class="chips-row mt-1">
+										{module.tags.map((tag) => (
+											<li class="chips-item">{tag}</li>
+										))}
+									</ul>
+								) : null}
+							</article>
+						))}
+					</div>
+				</div>
+			))}
+		</section>
+	)}
+</Layout>

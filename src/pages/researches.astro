@@ -1,0 +1,126 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getAllPapers } from '../lib/papers';
+
+const papers = getAllPapers();
+const categoryOrder = ['Publication', 'Working Paper', 'Work in Progress', 'Other'] as const;
+const grouped = new Map<string, typeof papers>();
+
+for (const paper of papers) {
+	const category = paper.category ?? 'Other';
+	if (!grouped.has(category)) {
+		grouped.set(category, []);
+	}
+	grouped.get(category)?.push(paper);
+}
+
+const orderedCategories = [
+	...categoryOrder.filter((category) => grouped.has(category)),
+	...Array.from(grouped.keys())
+		.filter((category) => !categoryOrder.includes(category as (typeof categoryOrder)[number]))
+		.sort((a, b) => a.localeCompare(b))
+];
+---
+
+<Layout>
+	<section class="flex flex-col gap-3 mb-8">
+		<h1 class="font-heading text-[clamp(2rem,3vw,2.6rem)] font-semibold text-slate-900">Researches</h1>
+		<p class="m-0 text-slate-600 max-w-[65ch]">
+			Peer-reviewed publications, workshop papers, and essays focusing on the flow of learning signals
+			across scholarly and civic platforms.
+		</p>
+	</section>
+
+	{orderedCategories.map((category) => {
+		const categoryPapers = grouped.get(category);
+		if (!categoryPapers?.length) {
+			return null;
+		}
+
+		return (
+			<section class="flex flex-col gap-5 mt-10 first:mt-0">
+				<h2 class="font-heading text-[clamp(1.5rem,2.5vw,2rem)] font-semibold text-slate-900">{category}</h2>
+				<div class="grid gap-5">
+					{categoryPapers.map((paper) => {
+						const abstractId = `abstract-${paper.id}`;
+						const hasAbstract = Boolean(paper.abstract);
+
+						return (
+							<article class="flex flex-col gap-4 border border-slate-200 rounded-2xl bg-white px-6 py-6 shadow-[0_16px_32px_rgba(15,23,42,0.05)]">
+								<header class="flex flex-col gap-2">
+								<h3 class="font-heading text-[clamp(1.2rem,2vw,1.6rem)] font-semibold text-slate-900">{paper.title}</h3>
+									<p class="m-0 text-slate-600">{paper.authors.join(', ')}</p>
+									<p class="m-0 text-sm text-slate-500">
+										{paper.venue ?? 'Venue pending'}
+										{paper.year ? ` · ${paper.year}` : ''}
+									</p>
+									{paper.keywords.length > 0 && (
+										<ul class="chips-row">
+											{paper.keywords.map((keyword) => (
+												<li class="chips-item">{keyword}</li>
+											))}
+										</ul>
+									)}
+								</header>
+
+								<div class="flex flex-wrap items-center gap-3 mt-auto">
+									{hasAbstract && (
+										<button
+											class="btn-secondary toggle-abstract"
+											type="button"
+											data-target={abstractId}
+											aria-controls={abstractId}
+											aria-expanded="false"
+										>
+											Show abstract
+										</button>
+									)}
+									{paper.url && (
+										<a
+											class="btn-primary ml-auto"
+											href={paper.url}
+											target="_blank"
+											rel="noreferrer"
+										>
+											View paper
+										</a>
+									)}
+								</div>
+
+								{hasAbstract && (
+									<p class="bg-slate-100 text-slate-600 px-4 py-4 rounded-xl -mt-2" id={abstractId} hidden>
+										{paper.abstract}
+									</p>
+								)}
+							</article>
+						);
+					})}
+				</div>
+			</section>
+		);
+	})}
+</Layout>
+
+<script is:inline>
+	document.addEventListener('DOMContentLoaded', () => {
+		document.querySelectorAll('.toggle-abstract').forEach((toggle) => {
+			toggle.addEventListener('click', () => {
+				const targetId = toggle.getAttribute('data-target');
+				if (!targetId) return;
+				const abstract = document.getElementById(targetId);
+				if (!abstract) return;
+
+				const isHidden = abstract.hasAttribute('hidden');
+				if (isHidden) {
+					abstract.removeAttribute('hidden');
+					toggle.setAttribute('aria-expanded', 'true');
+					toggle.textContent = 'Hide abstract';
+				} else {
+					abstract.setAttribute('hidden', '');
+					toggle.setAttribute('aria-expanded', 'false');
+					toggle.textContent = 'Show abstract';
+				}
+			});
+		});
+	});
+</script>

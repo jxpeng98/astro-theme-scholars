@@ -1,0 +1,43 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts'))
+	.filter((post) => !post.data.draft)
+	.sort(
+		(a, b) =>
+			new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime()
+	);
+---
+
+<Layout>
+	<section class="flex flex-col gap-3 mb-8">
+		<h1 class="font-heading text-[clamp(2rem,3vw,2.6rem)] font-semibold text-slate-900">Posts</h1>
+		<p class="m-0 text-slate-600 max-w-[65ch]">
+			Field notes, lab updates, and essays on infrastructure for learning analytics and open research.
+		</p>
+	</section>
+
+	<section>
+		<ul class="grid gap-5 list-none m-0 p-0">
+			{posts.map((post) => (
+				<li>
+					<a
+						class="flex flex-col gap-3 px-6 py-5 border border-slate-200 rounded-2xl bg-white no-underline text-slate-900 shadow-[0_12px_30px_rgba(15,23,42,0.08)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(15,23,42,0.1)]"
+						href={`/posts/${post.slug}`}
+					>
+						<h2 class="font-heading text-[clamp(1.2rem,2vw,1.6rem)] font-semibold">{post.data.title}</h2>
+						<p class="m-0 text-slate-600">{post.data.description}</p>
+						<time class="text-sm text-slate-500" datetime={post.data.publishedAt.toISOString()}>
+							{new Date(post.data.publishedAt).toLocaleDateString(undefined, {
+								year: 'numeric',
+								month: 'long',
+								day: 'numeric'
+							})}
+						</time>
+					</a>
+				</li>
+			))}
+		</ul>
+	</section>
+</Layout>

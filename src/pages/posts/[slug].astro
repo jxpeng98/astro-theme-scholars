@@ -1,0 +1,55 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('posts');
+	return posts.map((post) => ({
+		params: { slug: post.slug },
+		props: { post }
+	}));
+}
+
+const { post } = Astro.props as { post: CollectionEntry<'posts'> };
+const { Content } = await post.render();
+---
+
+<Layout>
+	<Fragment slot="title">{post.data.title} · Riley Ashford</Fragment>
+	<section class="flex flex-col gap-3 mb-8">
+		<p class="uppercase tracking-[0.12em] text-xs text-accent-600 font-semibold m-0">Post</p>
+	<h1 class="font-heading text-[clamp(2rem,3vw,2.8rem)] font-semibold text-slate-900 m-0">
+		{post.data.title}
+	</h1>
+		<p class="flex flex-wrap gap-4 text-sm text-slate-500 m-0">
+			<time class="font-medium" datetime={post.data.publishedAt.toISOString()}>
+				{new Date(post.data.publishedAt).toLocaleDateString(undefined, {
+					year: 'numeric',
+					month: 'long',
+					day: 'numeric'
+				})}
+			</time>
+			{post.data.updatedAt && (
+				<span>
+					Updated{' '}
+					<time class="font-medium" datetime={post.data.updatedAt.toISOString()}>
+						{new Date(post.data.updatedAt).toLocaleDateString(undefined, {
+							year: 'numeric',
+							month: 'long',
+							day: 'numeric'
+						})}
+					</time>
+				</span>
+			)}
+		</p>
+		<p class="m-0 text-slate-600 max-w-[65ch]">{post.data.description}</p>
+	</section>
+
+	<article class="prose prose-slate max-w-none text-[1.05rem] leading-7">
+		<Content />
+	</article>
+
+	<section class="mt-10">
+		<a class="text-accent-600 no-underline font-medium" href="/posts">← Back to posts</a>
+	</section>
+</Layout>

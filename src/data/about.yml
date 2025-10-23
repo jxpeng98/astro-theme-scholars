@@ -1,0 +1,45 @@
+hero:
+  title: About
+  description: >
+    Scholar, educator, and builder focused on learning analytics, humane computing, and tools
+    that support open collaboration.
+
+profile:
+  - label: Current Role
+    value: Assistant Professor, School of Information
+  - label: Research Areas
+    value: Learning analytics, web infrastructure, civic tech
+  - label: Education
+    value: Ph.D., Human-Computer Interaction, 2021
+
+
+experience:
+  - role: Assistant Professor
+    organization: School of Information
+    period: 2022 — Present
+    bullets:
+      - Lead the Learning Signals Lab with collaborators across education and computer science.
+      - Teach graduate seminars on human-centered AI and reproducible research pipelines.
+      - Co-chair the university open scholarship task force, advising on platform governance.
+  - role: Research Scientist
+    organization: Civic Innovation Lab
+    period: 2019 — 2022
+    bullets:
+      - Designed public data dashboards for municipal partners across five cities.
+      - Published foundational work on measuring knowledge transfer in informal communities.
+
+service:
+  - Program Chair — Learning Analytics & Knowledge (LAK) 2025
+  - Editorial Board — Journal of Learning Analytics
+  - Organizer — Web Science Workshop on Social Learning Signals
+
+education:
+  - degree: Ph.D., Human-Computer Interaction
+    institution: Northridge University
+    year: 2021
+  - degree: M.S., Learning Sciences
+    institution: Horizon Institute of Technology
+    year: 2016
+  - degree: B.S., Computer Science
+    institution: Clearwater College
+    year: 2014

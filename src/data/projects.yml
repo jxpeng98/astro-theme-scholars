@@ -1,0 +1,24 @@
+- title: Scholars Portal
+  period: 2023 — Present
+  description: Source-available portal that aggregates publications, talks, and teaching materials into a single academic profile with analytics.
+  tech:
+    - Astro
+    - TypeScript
+    - Content Collections
+  url: https://github.com/rileyashford/scholars-portal
+
+- title: Multilingual Citation Miner
+  period: 2022 — 2023
+  description: Natural-language processing pipeline that extracts multilingual citations from PDF proceedings to improve bibliometric coverage for underrepresented venues.
+  tech:
+    - Python
+    - spaCy
+    - PostgreSQL
+
+- title: Learning Signals Lab
+  period: 2021 — 2022
+  description: Interactive dashboards and data collection workflows for a research lab studying social learning signals across online communities.
+  tech:
+    - Next.js
+    - GraphQL
+    - D3.js

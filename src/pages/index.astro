@@ -1,11 +1,166 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { getFeaturedPapers } from '../lib/papers';
+import siteConfig from '../side.config';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const posts = (await getCollection('posts'))
+	.filter((post) => !post.data.draft)
+	.sort(
+		(a, b) =>
+			new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime()
+	)
+	.slice(0, 3);
+
+const papers = getFeaturedPapers(3);
+const socialLinks = siteConfig.socialLinks;
 ---
 
 <Layout>
-	<Welcome />
+	<section class="flex flex-col gap-6 md:flex-row md:items-center">
+		<img
+			class="w-40 h-40 mx-auto md:mx-0 rounded-full bg-accent-100 p-2 border-[3px] border-white shadow-[0_16px_32px_rgba(37,99,235,0.25)]"
+			src={siteConfig.hero.profileImage}
+			alt={siteConfig.hero.profileAlt}
+			width="160"
+			height="160"
+		/>
+		<div class="flex flex-col gap-4 text-slate-600 ml-10 md:ml-0">
+			<h1 class="font-heading text-[clamp(1.8rem,3vw,2.4rem)] font-semibold leading-tight text-slate-900">
+				{siteConfig.hero.headline}
+			</h1>
+			<p class="max-w-[60ch]">{siteConfig.hero.subheadline}</p>
+		<ul class="flex flex-wrap gap-3 list-none m-0 p-0">
+			{socialLinks.map((link) => {
+				const iconClass = link.icon?.startsWith('i-') ? link.icon : undefined;
+				return (
+					<li>
+						<a
+							class="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-accent-50 text-accent-600 font-medium no-underline transition-colors hover:bg-accent-100"
+							href={link.href}
+							target="_blank"
+							rel="noreferrer"
+						>
+							<div class={link.icon} />
+							<span>{link.label}</span>
+						</a>
+					</li>
+				);
+			})}
+		</ul>
+		</div>
+	</section>
+
+	<section class="flex flex-col gap-4">
+		<header class="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
+			<h2 class="font-heading text-[clamp(1.4rem,2vw,1.8rem)] font-semibold text-slate-900">Recent Posts</h2>
+			<a class="text-sm text-accent-600 no-underline" href="/posts">Browse all posts</a>
+		</header>
+		<ul class="grid gap-4 list-none m-0 p-0">
+			{posts.map((post) => (
+				<li>
+					<a
+						class="block border border-slate-200 rounded-2xl bg-slate-50 px-5 pt-1 pb-5 no-underline text-slate-900 transition-transform duration-200 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(15,23,42,0.1)]"
+						href={`/posts/${post.slug}`}
+					>
+						<h3 class="font-heading text-lg font-semibold mb-2">{post.data.title}</h3>
+						<p class="m-0 text-slate-600 mb-3">{post.data.description}</p>
+						<span class="inline-flex items-center gap-2 text-sm text-slate-500">
+							{new Date(post.data.publishedAt).toLocaleDateString(undefined, {
+								year: 'numeric',
+								month: 'short',
+								day: 'numeric'
+							})}
+						</span>
+					</a>
+				</li>
+			))}
+		</ul>
+	</section>
+
+	<section class="flex flex-col gap-4">
+		<header class="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
+			<h2 class="font-heading text-[clamp(1.4rem,2vw,1.8rem)] font-semibold text-slate-900">Selected Papers</h2>
+			<a class="text-sm text-accent-600 no-underline" href="/researches">View full list</a>
+		</header>
+		<ul class="grid gap-4 list-none m-0 p-0">
+			{papers.map((paper) => {
+				const abstractId = `home-abstract-${paper.id}`;
+				const hasAbstract = Boolean(paper.abstract);
+
+				return (
+					<li>
+						<article class="flex flex-col gap-4 border border-slate-200 rounded-2xl bg-white px-6 pt-3 pb-6 shadow-[0_16px_32px_rgba(15,23,42,0.05)]">
+							<header class="flex flex-col gap-2">
+								<h3 class="font-heading text-[clamp(1.15rem,2vw,1.4rem)] font-semibold text-slate-900">{paper.title}</h3>
+								<p class="m-0 text-slate-600">{paper.authors.join(', ')}</p>
+								<p class="m-0 text-sm text-slate-500">
+									{paper.venue ?? 'Venue pending'}
+									{paper.year ? ` · ${paper.year}` : ''}
+								</p>
+								{paper.keywords.length > 0 && (
+									<div class="flex flex-wrap gap-2">
+										{paper.keywords.map((keyword) => (
+											<span class="rounded-full bg-accent-50 text-accent-600 text-xs font-medium px-3 py-1">
+												{keyword}
+											</span>
+										))}
+									</div>
+								)}
+							</header>
+
+							<div class="flex flex-wrap items-center gap-3 mt-auto">
+								{hasAbstract && (
+									<button
+										class="btn-secondary toggle-abstract"
+										type="button"
+										data-target={abstractId}
+										aria-controls={abstractId}
+										aria-expanded="false"
+									>
+										Show abstract
+									</button>
+								)}
+								{paper.url && (
+									<a class="btn-primary ml-auto" href={paper.url} target="_blank" rel="noreferrer">
+										View paper
+									</a>
+								)}
+							</div>
+
+							{hasAbstract && (
+								<p class="bg-slate-100 text-slate-600 px-4 py-4 rounded-xl -mt-2" id={abstractId} hidden>
+									{paper.abstract}
+								</p>
+							)}
+						</article>
+					</li>
+				);
+			})}
+		</ul>
+	</section>
 </Layout>
+
+<script is:inline>
+	document.addEventListener('DOMContentLoaded', () => {
+		document.querySelectorAll('.toggle-abstract').forEach((toggle) => {
+			toggle.addEventListener('click', () => {
+				const targetId = toggle.getAttribute('data-target');
+				if (!targetId) return;
+				const abstract = document.getElementById(targetId);
+				if (!abstract) return;
+
+				const isHidden = abstract.hasAttribute('hidden');
+				if (isHidden) {
+					abstract.removeAttribute('hidden');
+					toggle.setAttribute('aria-expanded', 'true');
+					toggle.textContent = 'Hide abstract';
+				} else {
+					abstract.setAttribute('hidden', '');
+					toggle.setAttribute('aria-expanded', 'false');
+					toggle.textContent = 'Show abstract';
+				}
+			});
+		});
+	});
+</script>

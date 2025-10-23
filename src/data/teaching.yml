@@ -1,0 +1,50 @@
+current:
+  - term: Spring 2025
+    modules:
+      - title: Human-Centered AI Systems
+        code: INFO 742
+        summary: Graduate seminar covering participatory design, model interpretability, and policy considerations in AI deployments.
+        tags:
+          - graduate
+          - seminar
+          - ai
+      - title: Learning Analytics Studio
+        code: INFO 623
+        summary: Project-based studio guiding students through data collection, analysis, and storytelling for educational contexts.
+        tags:
+          - project-based
+          - analytics
+          - studio
+  - term: Fall 2024
+    modules:
+      - title: Web Infrastructure for Scholarship
+        code: INFO 511
+        summary: Core course on building reproducible academic web tooling with Astro, serverless functions, and content collections.
+        tags:
+          - core
+          - web
+          - reproducibility
+
+past:
+  - term: Spring 2024
+    modules:
+      - title: Learning Analytics Studio
+        code: INFO 623
+        summary: Cohort focused on qualitative + quantitative methods for studying learning communities.
+        tags:
+          - analytics
+          - studio
+      - title: Research Methods for Civic Tech
+        code: INFO 538
+        summary: Mixed-methods toolkit for civic technology research collaborations.
+        tags:
+          - civic tech
+          - methods
+  - term: Fall 2023
+    modules:
+      - title: Information Visualization
+        code: INFO 431
+        summary: Undergraduate course on designing visualizations for complex social data sets.
+        tags:
+          - undergraduate
+          - visualization
