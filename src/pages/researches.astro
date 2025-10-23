@@ -24,8 +24,8 @@ const orderedCategories = [
 
 <Layout>
 	<section class="flex flex-col gap-3 mb-8">
-		<h1 class="font-heading text-[clamp(2rem,3vw,2.6rem)] font-semibold text-slate-900">Researches</h1>
-		<p class="m-0 text-slate-600 max-w-[65ch]">
+		<h1 class="font-heading text-[clamp(2rem,3vw,2.6rem)] font-semibold text-slate-900 dark:text-slate-100">Researches</h1>
+		<p class="m-0 text-slate-600 dark:text-slate-300 max-w-[65ch]">
 			Peer-reviewed publications, workshop papers, and essays focusing on the flow of learning signals
 			across scholarly and civic platforms.
 		</p>
@@ -39,23 +39,23 @@ const orderedCategories = [
 
 		return (
 			<section class="flex flex-col gap-5 mt-10 first:mt-0">
-				<h2 class="font-heading text-[clamp(1.5rem,2.5vw,2rem)] font-semibold text-slate-900">{category}</h2>
+				<h2 class="font-heading text-[clamp(1.5rem,2.5vw,2rem)] font-semibold text-slate-900 dark:text-slate-100">{category}</h2>
 				<div class="grid gap-5">
 					{categoryPapers.map((paper) => {
 						const abstractId = `abstract-${paper.id}`;
 						const hasAbstract = Boolean(paper.abstract);
 
 						return (
-							<article class="flex flex-col gap-4 border border-slate-200 rounded-2xl bg-white px-6 py-6 shadow-[0_16px_32px_rgba(15,23,42,0.05)]">
+							<article class="flex flex-col gap-4 border border-slate-200 dark:border-slate-700 rounded-2xl bg-white dark:bg-slate-900 px-6 py-6 shadow-[0_16px_32px_rgba(15,23,42,0.05)] dark:shadow-[0_24px_50px_rgba(8,8,16,0.45)]">
 								<header class="flex flex-col gap-2">
-								<h3 class="font-heading text-[clamp(1.2rem,2vw,1.6rem)] font-semibold text-slate-900">{paper.title}</h3>
-									<p class="m-0 text-slate-600">{paper.authors.join(', ')}</p>
-									<p class="m-0 text-sm text-slate-500">
+									<h3 class="font-heading text-[clamp(1.2rem,2vw,1.6rem)] font-semibold text-slate-900 dark:text-slate-100">{paper.title}</h3>
+									<p class="m-0 text-slate-600 dark:text-slate-300">{paper.authors.join(', ')}</p>
+									<p class="m-0 text-sm text-slate-500 dark:text-slate-400">
 										{paper.venue ?? 'Venue pending'}
 										{paper.year ? ` · ${paper.year}` : ''}
 									</p>
 									{paper.keywords.length > 0 && (
-										<ul class="chips-row">
+										<ul class="chips-row mt-1">
 											{paper.keywords.map((keyword) => (
 												<li class="chips-item">{keyword}</li>
 											))}
@@ -88,7 +88,7 @@ const orderedCategories = [
 								</div>
 
 								{hasAbstract && (
-									<p class="bg-slate-100 text-slate-600 px-4 py-4 rounded-xl -mt-2" id={abstractId} hidden>
+									<p class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-4 py-4 rounded-xl -mt-2" id={abstractId} hidden>
 										{paper.abstract}
 									</p>
 								)}

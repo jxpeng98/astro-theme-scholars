@@ -37,6 +37,7 @@ export const siteConfig: SiteConfig = {
 	favicon: '/favicon.svg', // Path to favicon in the public directory
 	keywords: ['learning analytics', 'open scholarship', 'web infrastructure', 'academic website'],
 	// find the icon name from https://icon-sets.iconify.design
+	// most icons are from 'mdi', https://icones.js.org/collection/mdi
 	// double check the icon set from https://icones.js.org/
 	// copy icon name as the following style 'i+<icon-name>'
 	socialLinks: [
@@ -49,7 +50,7 @@ export const siteConfig: SiteConfig = {
 		{ href: '/', label: 'Home' },
 		{ href: '/about', label: 'About' },
 		{ href: '/researches', label: 'Researches' },
-		{ href: '/teachings', label: 'Teachings' },
+		{ href: '/teaching', label: 'Teaching' },
 		{ href: '/projects', label: 'Projects' },
 		{ href: '/posts', label: 'Posts' }
 	],
@@ -61,7 +62,7 @@ export const siteConfig: SiteConfig = {
 		subheadline:
 			'I am a researcher focused on building equitable tooling for open scholarship. My group studies how learning signals travel across platforms, and we ship practical infrastructure for sharing data, publications, and code.',
 		profileAlt: 'Portrait of Your Name',
-		profileImage: 'profile.svg' // Path relative to src/ or /public, or full URL
+		profileImage: '/profile.svg' // Path relative to src/ or /public, or full URL
 	}
 };
 

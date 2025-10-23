@@ -25,29 +25,29 @@ const { hero, profile, experience, service, education = [] } = aboutData;
 
 <Layout>
 	<section class="flex flex-col gap-3 mb-8">
-		<h1 class="font-heading text-[clamp(2rem,3vw,2.6rem)] font-semibold text-slate-900">
+		<h1 class="font-heading text-[clamp(2rem,3vw,2.6rem)] font-semibold text-slate-900 dark:text-slate-100">
 			{hero.title}
 		</h1>
-		<p class="m-0 text-slate-600 max-w-[60ch]">{hero.description}</p>
+		<p class="m-0 text-slate-600 dark:text-slate-300 max-w-[65ch]">{hero.description}</p>
 	</section>
 
 	{education.length > 0 && (
-		<section class="mt-8 flex flex-col gap-3">
-			<h2 class="font-heading text-xl font-semibold text-slate-900">Education</h2>
-			<ul class="list-disc pl-6 space-y-3 text-slate-600 m-0">
+		<section class="flex flex-col gap-3">
+			<h2 class="font-heading text-xl font-semibold text-slate-900 dark:text-slate-100">Education</h2>
+			<ul class="list-disc pl-6 space-y-3 text-slate-600 dark:text-slate-300 m-0">
 				{education.map((item) => (
 					<li>
-						<div class="font-semibold text-slate-900">{item.degree}</div>
-						<div class="text-sm text-slate-500">{item.institution} · {item.year}</div>
+						<div class="font-semibold text-slate-900 dark:text-slate-100">{item.degree}</div>
+						<div class="text-sm text-slate-500 dark:text-slate-400">{item.institution} · {item.year}</div>
 					</li>
 				))}
 			</ul>
 		</section>
 	)}
 
-	<section class="flex flex-col gap-3">
-		<h2 class="font-heading text-xl font-semibold text-slate-900">Profile</h2>
-		<ul class="list-disc pl-6 space-y-2 text-slate-600 m-0">
+	<section class="mt-8 flex flex-col gap-3">
+		<h2 class="font-heading text-xl font-semibold text-slate-900 dark:text-slate-100">Profile</h2>
+		<ul class="list-disc pl-6 space-y-2 text-slate-600 dark:text-slate-300 m-0">
 			{profile.map((item) => (
 				<li>
 					<strong>{item.label}:</strong> {item.value}
@@ -57,14 +57,14 @@ const { hero, profile, experience, service, education = [] } = aboutData;
 	</section>
 
 	<section class="mt-8 flex flex-col gap-4">
-		<h2 class="font-heading text-xl font-semibold text-slate-900">Experience</h2>
+		<h2 class="font-heading text-xl font-semibold text-slate-900 dark:text-slate-100">Experience</h2>
 		{experience.map((entry, idx) => (
-			<article class="border-b border-slate-200 pb-4 mb-6" class:list={{ 'border-none pb-0 mb-0': idx === experience.length - 1 }}>
-				<h3 class="font-heading text-lg font-semibold text-slate-900">
+			<article class="border-b border-slate-200 dark:border-slate-700 pb-4 mb-6" class:list={{ 'border-none pb-0 mb-0': idx === experience.length - 1 }}>
+				<h3 class="font-heading text-lg font-semibold text-slate-900 dark:text-slate-100">
 					{entry.role} · {entry.organization}
 				</h3>
-				<p class="text-sm text-slate-500 mt-1">{entry.period}</p>
-				<ul class="list-disc pl-6 space-y-2 text-slate-600 m-0 mt-2">
+				<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">{entry.period}</p>
+				<ul class="list-disc pl-6 space-y-2 text-slate-600 dark:text-slate-300 m-0 mt-2">
 					{entry.bullets.map((bullet) => (
 						<li>{bullet}</li>
 					))}
@@ -74,8 +74,8 @@ const { hero, profile, experience, service, education = [] } = aboutData;
 	</section>
 
 	<section class="mt-8 flex flex-col gap-3">
-		<h2 class="font-heading text-xl font-semibold text-slate-900">Selected Service</h2>
-		<ul class="list-disc pl-6 space-y-2 text-slate-600 m-0">
+		<h2 class="font-heading text-xl font-semibold text-slate-900 dark:text-slate-100">Selected Service</h2>
+		<ul class="list-disc pl-6 space-y-2 text-slate-600 dark:text-slate-300 m-0">
 			{service.map((item) => (
 				<li>{item}</li>
 			))}
