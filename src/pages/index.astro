@@ -55,7 +55,7 @@ const profileImageUrl = /^https?:/i.test(rawProfileImage)
 								{iconClass ? (
 									<span class={`${iconClass} text-lg`} aria-hidden="true"></span>
 								) : link.icon ? (
-									<span aria-hidden="true">{link.icon}</span>
+									<span>{link.icon}</span>
 								) : null}
 								<span>{link.label}</span>
 							</a>
