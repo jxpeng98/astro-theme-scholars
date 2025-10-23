@@ -30,8 +30,8 @@ export interface SiteConfig {
 }
 
 export const siteConfig: SiteConfig = {
-	title: 'Riley Ashford | Academic Portfolio',
-	author: 'Riley Ashford',
+	title: 'Your Name | Academic Portfolio',
+	author: 'Your Name',
 	description:
 		'Scholarship at the intersection of learning analytics and web infrastructure, building equitable tooling for open scholarship.',
 	favicon: '/favicon.svg', // Path to favicon in the public directory
@@ -41,14 +41,15 @@ export const siteConfig: SiteConfig = {
 	// copy icon name as the following style 'i+<icon-name>'
 	socialLinks: [
 		{ label: 'Google Scholar', href: 'https://scholar.google.com', icon: 'i-academicons:google-scholar'},
-		{ label: 'GitHub', href: 'https://github.com/rileyashford', icon: 'i-logos:github-icon'},
+		{ label: 'GitHub', href: 'https://github.com/your-handle', icon: 'i-logos:github-icon'},
 		{ label: 'ORCID', href: 'https://orcid.org/0000-0000-0000-0000', icon: 'i-academicons:orcid'},
-		{ label: 'Email', href: 'mailto:riley.ashford@example.com', icon: 'i-mdi:email-outline'}
+		{ label: 'Email', href: 'mailto:you.name@example.com', icon: 'i-mdi:email-outline'}
 	],
 	navLinks: [
 		{ href: '/', label: 'Home' },
 		{ href: '/about', label: 'About' },
 		{ href: '/researches', label: 'Researches' },
+		{ href: '/teachings', label: 'Teachings' },
 		{ href: '/projects', label: 'Projects' },
 		{ href: '/posts', label: 'Posts' }
 	],
@@ -59,7 +60,7 @@ export const siteConfig: SiteConfig = {
 		headline: 'Scholarship at the intersection of learning analytics and web infrastructure.',
 		subheadline:
 			'I am a researcher focused on building equitable tooling for open scholarship. My group studies how learning signals travel across platforms, and we ship practical infrastructure for sharing data, publications, and code.',
-		profileAlt: 'Portrait of Riley Ashford',
+		profileAlt: 'Portrait of Your Name',
 		profileImage: 'profile.svg' // Path relative to src/ or /public, or full URL
 	}
 };

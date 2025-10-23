@@ -1,12 +1,26 @@
 {
-  "name": "astro-scholars",
+  "name": "astro-theme-scholars",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "description": "Customizable Astro theme for academic and research portfolios.",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"
+  },
+  "author": "Jiaxin Peng",
+  "license": "MIT",
+  "keywords": [
+    "astro",
+    "theme",
+    "portfolio",
+    "academic",
+    "unocss"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jxpeng98/astro-theme-scholars.git"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.5",
