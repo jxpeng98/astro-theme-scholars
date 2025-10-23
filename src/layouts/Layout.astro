@@ -21,60 +21,57 @@ const siteTitle = siteConfig.author || siteConfig.title;
 	</head>
 	<body class="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 font-sans flex justify-center px-4 py-6 md:px-8 md:py-10 transition-colors">
 		<div class="w-full max-w-5xl bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-[0_24px_60px_rgba(15,23,42,0.08)] dark:shadow-[0_32px_80px_rgba(8,8,16,0.45)] px-6 py-8 md:px-12 md:py-12 flex flex-col min-h-[calc(100vh-3rem)] transition-colors">
-			<header class="relative flex flex-col gap-6 pt-14 pb-4 mb-12 md:gap-4 md:pt-0 md:pb-0 md:mb-16 md:flex-row md:items-center md:justify-between">
-				<a data-site-title class="font-heading font-semibold text-slate-900 dark:text-slate-100 text-2xl md:text-3xl no-underline text-center md:text-left whitespace-nowrap md:flex-shrink-0" href="/">
-					{siteTitle}
-				</a>
-				<nav class="w-full md:flex-1 md:min-w-0 md:overflow-hidden">
-					<ul
-						data-nav-list
-						class="flex flex-nowrap items-center justify-center gap-3 m-0 p-0 list-none md:justify-end md:min-w-0"
-					>
-						{siteConfig.navLinks.map((link) => (
-							<li data-nav-item>
-								<a
-									class="block no-underline text-slate-600 dark:text-slate-300 font-medium px-4 py-2 rounded-full transition-colors duration-200 hover:bg-accent-100 hover:text-accent-700 dark:hover:bg-accent-500/20 dark:hover:text-accent-200"
-									href={link.href}
+						<header class="relative flex flex-wrap items-center justify-between gap-y-4 p-4 mb-12 md:flex-nowrap md:gap-x-8 md:p-0 md:mb-16">
+							<a data-site-title class="font-heading font-semibold text-slate-900 dark:text-slate-100 text-2xl md:text-3xl no-underline whitespace-nowrap md:order-1" href="/">
+								{siteTitle}
+							</a>
+							<div data-actions class="flex items-center gap-3 md:order-3">
+								<div data-overflow-container class="relative">
+									<button
+										type="button"
+										data-overflow-toggle
+										class="h-10 w-10 items-center justify-center rounded-full bg-slate-200/80 text-slate-700 transition-colors duration-200 hover:bg-accent-100 hover:text-accent-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 dark:bg-slate-800/80 dark:text-slate-200 dark:hover:bg-accent-500/20 dark:hover:text-accent-200 dark:focus-visible:ring-offset-slate-950"
+										aria-expanded="false"
+										aria-haspopup="true"
+										hidden
+									>
+										<span class="sr-only">Open navigation menu</span>
+										<span class="i-ph-list-bold text-lg" aria-hidden="true"></span>
+									</button>
+									<ul
+										data-overflow-menu
+										class="hidden absolute right-0 top-full mt-3 min-w-[180px] list-none rounded-xl border border-slate-200 bg-white p-2 shadow-lg dark:border-slate-700 dark:bg-slate-900"
+									></ul>
+								</div>
+								<button
+									type="button"
+									data-theme-toggle
+									class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-accent-400 via-accent-500 to-accent-600 text-white shadow-[0_10px_18px_rgba(55,0,179,0.25)] transition-all duration-200 hover:shadow-[0_14px_22px_rgba(55,0,179,0.3)] hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 dark:from-accent-500 dark:via-accent-400 dark:to-accent-500 dark:focus-visible:ring-offset-slate-950"
+									aria-label="Toggle color mode"
 								>
-									{link.label}
-								</a>
-							</li>
-						))}
-					</ul>
-				</nav>
-				<div
-					data-actions
-					class="absolute right-4 top-4 flex items-center gap-2 md:static md:ml-6 md:flex-shrink-0 md:gap-3"
-				>
-					<div data-overflow-container class="relative">
-						<button
-							type="button"
-							data-overflow-toggle
-							class="h-10 w-10 items-center justify-center rounded-full bg-slate-200/80 text-slate-700 transition-colors duration-200 hover:bg-accent-100 hover:text-accent-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 dark:bg-slate-800/80 dark:text-slate-200 dark:hover:bg-accent-500/20 dark:hover:text-accent-200 dark:focus-visible:ring-offset-slate-950"
-							aria-expanded="false"
-							aria-haspopup="true"
-							hidden
-						>
-							<span class="sr-only">Open navigation menu</span>
-							<span class="i-ph-list-bold text-lg" aria-hidden="true"></span>
-						</button>
-						<ul
-							data-overflow-menu
-							class="hidden absolute right-0 top-full mt-3 min-w-[180px] list-none rounded-xl border border-slate-200 bg-white py-2 shadow-lg dark:border-slate-700 dark:bg-slate-900"
-						></ul>
-					</div>
-					<button
-						type="button"
-						data-theme-toggle
-						class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-accent-400 via-accent-500 to-accent-600 text-white shadow-[0_10px_18px_rgba(55,0,179,0.25)] transition-all duration-200 hover:shadow-[0_14px_22px_rgba(55,0,179,0.3)] hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 dark:from-accent-500 dark:via-accent-400 dark:to-accent-500 dark:focus-visible:ring-offset-slate-950"
-						aria-label="Toggle color mode"
-					>
-						<span class="sr-only">Toggle color mode</span>
-						<span class="i-ph-moon-stars-duotone text-lg block dark:hidden" aria-hidden="true"></span>
-						<span class="i-ph-sun-dim-duotone text-lg hidden dark:block" aria-hidden="true"></span>
-					</button>
-				</div>
-			</header>
+									<span class="sr-only">Toggle color mode</span>
+									<span class="i-ph-moon-stars-duotone text-lg block dark:hidden" aria-hidden="true"></span>
+									<span class="i-ph-sun-dim-duotone text-lg hidden dark:block" aria-hidden="true"></span>
+								</button>
+							</div>
+							<nav class="w-full order-last md:w-auto md:order-2 md:flex-1 md:min-w-0 md:overflow-hidden">
+								<ul
+									data-nav-list
+									class="flex flex-wrap items-center justify-center gap-3 m-0 p-0 list-none md:justify-end"
+								>
+									{siteConfig.navLinks.map((link) => (
+										<li data-nav-item>
+											<a
+												class="block no-underline text-slate-600 dark:text-slate-300 font-medium px-4 py-2 rounded-full transition-colors duration-200 hover:bg-accent-100 hover:text-accent-700 dark:hover:bg-accent-500/20 dark:hover:text-accent-200"
+												href={link.href}
+											>
+												{link.label}
+											</a>
+										</li>
+									))}
+								</ul>
+							</nav>
+						</header>
 
 			<main class="flex-1 flex flex-col gap-8 md:gap-12">
 				<slot />
@@ -138,11 +135,8 @@ const siteTitle = siteConfig.author || siteConfig.title;
 				const overflowMenu = document.querySelector('[data-overflow-menu]');
 				const overflowToggle = document.querySelector('[data-overflow-toggle]');
 				const actions = document.querySelector('[data-actions]');
-				const titleLink = document.querySelector('[data-site-title]');
 				if (navList && overflowMenu && overflowToggle && actions) {
 					const navItems = Array.from(navList.querySelectorAll('[data-nav-item]'));
-					const OVERFLOW_EPSILON = 2;
-					const header = navList.closest('header');
 					const setMenuItemMode = (item, inMenu) => {
 						item.classList.toggle('w-full', inMenu);
 						const link = item.querySelector('a');
@@ -150,29 +144,11 @@ const siteTitle = siteConfig.author || siteConfig.title;
 							return;
 						}
 						link.classList.toggle('text-left', inMenu);
-						link.classList.toggle('w-full', inMenu);
 						link.classList.toggle('rounded-lg', inMenu);
 						link.classList.toggle('rounded-full', !inMenu);
+						link.classList.toggle('px-4', !inMenu);
+						link.classList.toggle('px-2', inMenu);
 					};
-					const isNavOverflowing = () => navList.scrollWidth - navList.clientWidth > OVERFLOW_EPSILON;
-					const isHeaderOverflowing = () => {
-						if (!header) {
-							return false;
-						}
-						return header.scrollWidth - header.clientWidth > OVERFLOW_EPSILON;
-					};
-					const isTitleOverlapping = () => {
-						if (!titleLink || window.innerWidth < 768) {
-							return false;
-						}
-						const titleRect = titleLink.getBoundingClientRect();
-						const navRect = navList.getBoundingClientRect();
-						if (!titleRect.width || !navRect.width) {
-							return false;
-						}
-						return navRect.left < titleRect.right + OVERFLOW_EPSILON;
-					};
-					const needsOverflow = () => isNavOverflowing() || isHeaderOverflowing() || isTitleOverlapping();
 					const closeOverflowMenu = () => {
 						overflowMenu.classList.add('hidden');
 						overflowToggle.setAttribute('aria-expanded', 'false');
@@ -199,7 +175,9 @@ const siteTitle = siteConfig.author || siteConfig.title;
 						overflowToggle.setAttribute('aria-hidden', 'false');
 						overflowToggle.tabIndex = 0;
 					};
+
 					const updateOverflow = () => {
+						// Move all items back to the nav list to check for wrapping
 						navItems.forEach((item) => {
 							if (item.parentElement !== navList) {
 								setMenuItemMode(item, false);
@@ -211,16 +189,18 @@ const siteTitle = siteConfig.author || siteConfig.title;
 						if (!navItems.length) {
 							return;
 						}
+
+						const itemHeight = navItems[0] ? navItems[0].offsetHeight : 0;
+						const needsOverflow = () => itemHeight > 0 && navList.offsetHeight > itemHeight * 1.5;
+
 						if (!needsOverflow()) {
 							return;
 						}
 
 						showOverflowToggle();
-						navList.getBoundingClientRect();
 
 						while (needsOverflow() && navList.children.length > 0) {
-							const candidates = navList.querySelectorAll('[data-nav-item]');
-							const lastVisible = candidates[candidates.length - 1];
+							const lastVisible = navList.querySelector('[data-nav-item]:last-child');
 							if (!lastVisible) {
 								break;
 							}
@@ -232,22 +212,18 @@ const siteTitle = siteConfig.author || siteConfig.title;
 						}
 					};
 
-					updateOverflow();
+					// Initial call needs to be slightly delayed for offsetHeight to be correct
+					setTimeout(updateOverflow, 50);
+
 					window.addEventListener('resize', () => {
 						window.requestAnimationFrame(updateOverflow);
 					});
-						if ('ResizeObserver' in window) {
-							const observer = new ResizeObserver(() => {
-								window.requestAnimationFrame(updateOverflow);
-							});
-							observer.observe(navList);
-							if (header) {
-								observer.observe(header);
-							}
-							observer.observe(actions);
-							if (titleLink) {
-								observer.observe(titleLink);
-							}
+
+					if ('ResizeObserver' in window) {
+						const observer = new ResizeObserver(() => {
+							window.requestAnimationFrame(updateOverflow);
+						});
+						observer.observe(navList);
 					}
 
 					overflowToggle.addEventListener('click', (event) => {
