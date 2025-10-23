@@ -18,34 +18,91 @@ const currentYear = new Date().getFullYear();
 		</title>
 		<slot name="head" />
 	</head>
-	<body class="min-h-screen bg-slate-50 text-slate-900 font-sans flex justify-center px-4 py-6 md:px-8 md:py-10">
-		<div class="w-full max-w-5xl bg-white rounded-3xl border border-slate-200 shadow-[0_24px_60px_rgba(15,23,42,0.08)] px-6 py-8 md:px-12 md:py-12 flex flex-col min-h-[calc(100vh-3rem)]">
-			<header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-12 md:mb-16">
-				<a class="font-heading font-semibold text-slate-900 text-2xl md:text-3xl no-underline text-center md:text-left" href="/">
+	<body class="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 font-sans flex justify-center px-4 py-6 md:px-8 md:py-10 transition-colors">
+		<div class="w-full max-w-5xl bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-[0_24px_60px_rgba(15,23,42,0.08)] dark:shadow-[0_32px_80px_rgba(8,8,16,0.45)] px-6 py-8 md:px-12 md:py-12 flex flex-col min-h-[calc(100vh-3rem)] transition-colors">
+			<header class="flex flex-col gap-4 mb-12 md:mb-16 md:flex-row md:items-center md:justify-between">
+				<a class="font-heading font-semibold text-slate-900 dark:text-slate-100 text-2xl md:text-3xl no-underline text-center md:text-left" href="/">
 					{siteConfig.author}
 				</a>
-				<nav class="w-full md:w-auto">
-					<ul class="flex flex-wrap justify-center md:justify-end gap-x-4 gap-y-2 m-0 p-0 list-none">
-						{siteConfig.navLinks.map((link) => (
-							<li>
-								<a class="no-underline text-slate-600 font-medium px-3 py-2 rounded-full transition-colors duration-200 hover:bg-accent-100 hover:text-accent-600" href={link.href}>
-									{link.label}
-								</a>
-							</li>
-						))}
-					</ul>
-				</nav>
+				<div class="flex flex-col md:flex-row md:items-center gap-3 md:gap-4 w-full md:w-auto">
+					<nav class="w-full md:w-auto">
+						<ul class="flex flex-wrap justify-center md:justify-end gap-x-4 gap-y-2 m-0 p-0 list-none">
+							{siteConfig.navLinks.map((link) => (
+								<li>
+									<a class="no-underline text-slate-600 dark:text-slate-300 font-medium px-3 py-2 rounded-full transition-colors duration-200 hover:bg-accent-100 hover:text-accent-700 dark:hover:bg-accent-500/20 dark:hover:text-accent-200" href={link.href}>
+										{link.label}
+									</a>
+								</li>
+							))}
+						</ul>
+					</nav>
+					<button type="button" data-theme-toggle class="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-accent-500 text-white font-medium transition-colors duration-200 hover:bg-accent-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-300/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 dark:focus-visible:ring-offset-slate-950 dark:bg-accent-400 dark:text-slate-900 dark:hover:bg-accent-300">
+						<span class="i-ph-moon-stars-duotone text-lg block dark:hidden" aria-hidden="true"></span>
+						<span class="i-ph-sun-dim-duotone text-lg hidden dark:block" aria-hidden="true"></span>
+						<span class="text-sm font-medium">Theme</span>
+					</button>
+				</div>
 			</header>
 
 			<main class="flex-1 flex flex-col gap-8 md:gap-12">
 				<slot />
 			</main>
 
-			<footer class="mt-12 md:mt-16 text-sm text-slate-600 text-center">
+			<footer class="mt-12 md:mt-16 text-sm text-slate-600 dark:text-slate-400 text-center transition-colors">
 				<p class="m-0">
 					&copy; {`${currentYear} ${siteConfig.author}. ${siteConfig.footer.copyright}`}
 				</p>
 			</footer>
 		</div>
+
+		<script is:inline>
+		(() => {
+			const STORAGE_KEY = 'site-theme';
+			const getStored = () => {
+				try {
+					return localStorage.getItem(STORAGE_KEY);
+				} catch (err) {
+					return null;
+				}
+			};
+
+			const applyTheme = (mode) => {
+				if (mode === 'dark') {
+					document.documentElement.classList.add('dark');
+				} else {
+					document.documentElement.classList.remove('dark');
+				}
+			};
+
+			const stored = getStored();
+			if (stored) {
+				applyTheme(stored);
+			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+				applyTheme('dark');
+			}
+
+			document.addEventListener('DOMContentLoaded', () => {
+				const toggleButtons = document.querySelectorAll('[data-theme-toggle]');
+				toggleButtons.forEach((btn) => {
+					btn.addEventListener('click', () => {
+						const isDark = document.documentElement.classList.toggle('dark');
+						try {
+							localStorage.setItem(STORAGE_KEY, isDark ? 'dark' : 'light');
+						} catch (err) {
+							/* ignore */
+						}
+					});
+				});
+
+				if (window.matchMedia) {
+					window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+						if (!getStored()) {
+							applyTheme(event.matches ? 'dark' : 'light');
+						}
+					});
+				}
+			});
+		})();
+		</script>
 	</body>
 </html>

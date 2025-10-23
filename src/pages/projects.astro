@@ -5,8 +5,8 @@ import { projects } from '../components/projects';
 
 <Layout>
 	<section class="flex flex-col gap-3 mb-8">
-		<h1 class="font-heading text-[clamp(2rem,3vw,2.6rem)] font-semibold text-slate-900">Projects</h1>
-		<p class="m-0 text-slate-600 max-w-[65ch]">
+		<h1 class="font-heading text-[clamp(2rem,3vw,2.6rem)] font-semibold text-slate-900 dark:text-slate-100">Projects</h1>
+		<p class="m-0 text-slate-600 dark:text-slate-300 max-w-[65ch]">
 			Selected lab and community projects with a focus on reproducible research infrastructure,
 			learning analytics, and open collaboration.
 		</p>
@@ -14,12 +14,12 @@ import { projects } from '../components/projects';
 
 	<section class="grid gap-5">
 		{projects.map((project) => (
-			<article class="flex flex-col gap-4 border border-slate-200 rounded-2xl bg-slate-50 px-6 py-6 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.6)]">
+			<article class="flex flex-col gap-4 border border-slate-200 dark:border-slate-700 rounded-2xl bg-slate-50 dark:bg-slate-900 px-6 py-6 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.6)] dark:shadow-none">
 				<header class="flex flex-col gap-2">
-					<h2 class="font-heading text-[clamp(1.2rem,2vw,1.6rem)] font-semibold text-slate-900">{project.title}</h2>
-					<p class="text-sm text-slate-500">{project.period}</p>
+					<h2 class="font-heading text-[clamp(1.2rem,2vw,1.6rem)] font-semibold text-slate-900 dark:text-slate-100">{project.title}</h2>
+					<p class="text-sm text-slate-500 dark:text-slate-400">{project.period}</p>
 				</header>
-				<p class="m-0 text-slate-600">{project.description}</p>
+				<p class="m-0 text-slate-600 dark:text-slate-300">{project.description}</p>
 				<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
 					<ul class="tech-list chips-row">
 						{project.tech.map((item) => (
@@ -27,12 +27,7 @@ import { projects } from '../components/projects';
 						))}
 					</ul>
 					{project.url && (
-						<a
-							class="btn-primary sm:ml-auto"
-							href={project.url}
-							target="_blank"
-							rel="noreferrer"
-						>
+						<a class="btn-primary sm:ml-auto" href={project.url} target="_blank" rel="noreferrer">
 							Explore project
 						</a>
 					)}

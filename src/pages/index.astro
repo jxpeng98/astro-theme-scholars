@@ -14,58 +14,73 @@ const posts = (await getCollection('posts'))
 
 const papers = getFeaturedPapers(3);
 const socialLinks = siteConfig.socialLinks;
+
+const rawProfileImage = siteConfig.hero.profileImage.trim();
+const profileImageUrl = /^https?:/i.test(rawProfileImage)
+	? rawProfileImage
+	: rawProfileImage.startsWith('/')
+		? rawProfileImage
+		: new URL(
+			rawProfileImage.startsWith('.') ? rawProfileImage : `../${rawProfileImage}`,
+			import.meta.url
+		  ).href;
 ---
 
 <Layout>
 	<section class="flex flex-col gap-6 md:flex-row md:items-center">
 		<img
-			class="w-40 h-40 mx-auto md:mx-0 rounded-full bg-accent-100 p-2 border-[3px] border-white shadow-[0_16px_32px_rgba(37,99,235,0.25)]"
-			src={siteConfig.hero.profileImage}
+			class="w-40 h-40 mx-auto md:mx-0 rounded-full bg-accent-100 p-2 border-[3px] border-white dark:border-slate-800 shadow-[0_16px_32px_rgba(88,28,135,0.25)]"
+			src={profileImageUrl}
 			alt={siteConfig.hero.profileAlt}
 			width="160"
 			height="160"
 		/>
-		<div class="flex flex-col gap-4 text-slate-600 ml-10 md:ml-0">
-			<h1 class="font-heading text-[clamp(1.8rem,3vw,2.4rem)] font-semibold leading-tight text-slate-900">
+		<div class="flex flex-col gap-4 text-slate-600 dark:text-slate-300 ml-0 md:ml-8">
+			<h1 class="font-heading text-[clamp(1.8rem,3vw,2.4rem)] font-semibold leading-tight text-slate-900 dark:text-slate-100">
 				{siteConfig.hero.headline}
 			</h1>
 			<p class="max-w-[60ch]">{siteConfig.hero.subheadline}</p>
-		<ul class="flex flex-wrap gap-3 list-none m-0 p-0">
-			{socialLinks.map((link) => {
-				const iconClass = link.icon?.startsWith('i-') ? link.icon : undefined;
-				return (
-					<li>
-						<a
-							class="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-accent-50 text-accent-600 font-medium no-underline transition-colors hover:bg-accent-100"
-							href={link.href}
-							target="_blank"
-							rel="noreferrer"
-						>
-							<div class={link.icon} />
-							<span>{link.label}</span>
-						</a>
-					</li>
-				);
-			})}
-		</ul>
+			<ul class="flex flex-wrap gap-3 list-none m-0 p-0">
+				{socialLinks.map((link) => {
+					const iconClass = link.icon?.startsWith('i-') ? link.icon : undefined;
+
+					return (
+						<li>
+							<a
+								class="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-accent-100 text-accent-700 dark:bg-accent-500/15 dark:text-accent-200 font-medium no-underline transition-colors hover:bg-accent-200 dark:hover:bg-accent-400/20"
+								href={link.href}
+								target="_blank"
+								rel="noreferrer"
+							>
+								{iconClass ? (
+									<span class={`${iconClass} text-lg`} aria-hidden="true"></span>
+								) : link.icon ? (
+									<span aria-hidden="true">{link.icon}</span>
+								) : null}
+								<span>{link.label}</span>
+							</a>
+						</li>
+					);
+				})}
+			</ul>
 		</div>
 	</section>
 
 	<section class="flex flex-col gap-4">
 		<header class="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
-			<h2 class="font-heading text-[clamp(1.4rem,2vw,1.8rem)] font-semibold text-slate-900">Recent Posts</h2>
-			<a class="text-sm text-accent-600 no-underline" href="/posts">Browse all posts</a>
+			<h2 class="font-heading text-[clamp(1.4rem,2vw,1.8rem)] font-semibold text-slate-900 dark:text-slate-100">Recent Posts</h2>
+			<a class="text-sm text-accent-600 dark:text-accent-200 no-underline" href="/posts">Browse all posts</a>
 		</header>
 		<ul class="grid gap-4 list-none m-0 p-0">
 			{posts.map((post) => (
 				<li>
 					<a
-						class="block border border-slate-200 rounded-2xl bg-slate-50 px-5 pt-1 pb-5 no-underline text-slate-900 transition-transform duration-200 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(15,23,42,0.1)]"
+						class="block border border-slate-200 dark:border-slate-700 rounded-2xl bg-slate-50 dark:bg-slate-900 px-5 pt-1 pb-5 no-underline text-slate-900 dark:text-slate-100 transition-transform duration-200 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(76,29,149,0.18)] dark:hover:shadow-[0_24px_48px_rgba(10,10,20,0.55)]"
 						href={`/posts/${post.slug}`}
 					>
 						<h3 class="font-heading text-lg font-semibold mb-2">{post.data.title}</h3>
-						<p class="m-0 text-slate-600 mb-3">{post.data.description}</p>
-						<span class="inline-flex items-center gap-2 text-sm text-slate-500">
+						<p class="m-0 text-slate-600 dark:text-slate-300 mb-3">{post.data.description}</p>
+						<span class="inline-flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
 							{new Date(post.data.publishedAt).toLocaleDateString(undefined, {
 								year: 'numeric',
 								month: 'short',
@@ -80,8 +95,8 @@ const socialLinks = siteConfig.socialLinks;
 
 	<section class="flex flex-col gap-4">
 		<header class="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
-			<h2 class="font-heading text-[clamp(1.4rem,2vw,1.8rem)] font-semibold text-slate-900">Selected Papers</h2>
-			<a class="text-sm text-accent-600 no-underline" href="/researches">View full list</a>
+			<h2 class="font-heading text-[clamp(1.4rem,2vw,1.8rem)] font-semibold text-slate-900 dark:text-slate-100">Selected Papers</h2>
+			<a class="text-sm text-accent-600 dark:text-accent-200 no-underline" href="/researches">View full list</a>
 		</header>
 		<ul class="grid gap-4 list-none m-0 p-0">
 			{papers.map((paper) => {
@@ -90,22 +105,20 @@ const socialLinks = siteConfig.socialLinks;
 
 				return (
 					<li>
-						<article class="flex flex-col gap-4 border border-slate-200 rounded-2xl bg-white px-6 pt-3 pb-6 shadow-[0_16px_32px_rgba(15,23,42,0.05)]">
+						<article class="flex flex-col gap-4 border border-slate-200 dark:border-slate-700 rounded-2xl bg-white dark:bg-slate-900 px-6 pt-3 pb-6 shadow-[0_16px_32px_rgba(15,23,42,0.05)] dark:shadow-[0_24px_50px_rgba(8,8,16,0.45)]">
 							<header class="flex flex-col gap-2">
-								<h3 class="font-heading text-[clamp(1.15rem,2vw,1.4rem)] font-semibold text-slate-900">{paper.title}</h3>
-								<p class="m-0 text-slate-600">{paper.authors.join(', ')}</p>
-								<p class="m-0 text-sm text-slate-500">
+								<h3 class="font-heading text-[clamp(1.15rem,2vw,1.4rem)] font-semibold text-slate-900 dark:text-slate-100">{paper.title}</h3>
+								<p class="m-0 text-slate-600 dark:text-slate-300">{paper.authors.join(', ')}</p>
+								<p class="m-0 text-sm text-slate-500 dark:text-slate-400">
 									{paper.venue ?? 'Venue pending'}
 									{paper.year ? ` · ${paper.year}` : ''}
 								</p>
 								{paper.keywords.length > 0 && (
-									<div class="flex flex-wrap gap-2">
+									<ul class="chips-row mt-1">
 										{paper.keywords.map((keyword) => (
-											<span class="rounded-full bg-accent-50 text-accent-600 text-xs font-medium px-3 py-1">
-												{keyword}
-											</span>
+											<li class="chips-item">{keyword}</li>
 										))}
-									</div>
+									</ul>
 								)}
 							</header>
 
@@ -129,7 +142,7 @@ const socialLinks = siteConfig.socialLinks;
 							</div>
 
 							{hasAbstract && (
-								<p class="bg-slate-100 text-slate-600 px-4 py-4 rounded-xl -mt-2" id={abstractId} hidden>
+								<p class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-4 py-4 rounded-xl -mt-2" id={abstractId} hidden>
 									{paper.abstract}
 								</p>
 							)}
