@@ -62,7 +62,7 @@ export const siteConfig: SiteConfig = {
 		subheadline:
 			'I am a researcher focused on building equitable tooling for open scholarship. My group studies how learning signals travel across platforms, and we ship practical infrastructure for sharing data, publications, and code.',
 		profileAlt: 'Portrait of Your Name',
-		profileImage: '/profile.svg' // Path relative to src/ or /public, or full URL
+		profileImage: '/profile.svg' // Must be an absolute path starting with '/', a full URL, or a path relative to import.meta.url
 	}
 };
 
