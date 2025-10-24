@@ -10,6 +10,10 @@ interface TeachingSection {
 		code: string;
 		summary: string;
 		tags?: string[];
+		link?: {
+			label?: string;
+			href: string;
+		};
 	}>;
 }
 
@@ -46,12 +50,26 @@ const { current = [], past = [] } = teachingData;
 									<p class="text-sm text-slate-500 dark:text-slate-400 m-0">{module.code}</p>
 								</header>
 								<p class="m-0 text-slate-600 dark:text-slate-300">{module.summary}</p>
-								{module.tags?.length ? (
-									<ul class="chips-row mt-1">
-										{module.tags.map((tag) => (
-											<li class="chips-item">{tag}</li>
-										))}
-									</ul>
+								{module.tags?.length || module.link ? (
+									<div class="flex flex-wrap items-center gap-3 mt-1">
+										{module.tags?.length ? (
+											<ul class="chips-row">
+												{module.tags.map((tag) => (
+													<li class="chips-item">{tag}</li>
+												))}
+											</ul>
+										) : null}
+										{module.link ? (
+											<a
+												class="btn-primary ml-auto"
+												href={module.link.href}
+												target="_blank"
+												rel="noreferrer"
+											>
+												{module.link.label ?? 'Course website'}
+											</a>
+										) : null}
+									</div>
 								) : null}
 							</article>
 						))}
@@ -77,12 +95,26 @@ const { current = [], past = [] } = teachingData;
 									<p class="text-sm text-slate-500 dark:text-slate-400 m-0">{module.code}</p>
 								</header>
 								<p class="m-0 text-slate-600 dark:text-slate-300">{module.summary}</p>
-								{module.tags?.length ? (
-									<ul class="chips-row mt-1">
-										{module.tags.map((tag) => (
-											<li class="chips-item">{tag}</li>
-										))}
-									</ul>
+								{module.tags?.length || module.link ? (
+									<div class="flex flex-wrap items-center gap-3 mt-1">
+										{module.tags?.length ? (
+											<ul class="chips-row">
+												{module.tags.map((tag) => (
+													<li class="chips-item">{tag}</li>
+												))}
+											</ul>
+										) : null}
+										{module.link ? (
+											<a
+												class="btn-primary ml-auto"
+												href={module.link.href}
+												target="_blank"
+												rel="noreferrer"
+											>
+												{module.link.label ?? 'Course website'}
+											</a>
+										) : null}
+									</div>
 								) : null}
 							</article>
 						))}

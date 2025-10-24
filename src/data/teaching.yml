@@ -8,6 +8,9 @@ current:
           - graduate
           - seminar
           - ai
+        link:
+          label: Course syllabus
+          href: https://example.edu/info742
       - title: Learning Analytics Studio
         code: INFO 623
         summary: Project-based studio guiding students through data collection, analysis, and storytelling for educational contexts.
@@ -24,6 +27,9 @@ current:
           - core
           - web
           - reproducibility
+        link:
+          label: Course materials
+          href: https://example.edu/info511
 
 past:
   - term: Spring 2024
@@ -48,3 +54,6 @@ past:
         tags:
           - undergraduate
           - visualization
+        link:
+          label: Archive site
+          href: https://example.edu/info431
