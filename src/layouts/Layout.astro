@@ -4,9 +4,9 @@ import "uno.css";
 import siteConfig from "../side.config";
 
 export interface Props {
-	title?: string;
-	description?: string;
-	image?: string;
+  title?: string;
+  description?: string;
+  image?: string;
 }
 
 const { title, description, image } = Astro.props;
@@ -15,26 +15,26 @@ const { title, description, image } = Astro.props;
 const seoTitle = title ? `${title} | ${siteConfig.title}` : siteConfig.title;
 const seoDesc = description || siteConfig.description;
 // Assumes a default OG image is specified in siteConfig, with a fallback.
-const ogImage = image || '/profile.svg';
+const ogImage = image || "/profile.svg";
 
 const currentYear = new Date().getFullYear();
 const siteTitle = siteConfig.author || siteConfig.title;
-
-const primaryNav = siteConfig.navLinks.slice(0, 3);
-const extraNav = siteConfig.navLinks.slice(3);
+const navLinks = siteConfig.navLinks;
+const inlineLinkClasses =
+	"block px-3 py-2 text-center font-medium text-slate-600 no-underline transition-colors duration-200 hover:bg-accent-100 hover:text-accent-700 dark:text-slate-300 dark:hover:bg-accent-500/20 dark:hover:text-accent-200 rounded-full";
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="icon" type="image/svg+xml" href={siteConfig.favicon} />
-		<meta name="description" content={siteConfig.description} />
-		<meta name="keywords" content={siteConfig.keywords.join(', ')} />
-		<meta name="generator" content={Astro.generator} />
-		<title>{siteConfig.title}</title>
-		<link rel="sitemap" href="/sitemap-index.xml" />
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href={siteConfig.favicon} />
+    <meta name="description" content={siteConfig.description} />
+    <meta name="keywords" content={siteConfig.keywords.join(", ")} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{siteConfig.title}</title>
+    <link rel="sitemap" href="/sitemap-index.xml" />
 
     <SEO
       title={seoTitle}
@@ -42,114 +42,142 @@ const extraNav = siteConfig.navLinks.slice(3);
       openGraph={{
         basic: {
           title: seoTitle,
-          type: 'website',
+          type: "website",
           image: ogImage,
         },
       }}
       extend={{
-        link: [{ rel: 'icon', href: siteConfig.favicon }],
-        meta: [{ name: 'keywords', content: siteConfig.keywords.join(', ') }],
+        link: [{ rel: "icon", href: siteConfig.favicon }],
+        meta: [{ name: "keywords", content: siteConfig.keywords.join(", ") }],
       }}
     />
-		<slot name="head" />
-	</head>
-	<body class="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors">
-		<div class="mx-auto flex min-h-screen max-w-4xl flex-col px-5 py-8 md:px-10">
-			<header class="relative flex flex-col gap-5 pb-6 md:flex-row md:items-center md:justify-between md:pb-8">
-				<a class="font-heading text-center text-2xl font-semibold text-slate-900 no-underline dark:text-slate-100 md:text-left md:text-3xl" href="/">
-					{siteTitle}
-				</a>
-				<nav class="w-full md:w-auto">
-					<ul class="flex flex-wrap justify-center gap-x-4 gap-y-2 p-0 text-sm font-medium text-slate-600 dark:text-slate-300 md:text-base">
-						{primaryNav.map((link) => (
-							<li>
-								<a class="inline-flex items-center gap-1 rounded-full px-3 py-2 no-underline transition-colors hover:bg-accent-100 hover:text-accent-700 dark:hover:bg-accent-500/15 dark:hover:text-accent-200" href={link.href}>
-									{link.label}
-								</a>
-							</li>
-						))}
-						{extraNav.map((link) => (
-							<li class="hidden md:inline-flex">
-								<a class="inline-flex items-center gap-1 rounded-full px-3 py-2 no-underline transition-colors hover:bg-accent-100 hover:text-accent-700 dark:hover:bg-accent-500/15 dark:hover:text-accent-200" href={link.href}>
-									{link.label}
-								</a>
-							</li>
-						))}
-					</ul>
-				</nav>
-				<button
-					type="button"
-					data-theme-toggle
-					class="absolute right-0 top-0 inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm transition hover:border-accent-200 hover:text-accent-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-300 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-accent-400 dark:hover:text-accent-200 dark:focus-visible:ring-offset-slate-900 md:static md:ml-4"
-					aria-label="Toggle color mode"
-				>
-					<span class="sr-only">Toggle color mode</span>
-					<span class="i-ph-moon-stars-duotone text-lg block dark:hidden" aria-hidden="true"></span>
-					<span class="i-ph-sun-dim-duotone text-lg hidden dark:block" aria-hidden="true"></span>
-				</button>
-			</header>
+    <slot name="head" />
+  </head>
+  <body
+    class="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors"
+  >
+    <div
+      class="mx-auto flex min-h-screen max-w-4xl flex-col px-5 py-8 md:px-10"
+    >
+      <header
+        class="relative mb-12 flex flex-wrap items-center justify-between gap-y-4 p-4 md:mb-16 md:flex-nowrap md:gap-x-8 md:p-0"
+      >
+        <a
+          data-site-title
+          class="font-heading text-2xl font-semibold no-underline text-slate-900 whitespace-nowrap dark:text-slate-100 md:order-1 md:text-3xl"
+          href="/"
+        >
+          {siteTitle}
+        </a>
+        <div data-actions class="flex items-center gap-3 md:order-3">
+          <button
+            type="button"
+            data-theme-toggle
+						class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-accent-50 text-accent-700 shadow-sm transition-all duration-200 hover:bg-accent-100 hover:text-accent-700 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-300/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 border-none dark:bg-transparent dark:text-accent-200 dark:hover:bg-accent-500/20 dark:focus-visible:ring-offset-slate-950"
+            aria-label="Toggle color mode"
+          >
+            <span class="sr-only">Toggle color mode</span>
+            <span
+								class="i-ph-moon-stars-duotone block text-sm dark:hidden"
+              aria-hidden="true"></span>
+            <span
+								class="i-ph-sun-dim-duotone hidden text-sm dark:block"
+              aria-hidden="true"></span>
+          </button>
+        </div>
+        <nav
+          class="order-last w-full md:order-2 md:flex-1 md:min-w-0 md:overflow-hidden"
+        >
+          <ul
+            class="m-0 flex list-none flex-wrap items-center justify-center gap-3 p-0 md:justify-end"
+          >
+            {
+              navLinks.map((link) => (
+                <li>
+                  <a class={inlineLinkClasses} href={link.href}>
+                    {link.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </header>
 
-			<main class="flex-1 space-y-10 md:space-y-12">
-				<slot />
-			</main>
+      <main class="flex-1 space-y-10 md:space-y-12">
+        <slot />
+      </main>
 
-			<footer class="mt-10 border-t border-slate-200 pt-6 text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400 md:mt-16">
-				<p class="m-0 text-center md:text-left">
-					&copy; {`${currentYear} ${siteConfig.author}. ${siteConfig.footer.copyright}`}
-				</p>
-			</footer>
-		</div>
+      <footer
+        class="mt-10 border-t border-slate-200 pt-6 text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400 md:mt-16"
+      >
+        <p class="m-0 text-center md:text-left">
+          &copy; {
+            `${currentYear} ${siteConfig.author}. ${siteConfig.footer.copyright}`
+          }
+        </p>
+      </footer>
+    </div>
 
-		<script is:inline>
-		(() => {
-			const STORAGE_KEY = 'site-theme';
-			const getStored = () => {
-				try {
-					return localStorage.getItem(STORAGE_KEY);
-				} catch (err) {
-					return null;
-				}
-			};
+    <script is:inline>
+      (() => {
+        // --- Theme management ---
+        const STORAGE_KEY = "site-theme";
+        const getStored = () => {
+          try {
+            return localStorage.getItem(STORAGE_KEY);
+          } catch (err) {
+            return null;
+          }
+        };
 
-			const applyTheme = (mode) => {
-				if (mode === 'dark') {
-					document.documentElement.classList.add('dark');
-				} else {
-					document.documentElement.classList.remove('dark');
-				}
-			};
+        const applyTheme = (mode) => {
+          if (mode === "dark") {
+            document.documentElement.classList.add("dark");
+          } else {
+            document.documentElement.classList.remove("dark");
+          }
+        };
 
-			const stored = getStored();
-			if (stored) {
-				applyTheme(stored);
-			} else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-				applyTheme('dark');
-			}
+        const stored = getStored();
+        if (stored) {
+          applyTheme(stored);
+        } else if (
+          window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches
+        ) {
+          applyTheme("dark");
+        }
 
-			document.addEventListener('DOMContentLoaded', () => {
-				const toggleButtons = document.querySelectorAll('[data-theme-toggle]');
-				toggleButtons.forEach((btn) => {
-					btn.addEventListener('click', () => {
-						const isDark = document.documentElement.classList.toggle('dark');
-						try {
-							localStorage.setItem(STORAGE_KEY, isDark ? 'dark' : 'light');
-						} catch (err) {
-							/* ignore */
-						}
-					});
-				});
+        // --- Event Listeners ---
+        document.addEventListener("DOMContentLoaded", () => {
+          // Theme toggle buttons
+          const toggleButtons = document.querySelectorAll(
+            "[data-theme-toggle]"
+          );
+          toggleButtons.forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const isDark = document.documentElement.classList.toggle("dark");
+              try {
+                localStorage.setItem(STORAGE_KEY, isDark ? "dark" : "light");
+              } catch (err) {
+                /* ignore */
+              }
+            });
+          });
 
-				if (window.matchMedia) {
-					const media = window.matchMedia('(prefers-color-scheme: dark)');
-					const handler = (event) => {
-						if (!getStored()) {
-							applyTheme(event.matches ? 'dark' : 'light');
-						}
-					};
-					media.addEventListener('change', handler);
-				}
-			});
-		})();
-		</script>
-	</body>
+          // System theme change
+          if (window.matchMedia) {
+            window
+              .matchMedia("(prefers-color-scheme: dark)")
+              .addEventListener("change", (event) => {
+                if (!getStored()) {
+                  applyTheme(event.matches ? "dark" : "light");
+                }
+              });
+          }
+        });
+      })();
+    </script>
+  </body>
 </html>
