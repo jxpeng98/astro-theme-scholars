@@ -4,9 +4,9 @@ import "uno.css";
 import siteConfig from "../side.config";
 
 export interface Props {
-	title?: string;
-	description?: string;
-	image?: string;
+  title?: string;
+  description?: string;
+  image?: string;
 }
 
 const { title, description, image } = Astro.props;
@@ -15,28 +15,26 @@ const { title, description, image } = Astro.props;
 const seoTitle = title ? `${title} | ${siteConfig.title}` : siteConfig.title;
 const seoDesc = description || siteConfig.description;
 // Assumes a default OG image is specified in siteConfig, with a fallback.
-const ogImage = image || '/profile.svg';
+const ogImage = image || "/profile.svg";
 
 const currentYear = new Date().getFullYear();
 const siteTitle = siteConfig.author || siteConfig.title;
 const navLinks = siteConfig.navLinks;
 const inlineLinkClasses =
 	"block px-3 py-2 text-center font-medium text-slate-600 no-underline transition-colors duration-200 hover:bg-accent-100 hover:text-accent-700 dark:text-slate-300 dark:hover:bg-accent-500/20 dark:hover:text-accent-200 rounded-full";
-
-
 ---
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="icon" type="image/svg+xml" href={siteConfig.favicon} />
-		<meta name="description" content={siteConfig.description} />
-		<meta name="keywords" content={siteConfig.keywords.join(', ')} />
-		<meta name="generator" content={Astro.generator} />
-		<title>{siteConfig.title}</title>
-		<link rel="sitemap" href="/sitemap-index.xml" />
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href={siteConfig.favicon} />
+    <meta name="description" content={siteConfig.description} />
+    <meta name="keywords" content={siteConfig.keywords.join(", ")} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{siteConfig.title}</title>
+    <link rel="sitemap" href="/sitemap-index.xml" />
 
     <SEO
       title={seoTitle}
@@ -44,76 +42,84 @@ const inlineLinkClasses =
       openGraph={{
         basic: {
           title: seoTitle,
-          type: 'website',
+          type: "website",
           image: ogImage,
         },
       }}
       extend={{
-        link: [{ rel: 'icon', href: siteConfig.favicon }],
-        meta: [{ name: 'keywords', content: siteConfig.keywords.join(', ') }],
+        link: [{ rel: "icon", href: siteConfig.favicon }],
+        meta: [{ name: "keywords", content: siteConfig.keywords.join(", ") }],
       }}
     />
-		<slot name="head" />
-	</head>
-	<body class="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors">
-		<div class="mx-auto flex min-h-screen max-w-4xl flex-col px-5 py-8 md:px-10">
-			<header
-				class="relative mb-12 flex flex-wrap items-center justify-between gap-y-4 p-4 md:mb-16 md:flex-nowrap md:gap-x-8 md:p-0"
-			>
-				<a
-					data-site-title
-					class="font-heading text-2xl font-semibold no-underline text-slate-900 whitespace-nowrap dark:text-slate-100 md:order-1 md:text-3xl"
-					href="/"
-				>
-					{siteTitle}
-				</a>
-				<div data-actions class="flex items-center gap-3 md:order-3">
-					<button
-						type="button"
-						data-theme-toggle
-						class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-accent-400 via-accent-500 to-accent-600 text-white shadow-[0_10px_18px_rgba(55,0,179,0.25)] transition-all duration-200 hover:scale-110 hover:shadow-[0_14px_22px_rgba(55,0,179,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-200/60 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 dark:from-accent-500 dark:via-accent-400 dark:to-accent-500 dark:focus-visible:ring-offset-slate-950"
-						aria-label="Toggle color mode"
-					>
-						<span class="sr-only">Toggle color mode</span>
-						<span
-							class="i-ph-moon-stars-duotone block text-lg dark:hidden"
-							aria-hidden="true"
-						></span>
-						<span
-							class="i-ph-sun-dim-duotone hidden text-lg dark:block"
-							aria-hidden="true"
-						></span>
-					</button>
-				</div>
-				<nav class="order-last w-full md:order-2 md:flex-1 md:min-w-0 md:overflow-hidden">
-					<ul
-						class="m-0 flex list-none flex-wrap items-center justify-center gap-3 p-0 md:justify-end"
-					>
-						{
-							navLinks.map((link) => (
-								<li>
-									<a class={inlineLinkClasses} href={link.href}>
-										{link.label}
-									</a>
-								</li>
-							))
-						}
-					</ul>
-				</nav>
-			</header>
+    <slot name="head" />
+  </head>
+  <body
+    class="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors"
+  >
+    <div
+      class="mx-auto flex min-h-screen max-w-4xl flex-col px-5 py-8 md:px-10"
+    >
+      <header
+        class="relative mb-12 flex flex-wrap items-center justify-between gap-y-4 p-4 md:mb-16 md:flex-nowrap md:gap-x-8 md:p-0"
+      >
+        <a
+          data-site-title
+          class="font-heading text-2xl font-semibold no-underline text-slate-900 whitespace-nowrap dark:text-slate-100 md:order-1 md:text-3xl"
+          href="/"
+        >
+          {siteTitle}
+        </a>
+        <div data-actions class="flex items-center gap-3 md:order-3">
+          <button
+            type="button"
+            data-theme-toggle
+						class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-accent-50 text-accent-700 shadow-sm transition-all duration-200 hover:bg-accent-100 hover:text-accent-700 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-300/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 border-none dark:bg-transparent dark:text-accent-200 dark:hover:bg-accent-500/20 dark:focus-visible:ring-offset-slate-950"
+            aria-label="Toggle color mode"
+          >
+            <span class="sr-only">Toggle color mode</span>
+            <span
+								class="i-ph-moon-stars-duotone block text-sm dark:hidden"
+              aria-hidden="true"></span>
+            <span
+								class="i-ph-sun-dim-duotone hidden text-sm dark:block"
+              aria-hidden="true"></span>
+          </button>
+        </div>
+        <nav
+          class="order-last w-full md:order-2 md:flex-1 md:min-w-0 md:overflow-hidden"
+        >
+          <ul
+            class="m-0 flex list-none flex-wrap items-center justify-center gap-3 p-0 md:justify-end"
+          >
+            {
+              navLinks.map((link) => (
+                <li>
+                  <a class={inlineLinkClasses} href={link.href}>
+                    {link.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+      </header>
 
-			<main class="flex-1 space-y-10 md:space-y-12">
-				<slot />
-			</main>
+      <main class="flex-1 space-y-10 md:space-y-12">
+        <slot />
+      </main>
 
-			<footer class="mt-10 border-t border-slate-200 pt-6 text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400 md:mt-16">
-				<p class="m-0 text-center md:text-left">
-					&copy; {`${currentYear} ${siteConfig.author}. ${siteConfig.footer.copyright}`}
-				</p>
-			</footer>
-		</div>
+      <footer
+        class="mt-10 border-t border-slate-200 pt-6 text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400 md:mt-16"
+      >
+        <p class="m-0 text-center md:text-left">
+          &copy; {
+            `${currentYear} ${siteConfig.author}. ${siteConfig.footer.copyright}`
+          }
+        </p>
+      </footer>
+    </div>
 
-		<script is:inline>
+    <script is:inline>
       (() => {
         // --- Theme management ---
         const STORAGE_KEY = "site-theme";
@@ -172,6 +178,6 @@ const inlineLinkClasses =
           }
         });
       })();
-		</script>
-	</body>
+    </script>
+  </body>
 </html>
