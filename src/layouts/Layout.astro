@@ -54,17 +54,17 @@ const inlineLinkClasses =
     <slot name="head" />
   </head>
   <body
-    class="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors"
+    class="min-h-screen bg-[#fff] dark:bg-[#121212] text-[#333333] dark:text-[#e3e3e3] font-sans transition-colors duration-300"
   >
     <div
-      class="mx-auto flex min-h-screen max-w-4xl flex-col px-5 py-8 md:px-10"
+      class="mx-auto flex min-h-screen max-w-5xl flex-col px-6 md:px-12"
     >
       <header
-        class="relative mb-12 flex flex-wrap items-center justify-between gap-y-4 p-4 md:mb-16 md:flex-nowrap md:gap-x-8 md:p-0"
+        class="flex flex-wrap items-center justify-between gap-y-4 py-6 md:py-10 md:flex-nowrap md:gap-x-8"
       >
         <a
           data-site-title
-          class="font-heading text-2xl font-semibold no-underline text-slate-900 whitespace-nowrap dark:text-slate-100 md:order-1 md:text-3xl"
+          class="font-heading text-2xl font-bold tracking-tight no-underline text-[#111111] dark:text-[#f5f5f7] md:order-1"
           href="/"
         >
           {siteTitle}
@@ -73,15 +73,15 @@ const inlineLinkClasses =
           <button
             type="button"
             data-theme-toggle
-						class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-accent-50 text-accent-700 shadow-sm transition-all duration-200 hover:bg-accent-100 hover:text-accent-700 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-300/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 border-none dark:bg-transparent dark:text-accent-200 dark:hover:bg-accent-500/20 dark:focus-visible:ring-offset-slate-950"
+						class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-transparent text-[#666666] transition-colors hover:bg-[#1f1f1f]/5 dark:text-[#c4c7c5] dark:hover:bg-[#e3e3e3]/10 border-none cursor-pointer"
             aria-label="Toggle color mode"
           >
             <span class="sr-only">Toggle color mode</span>
             <span
-								class="i-ph-moon-stars-duotone block text-sm dark:hidden"
+								class="i-ph-moon-stars-duotone block text-xl dark:hidden"
               aria-hidden="true"></span>
             <span
-								class="i-ph-sun-dim-duotone hidden text-sm dark:block"
+								class="i-ph-sun-dim-duotone hidden text-xl dark:block"
               aria-hidden="true"></span>
           </button>
         </div>
@@ -89,12 +89,12 @@ const inlineLinkClasses =
           class="order-last w-full md:order-2 md:flex-1 md:min-w-0 md:overflow-hidden"
         >
           <ul
-            class="m-0 flex list-none flex-wrap items-center justify-center gap-3 p-0 md:justify-end"
+            class="m-0 flex list-none flex-wrap items-center justify-center gap-2 p-0 md:justify-end"
           >
             {
               navLinks.map((link) => (
                 <li>
-                  <a class={inlineLinkClasses} href={link.href}>
+                  <a class="block px-4 py-2 text-sm font-medium text-[#666666] no-underline transition-all hover:text-[#111111] dark:text-[#c4c7c5] dark:hover:text-[#e3e3e3] rounded-full hover:bg-[#1f1f1f]/5 dark:hover:bg-[#e3e3e3]/10" href={link.href}>
                     {link.label}
                   </a>
                 </li>
@@ -104,12 +104,12 @@ const inlineLinkClasses =
         </nav>
       </header>
 
-      <main class="flex-1 space-y-10 md:space-y-12">
+      <main class="flex-1 space-y-10 md:space-y-16">
         <slot />
       </main>
 
       <footer
-        class="mt-10 border-t border-slate-200 pt-6 text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400 md:mt-16"
+        class="mt-12 border-t border-[#1f1f1f]/10 pt-8 text-sm text-[#666666] dark:border-[#e3e3e3]/10 dark:text-[#c4c7c5] md:mt-20 pb-10"
       >
         <p class="m-0 text-center md:text-left">
           &copy; {

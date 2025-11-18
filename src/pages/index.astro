@@ -3,8 +3,9 @@ import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import { getFeaturedPapers } from '../lib/papers';
 import siteConfig from '../side.config';
+import { Image } from 'astro:assets';
 
-const posts = (await getCollection('posts'))
+const recentPosts = (await getCollection('posts'))
 	.filter((post) => !post.data.draft)
 	.sort(
 		(a, b) =>
@@ -12,8 +13,7 @@ const posts = (await getCollection('posts'))
 	)
 	.slice(0, 3);
 
-const papers = getFeaturedPapers(3);
-const socialLinks = siteConfig.socialLinks;
+const selectedPapers = getFeaturedPapers(3);
 
 const rawProfileImage = siteConfig.hero.profileImage.trim();
 const profileImageUrl = /^https?:/i.test(rawProfileImage)
@@ -24,137 +24,121 @@ const profileImageUrl = /^https?:/i.test(rawProfileImage)
 			rawProfileImage.startsWith('.') ? rawProfileImage : `../${rawProfileImage}`,
 			import.meta.url
 		  ).href;
+
+const about = {
+  name: siteConfig.author,
+  bio: siteConfig.hero.subheadline,
+  avatar: profileImageUrl,
+  socialLinks: siteConfig.socialLinks
+};
 ---
 
-<Layout>
-	<section class="flex flex-col gap-6 md:flex-row md:items-center">
-		<img
-			class="w-40 h-40 mx-auto md:mx-0 rounded-full bg-accent-100 p-2 border-[3px] border-white dark:border-slate-800 shadow-[0_16px_32px_rgba(88,28,135,0.25)]"
-			src={profileImageUrl}
-			alt={siteConfig.hero.profileAlt}
-			width="160"
-			height="160"
-		/>
-		<div class="flex flex-col gap-4 text-slate-600 dark:text-slate-300 ml-0 md:ml-8">
-			<h1 class="font-heading text-[clamp(1.8rem,3vw,2.4rem)] font-semibold leading-tight text-slate-900 dark:text-slate-100">
-				{siteConfig.hero.headline}
-			</h1>
-			<p class="max-w-[60ch]">{siteConfig.hero.subheadline}</p>
-			<ul class="flex flex-wrap gap-3 list-none m-0 p-0">
-				{socialLinks.map((link) => {
-					const iconClass = link.icon?.startsWith('i-') ? link.icon : undefined;
+<Layout title="Home">
+  <section class="fade-in-up">
+    <div class="flex flex-col-reverse gap-6 md:flex-row md:items-center md:justify-between md:gap-12">
+      <div class="flex-1 space-y-6">
+        <h1 class="font-heading text-4xl font-bold leading-tight text-[#111111] dark:text-[#f5f5f7] md:text-5xl lg:text-6xl">
+          Hello, I'm <span class="text-accent-600 dark:text-accent-400">{about.name}</span>.
+        </h1>
+        <p class="text-lg leading-relaxed text-[#333333] dark:text-[#e3e3e3] md:text-xl">
+          {about.bio}
+        </p>
+        <div class="flex flex-wrap gap-4 pt-2">
+          {
+            about.socialLinks.map((link) => (
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-2 rounded-full border border-[#747775] px-6 py-2.5 text-sm font-medium text-[#111111] transition-all hover:bg-[#1f1f1f]/5 dark:border-[#8e918f] dark:text-[#f5f5f7] dark:hover:bg-[#e3e3e3]/10 no-underline"
+              >
+                <span class={link.icon} />
+                {link.label}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+      <div class="relative h-32 w-32 shrink-0 overflow-hidden rounded-full md:h-48 md:w-48 lg:h-64 lg:w-64">
+        <Image
+          src={about.avatar}
+          alt={about.name}
+          width={300}
+          height={300}
+          class="h-full w-full object-cover"
+        />
+      </div>
+    </div>
+  </section>
 
-					return (
-						<li>
-							<a
-								class="inline-flex items-center gap-2 px-3 py-2 rounded-full bg-accent-100 text-accent-700 dark:bg-accent-500/15 dark:text-accent-200 font-medium no-underline transition-colors hover:bg-accent-200 dark:hover:bg-accent-400/20"
-								href={link.href}
-								target="_blank"
-								rel="noreferrer"
-							>
-								{iconClass ? (
-									<span class={`${iconClass} text-lg`} aria-hidden="true"></span>
-								) : link.icon ? (
-									<span>{link.icon}</span>
-								) : null}
-								<span>{link.label}</span>
-							</a>
-						</li>
-					);
-				})}
-			</ul>
-		</div>
-	</section>
+  <section class="fade-in-up animation-delay-200 space-y-6">
+    <div class="flex items-baseline justify-between">
+      <h2 class="font-heading text-2xl font-bold text-[#111111] dark:text-[#f5f5f7]">
+        Recent Posts
+      </h2>
+      <a href="/posts" class="text-sm font-medium text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300 no-underline">
+        View all
+      </a>
+    </div>
+    <div class="space-y-4">
+      {
+        recentPosts.map((post) => (
+          <a href={`/posts/${post.slug}`} class="group block no-underline">
+            <article class="flex flex-col gap-1 md:flex-row md:items-baseline md:gap-8">
+              <time datetime={post.data.publishedAt.toISOString()} class="shrink-0 text-sm text-[#666666] dark:text-[#c4c7c5] w-32">
+                {post.data.publishedAt.toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}
+              </time>
+              <div class="space-y-1">
+                <h3 class="text-lg font-bold text-[#111111] group-hover:text-accent-600 dark:text-[#f5f5f7] dark:group-hover:text-accent-400 transition-colors font-heading">
+                  {post.data.title}
+                </h3>
+                <p class="text-sm text-[#666666] dark:text-[#c4c7c5] line-clamp-2">
+                  {post.data.description}
+                </p>
+              </div>
+            </article>
+          </a>
+        ))
+      }
+    </div>
+  </section>
 
-	<section class="flex flex-col gap-4">
-		<header class="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
-			<h2 class="font-heading text-[clamp(1.4rem,2vw,1.8rem)] font-semibold text-slate-900 dark:text-slate-100">Recent Posts</h2>
-			<a class="text-sm text-accent-600 dark:text-accent-200 no-underline" href="/posts">Browse all posts</a>
-		</header>
-		<ul class="grid gap-4 list-none m-0 p-0">
-			{posts.map((post) => (
-				<li>
-					<a
-						class="flex flex-col gap-3 px-6 py-5 border border-slate-200 dark:border-slate-700 rounded-2xl bg-white dark:bg-slate-900 no-underline text-slate-900 dark:text-slate-100 shadow-[0_12px_30px_rgba(15,23,42,0.08)] dark:shadow-[0_20px_50px_rgba(8,8,16,0.45)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(76,29,149,0.18)] dark:hover:shadow-[0_24px_48px_rgba(10,10,20,0.55)]"
-						href={`/posts/${post.slug}`}
-					>
-						<h3 class="font-heading text-lg font-semibold mb-2">{post.data.title}</h3>
-						<p class="m-0 text-slate-600 dark:text-slate-300 mb-3">{post.data.description}</p>
-						<span class="inline-flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-							{new Date(post.data.publishedAt).toLocaleDateString(undefined, {
-								year: 'numeric',
-								month: 'short',
-								day: 'numeric'
-							})}
-						</span>
-					</a>
-				</li>
-			))}
-		</ul>
-	</section>
-
-	<section class="flex flex-col gap-4">
-		<header class="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:justify-between">
-			<h2 class="font-heading text-[clamp(1.4rem,2vw,1.8rem)] font-semibold text-slate-900 dark:text-slate-100">Selected Papers</h2>
-			<a class="text-sm text-accent-600 dark:text-accent-200 no-underline" href="/researches">View full list</a>
-		</header>
-		<ul class="grid gap-4 list-none m-0 p-0">
-			{papers.map((paper) => {
-				const abstractId = `home-abstract-${paper.id}`;
-				const hasAbstract = Boolean(paper.abstract);
-
-				return (
-					<li>
-						<article class="flex flex-col gap-4 border border-slate-200 dark:border-slate-700 rounded-2xl bg-white dark:bg-slate-900 px-6 pt-3 pb-6 shadow-[0_16px_32px_rgba(15,23,42,0.05)] dark:shadow-[0_24px_50px_rgba(8,8,16,0.45)]">
-							<header class="flex flex-col gap-2">
-								<h3 class="font-heading text-[clamp(1.15rem,2vw,1.4rem)] font-semibold text-slate-900 dark:text-slate-100">{paper.title}</h3>
-								<p class="m-0 text-slate-600 dark:text-slate-300">{paper.authors.join(', ')}</p>
-								<p class="m-0 text-sm text-slate-500 dark:text-slate-400">
-									{paper.venue ?? 'Venue pending'}
-									{paper.year ? ` · ${paper.year}` : ''}
-								</p>
-								{paper.keywords.length > 0 && (
-									<ul class="chips-row mt-1">
-										{paper.keywords.map((keyword) => (
-											<li class="chips-item">{keyword}</li>
-										))}
-									</ul>
-								)}
-							</header>
-
-							<div class="flex flex-wrap items-center gap-3 mt-auto">
-								{hasAbstract && (
-									<button
-										class="btn-secondary toggle-abstract"
-										type="button"
-										data-target={abstractId}
-										aria-controls={abstractId}
-										aria-expanded="false"
-									>
-										Show abstract
-									</button>
-								)}
-								{paper.url && (
-									<a class="btn-primary ml-auto" href={paper.url} target="_blank" rel="noreferrer">
-										View paper
-									</a>
-								)}
-							</div>
-
-							{hasAbstract && (
-								<p class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-4 py-4 rounded-xl -mt-2" id={abstractId} hidden>
-									{paper.abstract}
-								</p>
-							)}
-						</article>
-					</li>
-				);
-			})}
-		</ul>
-	</section>
-</Layout>
-
-<script is:inline>
+  <section class="fade-in-up animation-delay-400 space-y-6">
+    <div class="flex items-baseline justify-between">
+      <h2 class="font-heading text-2xl font-bold text-[#111111] dark:text-[#f5f5f7]">
+        Selected Papers
+      </h2>
+      <a href="/researches" class="text-sm font-medium text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300 no-underline">
+        View all
+      </a>
+    </div>
+    <div class="space-y-6">
+      {
+        selectedPapers.map((paper) => (
+          <article class="space-y-2">
+            <h3 class="text-lg font-bold text-[#111111] dark:text-[#f5f5f7] font-heading">
+              <a href={paper.url} target="_blank" class="hover:text-accent-600 dark:hover:text-accent-400 transition-colors no-underline text-inherit">
+                {paper.title}
+              </a>
+            </h3>
+            <p class="text-sm text-[#666666] dark:text-[#c4c7c5]">
+              {paper.authors.join(", ")}
+            </p>
+            <div class="flex flex-wrap gap-2 text-xs text-[#666666] dark:text-[#c4c7c5]">
+              <span class="font-medium text-[#111111] dark:text-[#f5f5f7]">{paper.venue}</span>
+              <span>•</span>
+              <span>{paper.year}</span>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</Layout><script is:inline>
 	document.addEventListener('DOMContentLoaded', () => {
 		document.querySelectorAll('.toggle-abstract').forEach((toggle) => {
 			toggle.addEventListener('click', () => {
@@ -163,16 +147,9 @@ const profileImageUrl = /^https?:/i.test(rawProfileImage)
 				const abstract = document.getElementById(targetId);
 				if (!abstract) return;
 
-				const isHidden = abstract.hasAttribute('hidden');
-				if (isHidden) {
-					abstract.removeAttribute('hidden');
-					toggle.setAttribute('aria-expanded', 'true');
-					toggle.textContent = 'Hide abstract';
-				} else {
-					abstract.setAttribute('hidden', '');
-					toggle.setAttribute('aria-expanded', 'false');
-					toggle.textContent = 'Show abstract';
-				}
+				abstract.classList.toggle('hidden');
+				const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+				toggle.setAttribute('aria-expanded', (!isExpanded).toString());
 			});
 		});
 	});

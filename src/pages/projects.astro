@@ -3,36 +3,46 @@ import Layout from '../layouts/Layout.astro';
 import { projects } from '../components/projects';
 ---
 
-<Layout>
-	<section class="flex flex-col gap-3 mb-8">
-		<h1 class="font-heading text-[clamp(2rem,3vw,2.6rem)] font-semibold text-slate-900 dark:text-slate-100">Projects</h1>
-		<p class="m-0 text-slate-600 dark:text-slate-300 max-w-[65ch]">
-			Selected lab and community projects with a focus on reproducible research infrastructure,
-			learning analytics, and open collaboration.
-		</p>
-	</section>
+<Layout title="Projects">
+  <div class="space-y-8">
+    <header class="fade-in-up max-w-2xl">
+      <h1 class="font-heading text-4xl font-bold text-[#111111] dark:text-[#f5f5f7] md:text-5xl">
+        Projects
+      </h1>
+      <p class="mt-4 text-lg text-[#666666] dark:text-[#c4c7c5]">
+        Selected lab and community projects with a focus on reproducible research infrastructure,
+        learning analytics, and open collaboration.
+      </p>
+    </header>
 
-	<section class="grid gap-5">
-		{projects.map((project) => (
-			<article class="flex flex-col gap-4 border border-slate-200 dark:border-slate-700 rounded-2xl bg-white dark:bg-slate-900 px-6 py-6 shadow-[0_16px_32px_rgba(15,23,42,0.05)] dark:shadow-[0_24px_50px_rgba(8,8,16,0.45)]">
-				<header class="flex flex-col gap-2">
-					<h2 class="font-heading text-[clamp(1.2rem,2vw,1.6rem)] font-semibold text-slate-900 dark:text-slate-100">{project.title}</h2>
-					<p class="text-sm text-slate-500 dark:text-slate-400">{project.period}</p>
-				</header>
-				<p class="m-0 text-slate-600 dark:text-slate-300">{project.description}</p>
-				<div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-					<ul class="tech-list chips-row">
-						{project.tech.map((item) => (
-							<li class="chips-item">{item}</li>
-						))}
-					</ul>
-					{project.url && (
-						<a class="btn-primary sm:ml-auto" href={project.url} target="_blank" rel="noreferrer">
-							Explore project
-						</a>
-					)}
-				</div>
-			</article>
-		))}
-	</section>
+    <div class="fade-in-up animation-delay-200 grid gap-x-8 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
+      {
+        projects.map((project) => (
+          <a
+            href={project.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group block space-y-3 no-underline"
+          >
+            <div class="flex items-center justify-between">
+              <h2 class="font-heading text-xl font-bold text-[#111111] group-hover:text-accent-600 dark:text-[#f5f5f7] dark:group-hover:text-accent-400 transition-colors">
+                {project.title}
+              </h2>
+              <span class="i-ph-arrow-up-right text-[#666666] opacity-0 transition-all group-hover:opacity-100 dark:text-[#c4c7c5]" />
+            </div>
+            <p class="text-sm leading-relaxed text-[#666666] dark:text-[#c4c7c5]">
+              {project.description}
+            </p>
+            <div class="flex flex-wrap gap-2 pt-1">
+              {project.tech.map((tag) => (
+                <span class="rounded-md bg-[#1f1f1f]/5 px-2 py-1 text-xs font-medium text-[#666666] dark:bg-[#e3e3e3]/10 dark:text-[#c4c7c5]">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </div>
 </Layout>
