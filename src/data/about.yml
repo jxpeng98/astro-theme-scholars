@@ -29,7 +29,9 @@ experience:
       - Published foundational work on measuring knowledge transfer in informal communities.
 
 service:
-  - Program Chair — Learning Analytics & Knowledge (LAK) 2025
+  - role: Program Chair Assistant
+    organization: ACM Conference on Learning at Scale (L@S) 2024
+    period: 2023 — 2024
   - Editorial Board — Journal of Learning Analytics
   - Organizer — Web Science Workshop on Social Learning Signals
 
@@ -43,3 +45,14 @@ education:
   - degree: B.S., Computer Science
     institution: Clearwater College
     year: 2014
+
+sections:
+  - title: Awards
+    items:
+      - title: Best Paper Award
+        subtitle: ACM CHI 2023
+        date: 2023
+        description: For the paper "Social Learning Signals in the Wild"
+      - title: NSF Graduate Research Fellowship
+        date: 2016 — 2021
+      - Dean's List, Clearwater College (2010-2014)

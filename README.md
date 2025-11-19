@@ -73,8 +73,35 @@ Make it your own! Customize your site by editing the configuration and data file
 
 ### About Page Content
 
-- Modify `src/data/about.yml` to update profile highlights, education, experience entries, and selected service.
-- The page at `src/pages/about.astro` parses this YAML—no code changes required after editing the data file.
+Modify `src/data/about.yml` to update your profile. This file supports standard sections and custom expandable sections.
+
+**Standard Sections:**
+
+- `hero`: Page title and introduction.
+- `profile`: Key-value pairs displayed in the sidebar (e.g., Role, Research Areas).
+- `education`: List of degrees.
+- `experience`: Professional history with bullet points.
+- `service`: Academic service (supports simple strings or structured objects with role/organization).
+
+**Custom Sections (New):**
+You can add arbitrary sections like "Awards", "Invited Talks", or "Press" using the `sections` key.
+
+```yaml
+sections:
+  - title: Awards
+    items:
+      - title: Best Paper Award
+        subtitle: ACM CHI 2023
+        date: 2023
+        description: For the paper "Social Learning Signals in the Wild"
+        link: https://example.com/award
+      - title: NSF Graduate Research Fellowship
+        date: 2016 — 2021
+      # Simple string items are also supported
+      - Dean's List, Clearwater College (2010-2014)
+```
+
+The page at `src/pages/about.astro` automatically renders these sections—no code changes required.
 
 ### Publications & Projects
 

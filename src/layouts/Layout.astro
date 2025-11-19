@@ -59,21 +59,34 @@ const inlineLinkClasses =
     <div
       class="mx-auto flex min-h-screen max-w-5xl flex-col px-6 md:px-12"
     >
-      <header
-        class="flex flex-wrap items-center justify-between gap-y-4 py-6 md:py-10 md:flex-nowrap md:gap-x-8"
-      >
+      <header class="relative flex items-center justify-between py-6 md:py-10">
         <a
           data-site-title
-          class="font-heading text-2xl font-bold tracking-tight no-underline text-gray-900 dark:text-gray-100 md:order-1 transition-transform duration-200 active:scale-95"
+          class="font-heading text-2xl font-bold tracking-tight no-underline text-gray-900 dark:text-gray-100 transition-transform duration-200 active:scale-95"
           href="/"
         >
           {siteTitle}
         </a>
-        <div data-actions class="flex items-center gap-3 md:order-3">
+
+        <!-- Desktop Navigation & Actions -->
+        <div class="hidden md:flex md:items-center md:gap-6">
+          <nav>
+            <ul class="m-0 flex list-none items-center gap-2 p-0">
+              {
+                navLinks.map((link) => (
+                  <li>
+                    <a class="block px-4 py-2 text-sm font-medium text-gray-600 no-underline transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800" href={link.href}>
+                      {link.label}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </nav>
           <button
             type="button"
             data-theme-toggle
-            class="hidden md:inline-flex h-8 w-8 items-center justify-center rounded-full bg-white border border-gray-200 shadow-sketch transition-all hover:shadow-sketch-hover hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 text-gray-600 cursor-pointer"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white border border-gray-200 shadow-sketch transition-all hover:shadow-sketch-hover hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 text-gray-600 cursor-pointer"
             aria-label="Toggle color mode"
           >
             <span class="sr-only">Toggle color mode</span>
@@ -85,23 +98,40 @@ const inlineLinkClasses =
               aria-hidden="true"></span>
           </button>
         </div>
-        <nav
-          class="order-last w-full md:order-2 md:flex-1 md:min-w-0 md:overflow-hidden"
+
+        <!-- Mobile Menu Button -->
+        <button
+          type="button"
+          id="mobile-menu-toggle"
+          class="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-full bg-white border border-gray-200 shadow-sketch transition-all hover:shadow-sketch-hover hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 text-gray-600 cursor-pointer z-50"
+          aria-label="Toggle menu"
+          aria-expanded="false"
         >
-          <ul
-            class="m-0 flex list-none flex-wrap items-center justify-center gap-2 p-0 md:justify-end"
-          >
-            {
-              navLinks.map((link) => (
+          <span class="sr-only">Toggle menu</span>
+          <span id="icon-menu" class="i-ph-list-bold text-lg transition-transform duration-200"></span>
+          <span id="icon-close" class="i-ph-x-bold text-lg hidden transition-transform duration-200"></span>
+        </button>
+
+        <!-- Mobile Dropdown Menu -->
+        <div
+          id="mobile-menu"
+          class="absolute top-full right-0 z-40 mt-2 w-48 origin-top-right rounded-2xl bg-white p-2 shadow-sketch ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700 opacity-0 scale-95 invisible transition-all duration-200 transform"
+        >
+          <nav>
+            <ul class="flex flex-col gap-1 list-none p-0 m-0">
+              {navLinks.map((link) => (
                 <li>
-                  <a class="block px-4 py-2 text-sm font-medium text-gray-600 no-underline transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800" href={link.href}>
+                  <a
+                    class="block px-4 py-2 text-sm font-medium text-gray-600 no-underline transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"
+                    href={link.href}
+                  >
                     {link.label}
                   </a>
                 </li>
-              ))
-            }
-          </ul>
-        </nav>
+              ))}
+            </ul>
+          </nav>
+        </div>
       </header>
 
       <main class="flex-1 space-y-10 md:space-y-16">
@@ -174,6 +204,46 @@ const inlineLinkClasses =
 
         // --- Event Listeners ---
         document.addEventListener("DOMContentLoaded", () => {
+          // Mobile menu functionality
+          const menuBtn = document.getElementById("mobile-menu-toggle");
+          const menu = document.getElementById("mobile-menu");
+          const iconMenu = document.getElementById("icon-menu");
+          const iconClose = document.getElementById("icon-close");
+
+          if (menuBtn && menu && iconMenu && iconClose) {
+            const toggleMenu = () => {
+              const isExpanded = menuBtn.getAttribute("aria-expanded") === "true";
+              if (isExpanded) {
+                // Close
+                menuBtn.setAttribute("aria-expanded", "false");
+                menu.classList.add("opacity-0", "scale-95", "invisible");
+                menu.classList.remove("opacity-100", "scale-100", "visible");
+                iconMenu.classList.remove("hidden");
+                iconClose.classList.add("hidden");
+              } else {
+                // Open
+                menuBtn.setAttribute("aria-expanded", "true");
+                menu.classList.remove("opacity-0", "scale-95", "invisible");
+                menu.classList.add("opacity-100", "scale-100", "visible");
+                iconMenu.classList.add("hidden");
+                iconClose.classList.remove("hidden");
+              }
+            };
+
+            menuBtn.addEventListener("click", (e) => {
+              e.stopPropagation();
+              toggleMenu();
+            });
+
+            // Close on click outside
+            document.addEventListener("click", (e) => {
+              const isExpanded = menuBtn.getAttribute("aria-expanded") === "true";
+              if (isExpanded && !menu.contains(e.target) && !menuBtn.contains(e.target)) {
+                toggleMenu();
+              }
+            });
+          }
+
           // Theme toggle buttons
           const toggleButtons = document.querySelectorAll(
             "[data-theme-toggle]"
