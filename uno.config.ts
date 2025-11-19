@@ -17,9 +17,6 @@ export default defineConfig({
 					'font-family':
 						"'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif"
 				},
-				':where(h1, h2, h3, h4, h5, h6)': {
-					'font-family': "'Playfair Display', Georgia, 'Times New Roman', serif"
-				}
 			}
 		}),
 		presetIcons({
@@ -75,7 +72,7 @@ export default defineConfig({
 			sans:
 				"-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
 			heading:
-				"'New York', 'Playfair Display', Georgia, 'Times New Roman', serif"
+				"-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
 		},
 		boxShadow: {
 			'apple': '0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02)',

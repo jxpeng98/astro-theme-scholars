@@ -40,19 +40,22 @@ const { hero, profile, experience, service, education = [] } = aboutData;
           <h2 class="font-heading text-2xl font-bold text-[#111111] dark:text-[#f5f5f7]">
             Education
           </h2>
-          <div class="space-y-6">
+          <div class="flex flex-col border-t border-gray-200 dark:border-gray-800">
             {education.map((edu) => (
-              <div class="flex flex-col gap-1">
-                <div class="flex items-baseline justify-between gap-4">
-                  <h3 class="text-lg font-bold text-[#111111] dark:text-[#f5f5f7] leading-snug font-heading">
-                    {edu.institution}
-                  </h3>
+              <div class="flex flex-col border-b border-gray-200 dark:border-gray-800 py-3">
+                <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+                  <div class="flex flex-col sm:flex-row sm:items-baseline gap-x-2">
+                    <h3 class="text-lg font-bold text-[#111111] dark:text-[#f5f5f7] leading-snug font-heading">
+                      {edu.institution}
+                    </h3>
+                    <span class="hidden sm:inline text-gray-300 dark:text-gray-700">/</span>
+                    <div class="text-base text-[#333333] dark:text-[#e3e3e3]">
+                      {edu.degree}
+                    </div>
+                  </div>
                   <span class="shrink-0 text-sm text-[#666666] dark:text-[#c4c7c5]">
                     {edu.year}
                   </span>
-                </div>
-                <div class="text-base text-[#333333] dark:text-[#e3e3e3]">
-                  {edu.degree}
                 </div>
               </div>
             ))}
@@ -64,21 +67,24 @@ const { hero, profile, experience, service, education = [] } = aboutData;
         <h2 class="font-heading text-2xl font-bold text-[#111111] dark:text-[#f5f5f7]">
           Experience
         </h2>
-        <div class="space-y-8">
+        <div class="flex flex-col border-t border-gray-200 dark:border-gray-800">
           {experience.map((exp) => (
-            <div class="flex flex-col gap-1">
-              <div class="flex items-baseline justify-between gap-4">
-                <h3 class="text-lg font-bold text-[#111111] dark:text-[#f5f5f7] leading-snug font-heading">
-                  {exp.role}
-                </h3>
+            <div class="flex flex-col gap-2 border-b border-gray-200 dark:border-gray-800 py-6 hover:bg-gray-50 dark:hover:bg-gray-800/50 -mx-4 px-4 transition-colors rounded-lg">
+              <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+                <div class="flex flex-col sm:flex-row sm:items-baseline gap-x-2">
+                  <h3 class="text-lg font-bold text-[#111111] dark:text-[#f5f5f7] leading-snug font-heading">
+                    {exp.role}
+                  </h3>
+                  <span class="hidden sm:inline text-gray-300 dark:text-gray-700">/</span>
+                  <div class="text-base text-[#333333] dark:text-[#e3e3e3]">
+                    {exp.organization}
+                  </div>
+                </div>
                 <span class="shrink-0 text-sm text-[#666666] dark:text-[#c4c7c5]">
                   {exp.period}
                 </span>
               </div>
-              <div class="text-base text-[#333333] dark:text-[#e3e3e3]">
-                {exp.organization}
-              </div>
-              <ul class="list-disc pl-5 space-y-1 text-[#666666] dark:text-[#c4c7c5] mt-2">
+              <ul class="list-disc pl-5 space-y-1 text-[#666666] dark:text-[#c4c7c5]">
                 {exp.bullets.map((bullet) => (
                   <li>{bullet}</li>
                 ))}
