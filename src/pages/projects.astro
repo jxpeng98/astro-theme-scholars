@@ -15,14 +15,14 @@ import { projects } from '../components/projects';
       </p>
     </header>
 
-    <div class="fade-in-up animation-delay-200 flex flex-col gap-4">
+    <div class="fade-in-up animation-delay-200 flex flex-col divide-y divide-gray-200 dark:divide-gray-800">
       {
         projects.map((project) => (
           <a
             href={project.url}
             target="_blank"
             rel="noopener noreferrer"
-            class="group block space-y-2 no-underline"
+            class="group block space-y-0.5 py-4 first:pt-0 last:pb-0 no-underline"
           >
             <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2">
               <h2 class="font-heading text-xl font-bold text-[#111111] group-hover:text-accent-600 dark:text-[#f5f5f7] dark:group-hover:text-accent-400 transition-colors">

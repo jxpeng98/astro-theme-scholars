@@ -73,15 +73,15 @@ const inlineLinkClasses =
           <button
             type="button"
             data-theme-toggle
-						class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-transparent text-[#666666] transition-colors hover:bg-[#1f1f1f]/5 dark:text-[#c4c7c5] dark:hover:bg-[#e3e3e3]/10 border-none cursor-pointer"
+            class="hidden md:inline-flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-sm ring-1 ring-gray-200 transition-all hover:bg-gray-50 hover:ring-gray-300 dark:bg-gray-800 dark:ring-gray-700 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 cursor-pointer"
             aria-label="Toggle color mode"
           >
             <span class="sr-only">Toggle color mode</span>
             <span
-								class="i-ph-moon-stars-duotone block text-xl dark:hidden"
+              class="i-ph-moon-stars-duotone block text-lg dark:hidden"
               aria-hidden="true"></span>
             <span
-								class="i-ph-sun-dim-duotone hidden text-xl dark:block"
+              class="i-ph-sun-dim-duotone hidden text-lg dark:block"
               aria-hidden="true"></span>
           </button>
         </div>
@@ -111,12 +111,35 @@ const inlineLinkClasses =
       <footer
         class="mt-12 border-t border-[#1f1f1f]/10 pt-8 text-sm text-[#666666] dark:border-[#e3e3e3]/10 dark:text-[#c4c7c5] md:mt-20 pb-10"
       >
-        <p class="m-0 text-center md:text-left">
+        <p class="m-0 text-center">
           &copy; {
             `${currentYear} ${siteConfig.author}. ${siteConfig.footer.copyright}`
           }
         </p>
       </footer>
+    </div>
+
+    <!-- Mobile Floating Action Buttons -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 md:hidden">
+      <button
+        type="button"
+        id="back-to-top"
+        class="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg shadow-gray-200/50 ring-1 ring-gray-200 transition-all hover:scale-110 active:scale-95 dark:bg-gray-800 dark:shadow-gray-900/50 dark:ring-gray-700 text-gray-600 dark:text-gray-300 opacity-0 translate-y-4 pointer-events-none data-[visible=true]:opacity-100 data-[visible=true]:translate-y-0 data-[visible=true]:pointer-events-auto duration-300 cursor-pointer"
+        aria-label="Back to top"
+      >
+        <span class="i-ph-arrow-up-bold text-lg"></span>
+      </button>
+      
+      <button
+        type="button"
+        data-theme-toggle
+        class="flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg shadow-gray-200/50 ring-1 ring-gray-200 transition-all hover:scale-110 active:scale-95 dark:bg-gray-800 dark:shadow-gray-900/50 dark:ring-gray-700 text-gray-600 dark:text-gray-300 cursor-pointer"
+        aria-label="Toggle color mode"
+      >
+        <span class="sr-only">Toggle color mode</span>
+        <span class="i-ph-moon-stars-duotone block text-lg dark:hidden"></span>
+        <span class="i-ph-sun-dim-duotone hidden text-lg dark:block"></span>
+      </button>
     </div>
 
     <script is:inline>
@@ -175,6 +198,23 @@ const inlineLinkClasses =
                   applyTheme(event.matches ? "dark" : "light");
                 }
               });
+          }
+
+          // Back to top functionality
+          const backToTopBtn = document.getElementById("back-to-top");
+          if (backToTopBtn) {
+            const toggleBackToTop = () => {
+              if (window.scrollY > 300) {
+                backToTopBtn.setAttribute("data-visible", "true");
+              } else {
+                backToTopBtn.setAttribute("data-visible", "false");
+              }
+            };
+
+            window.addEventListener("scroll", toggleBackToTop);
+            backToTopBtn.addEventListener("click", () => {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            });
           }
         });
       })();
