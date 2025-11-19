@@ -23,7 +23,7 @@ const orderedCategories = [
 ---
 
 <Layout title="Researches">
-  <div class="space-y-8">
+  <div class="space-y-6">
     <header class="fade-in-up max-w-2xl">
       <h1 class="font-heading text-4xl font-bold text-[#111111] dark:text-[#f5f5f7] md:text-5xl">
         Researches
@@ -34,7 +34,7 @@ const orderedCategories = [
       </p>
     </header>
 
-    <div class="space-y-10">
+    <div class="space-y-8">
       {orderedCategories.map((category) => {
         const categoryPapers = grouped.get(category);
         if (!categoryPapers?.length) {
@@ -42,7 +42,7 @@ const orderedCategories = [
         }
 
         return (
-          <section class="fade-in-up animation-delay-200 space-y-6">
+          <section class="fade-in-up animation-delay-200 space-y-4">
             <h2 class="font-heading text-2xl font-bold text-[#111111] dark:text-[#f5f5f7]">
               {category}
             </h2>
@@ -52,19 +52,21 @@ const orderedCategories = [
                 const hasAbstract = Boolean(paper.abstract);
 
                 return (
-                  <article class="group relative flex flex-col gap-2 border-b border-gray-200 dark:border-gray-800 py-6 hover:bg-gray-50 dark:hover:bg-gray-800/50 -mx-4 px-4 transition-colors">
-                    <div class="flex flex-col gap-1">
-                      <h3 class="text-lg font-bold text-[#111111] dark:text-[#f5f5f7] leading-snug font-heading">
-                        {paper.url ? (
-                          <a href={paper.url} target="_blank" rel="noreferrer" class="group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors no-underline text-inherit">
-                            {paper.title}
-                          </a>
-                        ) : (
-                          paper.title
-                        )}
-                      </h3>
-                      <div class="text-sm text-[#666666] dark:text-[#c4c7c5]">
-                        {paper.authors.join(', ')}
+                  <article class="group relative flex flex-col gap-1.5 border-b border-gray-200 dark:border-gray-800 py-3 hover:bg-gray-50 dark:hover:bg-gray-800/50 -mx-4 px-4 transition-colors">
+                    <div class="flex flex-col gap-1.5">
+                      <div class="flex flex-col gap-0">
+                        <h3 class="text-lg font-bold text-[#111111] dark:text-[#f5f5f7] leading-snug font-heading">
+                          {paper.url ? (
+                            <a href={paper.url} target="_blank" rel="noreferrer" class="group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors no-underline text-inherit">
+                              {paper.title}
+                            </a>
+                          ) : (
+                            paper.title
+                          )}
+                        </h3>
+                        <div class="text-sm text-[#666666] dark:text-[#c4c7c5]">
+                          {paper.authors.join(', ')}
+                        </div>
                       </div>
                       <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#666666] dark:text-[#c4c7c5]">
                         <span class="font-medium text-[#111111] dark:text-[#f5f5f7] bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
@@ -94,7 +96,7 @@ const orderedCategories = [
                     </div>
 
                     {hasAbstract && (
-                      <div class="hidden text-sm leading-relaxed text-[#666666] dark:text-[#c4c7c5] pl-4 border-l-2 border-accent-600/30 dark:border-accent-400/30 mt-2" id={abstractId}>
+                      <div class="hidden text-sm leading-relaxed text-[#666666] dark:text-[#c4c7c5] pl-4 border-l-2 border-accent-600/30 dark:border-accent-400/30 mt-1" id={abstractId}>
                         {paper.abstract}
                       </div>
                     )}

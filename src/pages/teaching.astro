@@ -27,7 +27,7 @@ const { current = [], past = [] } = teachingData;
 ---
 
 <Layout title="Teaching">
-  <div class="space-y-12">
+  <div class="space-y-8">
     <header class="fade-in-up max-w-2xl">
       <h1 class="font-heading text-4xl font-bold text-[#111111] dark:text-[#f5f5f7] md:text-5xl">
         Teaching
@@ -37,61 +37,65 @@ const { current = [], past = [] } = teachingData;
       </p>
     </header>
 
-    <div class="fade-in-up animation-delay-200 space-y-12">
+    <div class="fade-in-up animation-delay-200 space-y-8">
       {current.length > 0 && (
         <section class="space-y-8">
           <h2 class="font-heading text-2xl font-bold text-[#111111] dark:text-[#f5f5f7]">
             Current Modules
           </h2>
-          {current.map((section) => (
-            <div class="rounded-2xl bg-gray-50 dark:bg-gray-800/50 p-6 space-y-6">
-              <h3 class="text-sm font-bold uppercase tracking-wider text-[#111111] dark:text-[#f5f5f7]">
-                {section.term}
-              </h3>
-              <div class="flex flex-col">
-                {section.modules.map((module) => (
-                  <div class="flex flex-col gap-2 border-b border-gray-200 dark:border-gray-700/50 last:border-0 py-4 first:pt-0 last:pb-0">
-                    <div class="flex flex-col gap-1">
-                      <div class="flex items-baseline justify-between gap-4">
-                        <h4 class="text-lg font-bold text-[#111111] dark:text-[#f5f5f7] leading-snug font-heading">
-                          {module.title}
-                        </h4>
-                        <span class="shrink-0 text-sm text-[#666666] dark:text-[#c4c7c5]">
-                          {module.code}
-                        </span>
+          <div class="flex flex-col gap-12">
+            {current.map((section) => (
+              <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4 md:gap-8">
+                <div class="md:py-1">
+                  <h3 class="text-sm font-bold uppercase tracking-wider text-[#666666] dark:text-[#c4c7c5] md:text-right sticky top-24">
+                    {section.term}
+                  </h3>
+                </div>
+                <div class="flex flex-col gap-3">
+                  {section.modules.map((module) => (
+                    <div class="flex flex-col gap-2 bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800">
+                      <div class="flex flex-col gap-1">
+                        <div class="flex items-baseline justify-between gap-4">
+                          <h4 class="text-lg font-bold text-[#111111] dark:text-[#f5f5f7] leading-snug font-heading">
+                            {module.title}
+                          </h4>
+                          <span class="shrink-0 text-sm text-[#666666] dark:text-[#c4c7c5]">
+                            {module.code}
+                          </span>
+                        </div>
                       </div>
+                      <p class="text-sm text-[#666666] dark:text-[#c4c7c5] max-w-2xl">
+                        {module.summary}
+                      </p>
+                      {(module.tags?.length || module.link) && (
+                        <div class="flex flex-wrap items-center gap-3 pt-1">
+                          {module.tags?.length && (
+                            <div class="flex flex-wrap gap-2">
+                              {module.tags.map((tag) => (
+                                <span class="text-xs font-medium text-[#666666] dark:text-[#c4c7c5] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 px-2 py-0.5 rounded">
+                                  #{tag}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                          {module.link && (
+                            <a
+                              class="ml-auto text-sm font-medium text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300 no-underline"
+                              href={module.link.href}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              {module.link.label ?? 'Course website'}
+                            </a>
+                          )}
+                        </div>
+                      )}
                     </div>
-                    <p class="text-sm text-[#666666] dark:text-[#c4c7c5] max-w-2xl">
-                      {module.summary}
-                    </p>
-                    {(module.tags?.length || module.link) && (
-                      <div class="flex flex-wrap items-center gap-3 pt-1">
-                        {module.tags?.length && (
-                          <div class="flex flex-wrap gap-2">
-                            {module.tags.map((tag) => (
-                              <span class="text-xs font-medium text-[#666666] dark:text-[#c4c7c5] bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-2 py-0.5 rounded">
-                                #{tag}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                        {module.link && (
-                          <a
-                            class="ml-auto text-sm font-medium text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300 no-underline"
-                            href={module.link.href}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            {module.link.label ?? 'Course website'}
-                          </a>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </section>
       )}
 
@@ -100,32 +104,36 @@ const { current = [], past = [] } = teachingData;
           <h2 class="font-heading text-2xl font-bold text-[#111111] dark:text-[#f5f5f7]">
             Past Modules
           </h2>
-          {past.map((section) => (
-            <div class="rounded-2xl bg-gray-50 dark:bg-gray-800/50 p-6 space-y-6">
-              <h3 class="text-sm font-bold uppercase tracking-wider text-[#111111] dark:text-[#f5f5f7]">
-                {section.term}
-              </h3>
-              <div class="flex flex-col">
-                {section.modules.map((module) => (
-                  <div class="flex flex-col gap-2 border-b border-gray-200 dark:border-gray-700/50 last:border-0 py-4 first:pt-0 last:pb-0 opacity-80 hover:opacity-100 transition-opacity">
-                    <div class="flex flex-col gap-1">
-                      <div class="flex items-baseline justify-between gap-4">
-                        <h4 class="text-lg font-bold text-[#111111] dark:text-[#f5f5f7] leading-snug font-heading">
-                          {module.title}
-                        </h4>
-                        <span class="shrink-0 text-sm text-[#666666] dark:text-[#c4c7c5]">
-                          {module.code}
-                        </span>
+          <div class="flex flex-col gap-12">
+            {past.map((section) => (
+              <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4 md:gap-8">
+                <div class="md:py-1">
+                  <h3 class="text-sm font-bold uppercase tracking-wider text-[#666666] dark:text-[#c4c7c5] md:text-right sticky top-24">
+                    {section.term}
+                  </h3>
+                </div>
+                <div class="flex flex-col gap-3">
+                  {section.modules.map((module) => (
+                    <div class="flex flex-col gap-2 bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 opacity-80 hover:opacity-100">
+                      <div class="flex flex-col gap-1">
+                        <div class="flex items-baseline justify-between gap-4">
+                          <h4 class="text-lg font-bold text-[#111111] dark:text-[#f5f5f7] leading-snug font-heading">
+                            {module.title}
+                          </h4>
+                          <span class="shrink-0 text-sm text-[#666666] dark:text-[#c4c7c5]">
+                            {module.code}
+                          </span>
+                        </div>
                       </div>
+                      <p class="text-sm text-[#666666] dark:text-[#c4c7c5] max-w-2xl">
+                        {module.summary}
+                      </p>
                     </div>
-                    <p class="text-sm text-[#666666] dark:text-[#c4c7c5] max-w-2xl">
-                      {module.summary}
-                    </p>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </section>
       )}
     </div>
