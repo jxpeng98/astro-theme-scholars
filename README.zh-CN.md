@@ -1,37 +1,38 @@
-# Scholar Pages Astro 主题
+# Scholar Pages：专为学者打造的 Astro 主题
 
-为您的学术和研究作品集量身打造。这款 Astro 主题可帮助您轻松构建一个专业、快速且内容驱动的个人网站。
+这是一个专为学术界设计的 Astro 主题，旨在帮助您轻松搭建一个专业、高效且内容驱动的个人学术主页。
 
 ![Scholar Pages 主题桌面和移动端预览](https://r2imga.jxpeng.dev/2025/10/9dfa4106fa05badc9f5e80b4694c9309.png)
 
 ## 简介
 
-欢迎使用 Scholar Pages！这款功能丰富的 Astro 主题旨在帮助学者、研究人员和学生打造一个引人注目的在线形象。我们将 Astro 静态网站生成的强大功能与简单的数据驱动内容管理相结合，因此您可以专注于您的工作，而我们将为您处理构建网站的繁重工作。
+Scholar Pages 致力于帮助学者、研究人员和学生建立优雅的在线形象。我们结合了 Astro 极速的静态生成能力与简洁的数据驱动管理方式，让您无需操心繁琐的代码，专注于展示您的研究成果。
 
-该主题在构建时考虑了性能和定制性，具有自动 BibTeX 解析、用于您的个人资料和项目的基于 YAML 的内容，以及使用 UnoCSS 的实用程序优先样式。
+主题设计兼顾了性能与个性化，支持自动解析 BibTeX 生成论文列表，通过 YAML 轻松管理个人履历，并采用 UnoCSS 打造了独特的素描风格视觉体验。
 
-## 特性
+## 核心特性
 
-- **Astro 框架**: 使用 Astro 构建，用于快速、优化的静态网站生成。
-- **BibTeX 集成**: 自动解析并显示来自 BibTeX 文件的出版物。
-- **YAML 数据源**: 通过易于编辑的 YAML 文件管理个人资料、项目和教学数据。
-- **UnoCSS 样式**: 利用 UnoCSS 进行实用程序优先的样式设计，并提供可定制的主题。
-- **模块化组件**: 可重用的组件，便于定制和扩展。
-- **响应式设计**: 移动友好的布局，可在所有设备上实现最佳查看效果。
-- **SEO 优化**: 内置 SEO 最佳实践，以增强可发现性。
-- **深色模式支持**: 自动深色模式样式，提高在弱光环境下的可读性。
-- **轻松部署**: 可在流行的静态网站托管平台上部署。
+- **Astro 驱动**: 基于 Astro 构建，生成极速、SEO 友好的静态网站。
+- **素描质感设计**: 独特的极简美学，融合暖灰纸张色调与手绘风格阴影，呈现书卷气。
+- **BibTeX 无缝集成**: 直接解析 BibTeX 文件，自动生成格式规范的出版物列表。
+- **YAML 数据驱动**: 通过简单的 YAML 配置文件管理个人简介、项目和教学经历，清晰直观。
+- **UnoCSS 样式**: 采用实用主义 CSS 引擎，样式定制灵活方便。
+- **模块化组件**: 代码结构清晰，组件复用性强，易于二次开发。
+- **智能响应式**: 移动端适配优化，配备自动折叠的导航菜单，在任何设备上都优雅美观。
+- **SEO 优化**: 内置 SEO 最佳实践，提高您的学术主页在搜索引擎中的可见度。
+- **深色模式**: 自动适配系统深色模式，提供舒适的夜间阅读体验。
+- **轻松部署**: 适配 Vercel, Netlify, GitHub Pages 等主流静态托管平台。
 
-## 入门指南
+## 快速开始
 
-### 您需要准备的
+### 准备工作
 
 - [Node.js](https://nodejs.org/) (推荐 LTS 版本)
-- [Bun](https://bun.sh/)
+- [Bun](https://bun.sh/) (包管理工具)
 
-### 1. 设置您的网站
+### 1. 初始化项目
 
-克隆仓库并安装依赖项：
+克隆仓库并安装依赖：
 
 ```bash
 git clone https://github.com/jxpeng98/astro-scholars.git
@@ -39,96 +40,124 @@ cd astro-scholars
 bun install
 ```
 
-### 2. 本地开发
+### 2. 本地预览
 
-启动本地开发服务器，查看您的网站：
+启动开发服务器，实时预览您的网站：
 
 ```bash
 bun dev
 ```
 
-您的网站将在 `http://localhost:4321` 上可用。
+浏览器访问 `http://localhost:4321` 即可看到效果。
 
-## 可用命令
+## 常用命令
 
-| 命令 | 操作 |
+| 命令 | 说明 |
 | :---------------- | :------------------------------------------------- |
-| `bun install` | 安装依赖项 |
-| `bun dev` | 在 `http://localhost:4321` 启动本地开发服务器 |
-| `bun build` | 将生产站点构建到 `./dist/` |
-| `bun preview` | 在本地预览生产版本 |
-| `bun astro ...` | 访问 Astro CLI 命令 (例如, `bun astro check`) |
+| `bun install` | 安装项目依赖 |
+| `bun dev` | 启动本地开发服务器 (`http://localhost:4321`) |
+| `bun build` | 构建生产环境代码到 `./dist/` 目录 |
+| `bun preview` | 本地预览构建后的生产版本 |
+| `bun astro ...` | 调用 Astro CLI 命令 (如 `bun astro check`) |
 
-## 自定义指南
+## 定制您的学术主页
 
-打造您自己的网站！通过编辑配置文件和数据文件来自定义您的网站。
+无需深入代码细节，通过修改配置文件即可打造您的专属主页。
 
-### 品牌和导航
+### 基础配置与导航
 
-- 编辑 `src/side.config.ts` 以更改网站标题、作者姓名、英雄文案、社交链接、导航和页脚文本。
-- `hero.profileImage` 接受 CDN URL 或相对路径 (例如, `assets/profile.svg`)。
-- 社交链接图标可以使用 UnoCSS 图标类名 (例如, `i-logos:github-icon`)。这些都在 `uno.config.ts` 的安全列表中。
+- **全局设置**: 编辑 `src/side.config.ts`，配置网站标题、作者名、首页标语、社交链接以及页脚信息。
+- **头像设置**: `hero.profileImage` 支持填写 CDN 链接或本地路径 (如 `assets/profile.svg`)。
+- **社交图标**: 支持 UnoCSS 图标库 (如 `i-logos:github-icon`)，图标需在 `uno.config.ts` 的 safelist 中注册。
 
-### 个人信息页面内容
+### 个人简介 (About)
 
-- 修改 `src/data/about.yml` 以更新个人资料亮点、教育、经验条目和选定的服务。
-- `src/pages/about.astro` 页面解析此 YAML - 编辑数据文件后无需更改代码。
+通过修改 `src/data/about.yml` 来更新您的个人履历。我们支持标准模块和自定义扩展模块。
 
-### 发表和项目展示
+**标准模块：**
 
-- 使用 BibTeX 条目更新 `src/data/publications.bib`。解析后的条目将呈现在“研究”页面上。
-- 在 `src/data/projects.yml` 中定义项目; `src/components/projects.ts` 中的帮助程序将该 YAML 转换为“项目”页面上显示的卡片。
+- `hero`: 页面顶部的自我介绍。
+- `profile`: 侧边栏的个人信息（如：职位、研究方向）。
+- `education`: 教育背景列表。
+- `experience`: 工作经历（支持多条目和详细描述）。
+- `service`: 学术服务（支持简单文本或结构化信息）。
 
-### 博客文章
+**自定义模块（新功能）：**
+您可以通过 `sections` 字段添加任意自定义内容，例如“获奖情况”、“受邀演讲”或“媒体报道”。
 
-- 内容位于 `src/content/posts/` 下。添加与 `src/content/config.ts` 中模式匹配的 frontmatter 的 Markdown/MDX 文件。
+```yaml
+sections:
+  - title: Awards
+    items:
+      - title: Best Paper Award
+        subtitle: ACM CHI 2023
+        date: 2023
+        description: For the paper "Social Learning Signals in the Wild"
+        link: https://example.com/award
+      - title: NSF Graduate Research Fellowship
+        date: 2016 — 2021
+      # 也支持简单的文本条目
+      - Dean's List, Clearwater College (2010-2014)
+```
 
-### 教学相关
+修改后，`src/pages/about.astro` 会自动渲染这些内容，无需修改代码。
 
-- 编辑 `src/data/teaching.yml` 以管理当前和过去的模块。“教学”页面读取此数据并按学期使用标签芯片对模块进行分组。
+### 研究成果与项目 (Research & Projects)
 
-### 样式
+- **论文列表**: 将您的 BibTeX 条目复制到 `src/data/publications.bib`，系统会自动解析并在“Researches”页面展示。
+- **项目展示**: 在 `src/data/projects.yml` 中定义您的项目信息，它们将以卡片形式展示在“Projects”页面。
 
-- 实用程序类来自 UnoCSS。修改 `uno.config.ts` 中的快捷方式、预设或安全列表条目以调整主题样式。
-- 全局布局样式 (页眉/页脚/网格) 位于 `src/layouts/Layout.astro` 中。
+### 博客 (Blog)
 
-## 项目结构
+- 在 `src/content/posts/` 目录下创建 Markdown 或 MDX 文件即可发布文章。
+- 文章头部信息 (Frontmatter) 需符合 `src/content/config.ts` 中的定义。
+
+### 教学经历 (Teaching)
+
+- 编辑 `src/data/teaching.yml` 管理您的课程信息。系统会自动按学期分组并生成标签展示。
+
+### 样式定制
+
+- 样式基于 UnoCSS。您可以在 `uno.config.ts` 中修改预设、快捷类名或添加安全列表。
+- 全局布局（如页眉、页脚、容器宽度）可在 `src/layouts/Layout.astro` 中调整。
+
+## 项目结构概览
 
 ```text
 /
-├── public/ # 静态文件按原样提供
+├── public/               # 静态资源目录（不会被构建处理）
 ├── src/
-│ ├── assets/ # 图像、图标和主题图形
-│ ├── components/ # 可重用的 UI 组件
-│ ├── content/ # Markdown/MDX 博客文章
-│ │ └── posts/
-│ ├── data/ # 内容数据 (BibTeX & YAML 源)
-│ │ ├── about.yml
-│ │ ├── projects.yml
-│ │ ├── publications.bib
-│ │ └── teaching.yml
-│ ├── layouts/ # 站点范围的布局 (页眉/页脚)
-│ ├── lib/ # 实用程序帮助程序 (BibTeX 解析器、论文帮助程序)
-│ ├── pages/ # 路由页面 (主页、关于、文章、项目、研究、教学)
-│ └── side.config.ts # 全局站点配置 (品牌、链接、英雄)
-├── uno.config.ts # UnoCSS 预设、快捷方式和安全列表
-├── astro.config.mjs # Astro 配置
+│   ├── assets/           # 图片、图标等资源
+│   ├── components/       # UI 组件库
+│   ├── content/          # 博客文章 (Markdown/MDX)
+│   │   └── posts/
+│   ├── data/             # 数据中心 (BibTeX & YAML)
+│   │   ├── about.yml
+│   │   ├── projects.yml
+│   │   ├── publications.bib
+│   │   └── teaching.yml
+│   ├── layouts/          # 全局布局组件
+│   ├── lib/              # 工具函数 (BibTeX 解析等)
+│   ├── pages/            # 页面路由 (Home, About, Research 等)
+│   └── side.config.ts    # 网站核心配置
+├── uno.config.ts         # UnoCSS 样式配置
+├── astro.config.mjs      # Astro 项目配置
 └── bun.lock / package.json
 ```
 
-## 部署
+## 部署上线
 
-此 Astro 项目是一个静态站点。要部署，请运行 `bun build` 并将 `dist/` 目录的内容上传到任何静态托管提供商，例如：
+本项目是纯静态网站，部署非常简单。运行 `bun build` 后，将生成的 `dist/` 目录上传至任何静态托管服务即可：
 
-- [Vercel](https://vercel.com/)
+- [Vercel](https://vercel.com/) (推荐)
 - [Netlify](https://www.netlify.com/)
 - [GitHub Pages](https://pages.github.com/)
 - [Cloudflare Pages](https://pages.cloudflare.com/)
 
-## 加入
+## 参与贡献
 
-我们欢迎任何贡献！请随时提交拉取请求或提出问题以讨论您的想法。
+我们非常欢迎您的参与！无论是提交 Pull Request 修复 Bug，还是发起 Issue 讨论新功能，您的建议都能让这个主题变得更好。
 
-## 许可证
+## 开源协议
 
-该项目根据 [MIT 许可证](./LICENSE) 获得许可。您可以根据许可证中描述的条款自由使用、修改和分发该主题。
+本项目采用 [MIT 许可证](./LICENSE)。您可以自由地使用、修改和分发本主题，只需保留原作者的版权声明。

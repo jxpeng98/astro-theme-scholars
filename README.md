@@ -15,11 +15,12 @@ The theme is built with performance and customization in mind, featuring automat
 ## Features
 
 - **Astro Framework**: Built with Astro for fast, optimized static site generation.
+- **Sketch Style Design**: A unique, minimalist aesthetic featuring warm gray tones, paper-like textures, and hand-drawn style shadows.
 - **BibTeX Integration**: Automatically parse and display publications from a BibTeX file.
 - **YAML Data Sources**: Manage profile, projects, and teaching data through easy-to-edit YAML files.
 - **UnoCSS Styling**: Utilize UnoCSS for utility-first styling with customizable themes.
 - **Modular Components**: Reusable components for easy customization and extension.
-- **Responsive Design**: Mobile-friendly layouts for optimal viewing on all devices.
+- **Responsive Design**: Mobile-friendly layouts with a smart navigation menu that adapts to screen size.
 - **SEO Optimized**: Built-in SEO best practices to enhance discoverability.
 - **Dark Mode Support**: Automatic dark mode styling for improved readability in low-light environments.
 - **Easy Deployment**: Ready for deployment on popular static site hosting platforms.
