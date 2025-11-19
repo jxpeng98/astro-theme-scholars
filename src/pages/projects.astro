@@ -1,21 +1,25 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { projects } from '../components/projects';
+import Layout from "../layouts/Layout.astro";
+import { projects } from "../components/projects";
 ---
 
 <Layout title="Projects">
   <div class="space-y-6">
-        <header class="fade-in-up max-w-2xl">
-      <h1 class="font-heading text-4xl font-bold text-gray-900 dark:text-gray-100 md:text-5xl">
+    <header class="max-w-2xl">
+      <h1
+        class="font-heading text-4xl font-bold text-gray-900 dark:text-gray-100 md:text-5xl"
+      >
         Projects
       </h1>
       <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
-        Selected lab and community projects with a focus on reproducible research infrastructure,
-        learning analytics, and open collaboration.
+        Selected lab and community projects with a focus on reproducible
+        research infrastructure, learning analytics, and open collaboration.
       </p>
     </header>
 
-    <div class="fade-in-up animation-delay-200 flex flex-col divide-y divide-gray-200 dark:divide-gray-800">
+    <div
+      class="fade-in-up animation-delay-200 flex flex-col divide-y divide-gray-200 dark:divide-gray-800"
+    >
       {
         projects.map((project) => (
           <a

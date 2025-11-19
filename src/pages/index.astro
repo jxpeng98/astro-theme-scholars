@@ -1,46 +1,57 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
-import { getFeaturedPapers } from '../lib/papers';
-import siteConfig from '../side.config';
-import { Image } from 'astro:assets';
+import Layout from "../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import { getFeaturedPapers } from "../lib/papers";
+import siteConfig from "../side.config";
+import { Image } from "astro:assets";
 
-const recentPosts = (await getCollection('posts'))
-	.filter((post) => !post.data.draft)
-	.sort(
-		(a, b) =>
-			new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime()
-	)
-	.slice(0, 3);
+const recentPosts = (await getCollection("posts"))
+  .filter((post) => !post.data.draft)
+  .sort(
+    (a, b) =>
+      new Date(b.data.publishedAt).getTime() -
+      new Date(a.data.publishedAt).getTime(),
+  )
+  .slice(0, 3);
 
 const selectedPapers = getFeaturedPapers(3);
 
 const rawProfileImage = siteConfig.hero.profileImage.trim();
 const profileImageUrl = /^https?:/i.test(rawProfileImage)
-	? rawProfileImage
-	: rawProfileImage.startsWith('/')
-		? rawProfileImage
-		: new URL(
-			rawProfileImage.startsWith('.') ? rawProfileImage : `../${rawProfileImage}`,
-			import.meta.url
-		  ).href;
+  ? rawProfileImage
+  : rawProfileImage.startsWith("/")
+    ? rawProfileImage
+    : new URL(
+        rawProfileImage.startsWith(".")
+          ? rawProfileImage
+          : `../${rawProfileImage}`,
+        import.meta.url,
+      ).href;
 
 const about = {
   name: siteConfig.author,
   bio: siteConfig.hero.subheadline,
   avatar: profileImageUrl,
-  socialLinks: siteConfig.socialLinks
+  socialLinks: siteConfig.socialLinks,
 };
 ---
 
 <Layout title="Home">
-  <section class="fade-in-up">
-    <div class="flex flex-col-reverse gap-6 md:flex-row md:items-center md:justify-between md:gap-8">
+  <section>
+    <div
+      class="flex flex-col-reverse gap-6 md:flex-row md:items-center md:justify-between md:gap-8"
+    >
       <div class="flex-1 space-y-4">
-        <h1 class="font-heading text-4xl font-bold leading-tight text-gray-900 dark:text-gray-100 md:text-5xl lg:text-6xl">
-          Hello, I'm <span class="text-accent-600 dark:text-accent-400">{about.name}</span>.
+        <h1
+          class="font-heading text-4xl font-bold leading-tight text-gray-900 dark:text-gray-100 md:text-5xl lg:text-6xl"
+        >
+          Hello, I'm <span class="text-accent-600 dark:text-accent-400"
+            >{about.name}</span
+          >.
         </h1>
-        <p class="text-lg leading-relaxed text-gray-800 dark:text-gray-200 md:text-xl">
+        <p
+          class="text-lg leading-relaxed text-gray-800 dark:text-gray-200 md:text-xl"
+        >
           {about.bio}
         </p>
         <div class="flex flex-wrap gap-4 pt-2">
@@ -59,7 +70,9 @@ const about = {
           }
         </div>
       </div>
-      <div class="relative h-32 w-32 shrink-0 overflow-hidden rounded-full md:h-48 md:w-48 lg:h-64 lg:w-64 mx-auto md:mx-0">
+      <div
+        class="relative h-32 w-32 shrink-0 overflow-hidden rounded-full md:h-48 md:w-48 lg:h-64 lg:w-64 mx-auto md:mx-0"
+      >
         <Image
           src={about.avatar}
           alt={about.name}
@@ -72,11 +85,18 @@ const about = {
   </section>
 
   <section class="fade-in-up animation-delay-200 space-y-3">
-    <div class="flex items-baseline justify-between border-b border-gray-200 dark:border-gray-800 pb-2">
-      <h2 class="font-heading text-2xl font-bold text-gray-900 dark:text-gray-100">
+    <div
+      class="flex items-baseline justify-between border-b border-gray-200 dark:border-gray-800 pb-2"
+    >
+      <h2
+        class="font-heading text-2xl font-bold text-gray-900 dark:text-gray-100"
+      >
         Recent Posts
       </h2>
-      <a href="/posts" class="text-sm font-medium text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300 no-underline">
+      <a
+        href="/posts"
+        class="text-sm font-medium text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300 no-underline"
+      >
         View all
       </a>
     </div>
@@ -85,7 +105,10 @@ const about = {
         recentPosts.map((post) => (
           <a href={`/posts/${post.slug}`} class="group block no-underline">
             <article class="flex flex-col gap-1 md:flex-row md:items-baseline md:gap-8">
-              <time datetime={post.data.publishedAt.toISOString()} class="shrink-0 text-sm text-gray-600 dark:text-gray-400 w-32 font-mono">
+              <time
+                datetime={post.data.publishedAt.toISOString()}
+                class="shrink-0 text-sm text-gray-600 dark:text-gray-400 w-32 font-mono"
+              >
                 {post.data.publishedAt.toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "short",
@@ -108,11 +131,18 @@ const about = {
   </section>
 
   <section class="fade-in-up animation-delay-400 space-y-3">
-    <div class="flex items-baseline justify-between border-b border-gray-200 dark:border-gray-800 pb-2">
-      <h2 class="font-heading text-2xl font-bold text-gray-900 dark:text-gray-100">
+    <div
+      class="flex items-baseline justify-between border-b border-gray-200 dark:border-gray-800 pb-2"
+    >
+      <h2
+        class="font-heading text-2xl font-bold text-gray-900 dark:text-gray-100"
+      >
         Selected Papers
       </h2>
-      <a href="/researches" class="text-sm font-medium text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300 no-underline">
+      <a
+        href="/researches"
+        class="text-sm font-medium text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300 no-underline"
+      >
         View all
       </a>
     </div>
@@ -128,7 +158,12 @@ const about = {
                 <div class="flex flex-col gap-0">
                   <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug font-heading">
                     {paper.url ? (
-                      <a href={paper.url} target="_blank" rel="noreferrer" class="group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors no-underline text-inherit">
+                      <a
+                        href={paper.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        class="group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors no-underline text-inherit"
+                      >
                         {paper.title}
                       </a>
                     ) : (
@@ -136,12 +171,12 @@ const about = {
                     )}
                   </h3>
                   <div class="text-sm text-gray-600 dark:text-gray-400">
-                    {paper.authors.join(', ')}
+                    {paper.authors.join(", ")}
                   </div>
                 </div>
                 <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-600 dark:text-gray-400">
                   <span class="font-medium text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
-                    {paper.venue ?? 'Venue pending'}
+                    {paper.venue ?? "Venue pending"}
                   </span>
                   {paper.year && (
                     <>
@@ -167,7 +202,10 @@ const about = {
               </div>
 
               {hasAbstract && (
-                <div class="hidden text-sm leading-relaxed text-gray-600 dark:text-gray-400 pl-4 border-l-2 border-accent-600/30 dark:border-accent-400/30 mt-1" id={abstractId}>
+                <div
+                  class="hidden text-sm leading-relaxed text-gray-600 dark:text-gray-400 pl-4 border-l-2 border-accent-600/30 dark:border-accent-400/30 mt-1"
+                  id={abstractId}
+                >
                   {paper.abstract}
                 </div>
               )}
@@ -178,18 +216,18 @@ const about = {
     </div>
   </section>
 </Layout><script is:inline>
-	document.addEventListener('DOMContentLoaded', () => {
-		document.querySelectorAll('.toggle-abstract').forEach((toggle) => {
-			toggle.addEventListener('click', () => {
-				const targetId = toggle.getAttribute('data-target');
-				if (!targetId) return;
-				const abstract = document.getElementById(targetId);
-				if (!abstract) return;
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".toggle-abstract").forEach((toggle) => {
+      toggle.addEventListener("click", () => {
+        const targetId = toggle.getAttribute("data-target");
+        if (!targetId) return;
+        const abstract = document.getElementById(targetId);
+        if (!abstract) return;
 
-				abstract.classList.toggle('hidden');
-				const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
-				toggle.setAttribute('aria-expanded', (!isExpanded).toString());
-			});
-		});
-	});
+        abstract.classList.toggle("hidden");
+        const isExpanded = toggle.getAttribute("aria-expanded") === "true";
+        toggle.setAttribute("aria-expanded", (!isExpanded).toString());
+      });
+    });
+  });
 </script>

@@ -1,25 +1,25 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import teachingRaw from '../data/teaching.yml?raw';
-import { parse } from 'yaml';
+import Layout from "../layouts/Layout.astro";
+import teachingRaw from "../data/teaching.yml?raw";
+import { parse } from "yaml";
 
 interface TeachingSection {
-	term: string;
-	modules: Array<{
-		title: string;
-		code: string;
-		summary: string;
-		tags?: string[];
-		link?: {
-			label?: string;
-			href: string;
-		};
-	}>;
+  term: string;
+  modules: Array<{
+    title: string;
+    code: string;
+    summary: string;
+    tags?: string[];
+    link?: {
+      label?: string;
+      href: string;
+    };
+  }>;
 }
 
 interface TeachingData {
-	current: TeachingSection[];
-	past: TeachingSection[];
+  current: TeachingSection[];
+  past: TeachingSection[];
 }
 
 const teachingData = parse(teachingRaw) as TeachingData;
@@ -28,8 +28,10 @@ const { current = [], past = [] } = teachingData;
 
 <Layout title="Teaching">
   <div class="space-y-8">
-    <header class="fade-in-up max-w-2xl">
-      <h1 class="font-heading text-4xl font-bold text-gray-900 dark:text-gray-100 md:text-5xl">
+    <header class="max-w-2xl">
+      <h1
+        class="font-heading text-4xl font-bold text-gray-900 dark:text-gray-100 md:text-5xl"
+      >
         Teaching
       </h1>
       <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
@@ -38,104 +40,108 @@ const { current = [], past = [] } = teachingData;
     </header>
 
     <div class="fade-in-up animation-delay-200 space-y-8">
-      {current.length > 0 && (
-        <section class="space-y-8">
-          <h2 class="font-heading text-2xl font-bold text-gray-900 dark:text-gray-100">
-            Current Modules
-          </h2>
-          <div class="flex flex-col gap-6">
-            {current.map((section) => (
-              <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4">
-                <div class="md:py-1">
-                  <h3 class="text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 md:text-right sticky top-24">
-                    {section.term}
-                  </h3>
-                </div>
-                <div class="flex flex-col divide-y divide-gray-200 dark:divide-gray-800">
-                  {section.modules.map((module) => (
-                    <div class="flex flex-col gap-0.5 py-3 first:pt-0 last:pb-0">
-                      <div class="flex flex-col gap-1">
-                        <div class="flex items-baseline justify-between gap-4">
-                          <h4 class="text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug font-heading">
-                            {module.title}
-                          </h4>
-                          <span class="shrink-0 text-sm text-gray-600 dark:text-gray-400">
-                            {module.code}
-                          </span>
+      {
+        current.length > 0 && (
+          <section class="space-y-8">
+            <h2 class="font-heading text-2xl font-bold text-gray-900 dark:text-gray-100">
+              Current Modules
+            </h2>
+            <div class="flex flex-col gap-6">
+              {current.map((section) => (
+                <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4">
+                  <div class="md:py-1">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 md:text-right sticky top-24">
+                      {section.term}
+                    </h3>
+                  </div>
+                  <div class="flex flex-col divide-y divide-gray-200 dark:divide-gray-800">
+                    {section.modules.map((module) => (
+                      <div class="flex flex-col gap-0.5 py-3 first:pt-0 last:pb-0">
+                        <div class="flex flex-col gap-1">
+                          <div class="flex items-baseline justify-between gap-4">
+                            <h4 class="text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug font-heading">
+                              {module.title}
+                            </h4>
+                            <span class="shrink-0 text-sm text-gray-600 dark:text-gray-400">
+                              {module.code}
+                            </span>
+                          </div>
                         </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 max-w-2xl">
+                          {module.summary}
+                        </p>
+                        {(module.tags?.length || module.link) && (
+                          <div class="flex flex-wrap items-center gap-3 pt-1">
+                            {module.tags?.length && (
+                              <div class="flex flex-wrap gap-2">
+                                {module.tags.map((tag) => (
+                                  <span class="text-xs font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
+                                    #{tag}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                            {module.link && (
+                              <a
+                                class="ml-auto text-sm font-medium text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300 no-underline"
+                                href={module.link.href}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                {module.link.label ?? "Course website"}
+                              </a>
+                            )}
+                          </div>
+                        )}
                       </div>
-                      <p class="text-sm text-gray-600 dark:text-gray-400 max-w-2xl">
-                        {module.summary}
-                      </p>
-                      {(module.tags?.length || module.link) && (
-                        <div class="flex flex-wrap items-center gap-3 pt-1">
-                          {module.tags?.length && (
-                            <div class="flex flex-wrap gap-2">
-                              {module.tags.map((tag) => (
-                                <span class="text-xs font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
-                                  #{tag}
-                                </span>
-                              ))}
-                            </div>
-                          )}
-                          {module.link && (
-                            <a
-                              class="ml-auto text-sm font-medium text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300 no-underline"
-                              href={module.link.href}
-                              target="_blank"
-                              rel="noreferrer"
-                            >
-                              {module.link.label ?? 'Course website'}
-                            </a>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+              ))}
+            </div>
+          </section>
+        )
+      }
 
-      {past.length > 0 && (
-        <section class="space-y-8">
-          <h2 class="font-heading text-2xl font-bold text-gray-900 dark:text-gray-100">
-            Past Modules
-          </h2>
-          <div class="flex flex-col gap-6">
-            {past.map((section) => (
-              <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4">
-                <div class="md:py-1">
-                  <h3 class="text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 md:text-right sticky top-24">
-                    {section.term}
-                  </h3>
-                </div>
-                <div class="flex flex-col divide-y divide-gray-200 dark:divide-gray-800">
-                  {section.modules.map((module) => (
-                    <div class="flex flex-col gap-0.5 py-3 first:pt-0 last:pb-0">
-                      <div class="flex flex-col gap-1">
-                        <div class="flex items-baseline justify-between gap-4">
-                          <h4 class="text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug font-heading">
-                            {module.title}
-                          </h4>
-                          <span class="shrink-0 text-sm text-gray-600 dark:text-gray-400">
-                            {module.code}
-                          </span>
+      {
+        past.length > 0 && (
+          <section class="space-y-8">
+            <h2 class="font-heading text-2xl font-bold text-gray-900 dark:text-gray-100">
+              Past Modules
+            </h2>
+            <div class="flex flex-col gap-6">
+              {past.map((section) => (
+                <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4">
+                  <div class="md:py-1">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 md:text-right sticky top-24">
+                      {section.term}
+                    </h3>
+                  </div>
+                  <div class="flex flex-col divide-y divide-gray-200 dark:divide-gray-800">
+                    {section.modules.map((module) => (
+                      <div class="flex flex-col gap-0.5 py-3 first:pt-0 last:pb-0">
+                        <div class="flex flex-col gap-1">
+                          <div class="flex items-baseline justify-between gap-4">
+                            <h4 class="text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug font-heading">
+                              {module.title}
+                            </h4>
+                            <span class="shrink-0 text-sm text-gray-600 dark:text-gray-400">
+                              {module.code}
+                            </span>
+                          </div>
                         </div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 max-w-2xl">
+                          {module.summary}
+                        </p>
                       </div>
-                      <p class="text-sm text-gray-600 dark:text-gray-400 max-w-2xl">
-                        {module.summary}
-                      </p>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+              ))}
+            </div>
+          </section>
+        )
+      }
     </div>
   </div>
 </Layout>

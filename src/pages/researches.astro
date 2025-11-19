@@ -1,131 +1,151 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { getAllPapers } from '../lib/papers';
+import Layout from "../layouts/Layout.astro";
+import { getAllPapers } from "../lib/papers";
 
 const papers = getAllPapers();
-const categoryOrder = ['Publication', 'Working Paper', 'Work in Progress', 'Other'] as const;
+const categoryOrder = [
+  "Publication",
+  "Working Paper",
+  "Work in Progress",
+  "Other",
+] as const;
 const grouped = new Map<string, typeof papers>();
 
 for (const paper of papers) {
-	const category = paper.category ?? 'Other';
-	if (!grouped.has(category)) {
-		grouped.set(category, []);
-	}
-	grouped.get(category)?.push(paper);
+  const category = paper.category ?? "Other";
+  if (!grouped.has(category)) {
+    grouped.set(category, []);
+  }
+  grouped.get(category)?.push(paper);
 }
 
 const orderedCategories = [
-	...categoryOrder.filter((category) => grouped.has(category)),
-	...Array.from(grouped.keys())
-		.filter((category) => !categoryOrder.includes(category as (typeof categoryOrder)[number]))
-		.sort((a, b) => a.localeCompare(b))
+  ...categoryOrder.filter((category) => grouped.has(category)),
+  ...Array.from(grouped.keys())
+    .filter(
+      (category) =>
+        !categoryOrder.includes(category as (typeof categoryOrder)[number]),
+    )
+    .sort((a, b) => a.localeCompare(b)),
 ];
 ---
 
 <Layout title="Researches">
   <div class="space-y-6">
-    <header class="fade-in-up max-w-2xl">
-      <h1 class="font-heading text-4xl font-bold text-gray-900 dark:text-gray-100 md:text-5xl">
+    <header class="max-w-2xl">
+      <h1
+        class="font-heading text-4xl font-bold text-gray-900 dark:text-gray-100 md:text-5xl"
+      >
         Researches
       </h1>
       <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
-        Peer-reviewed publications, workshop papers, and essays focusing on the flow of learning signals
-        across scholarly and civic platforms.
+        Peer-reviewed publications, workshop papers, and essays focusing on the
+        flow of learning signals across scholarly and civic platforms.
       </p>
     </header>
 
     <div class="fade-in-up animation-delay-200 flex flex-col gap-6">
-      {orderedCategories.map((category) => {
-        const categoryPapers = grouped.get(category);
-        if (!categoryPapers?.length) {
-          return null;
-        }
+      {
+        orderedCategories.map((category) => {
+          const categoryPapers = grouped.get(category);
+          if (!categoryPapers?.length) {
+            return null;
+          }
 
-        return (
-          <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4">
-            <div class="md:py-1">
-              <h3 class="text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 md:text-right sticky top-24">
-                {category}
-              </h3>
-            </div>
-            <div class="flex flex-col gap-3">
-              {categoryPapers.map((paper) => {
-                const abstractId = `abstract-${paper.id}`;
-                const hasAbstract = Boolean(paper.abstract);
+          return (
+            <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4">
+              <div class="md:py-1">
+                <h3 class="text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 md:text-right sticky top-24">
+                  {category}
+                </h3>
+              </div>
+              <div class="flex flex-col gap-3">
+                {categoryPapers.map((paper) => {
+                  const abstractId = `abstract-${paper.id}`;
+                  const hasAbstract = Boolean(paper.abstract);
 
-                return (
-                  <article class="group relative flex flex-col gap-2">
-                    <div class="flex flex-col gap-1.5">
-                      <div class="flex flex-col gap-0">
-                        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug font-heading">
-                          {paper.url ? (
-                            <a href={paper.url} target="_blank" rel="noreferrer" class="group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors no-underline text-inherit">
-                              {paper.title}
-                            </a>
-                          ) : (
-                            paper.title
+                  return (
+                    <article class="group relative flex flex-col gap-2">
+                      <div class="flex flex-col gap-1.5">
+                        <div class="flex flex-col gap-0">
+                          <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug font-heading">
+                            {paper.url ? (
+                              <a
+                                href={paper.url}
+                                target="_blank"
+                                rel="noreferrer"
+                                class="group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors no-underline text-inherit"
+                              >
+                                {paper.title}
+                              </a>
+                            ) : (
+                              paper.title
+                            )}
+                          </h3>
+                          <div class="text-sm text-gray-600 dark:text-gray-400">
+                            {paper.authors.join(", ")}
+                          </div>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-600 dark:text-gray-400">
+                          <span class="font-medium text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
+                            {paper.venue ?? "Venue pending"}
+                          </span>
+                          {paper.year && (
+                            <>
+                              <span>•</span>
+                              <span>{paper.year}</span>
+                            </>
                           )}
-                        </h3>
-                        <div class="text-sm text-gray-600 dark:text-gray-400">
-                          {paper.authors.join(', ')}
+                          {hasAbstract && (
+                            <>
+                              <span>•</span>
+                              <button
+                                class="font-medium text-accent-600 dark:text-accent-400 hover:underline bg-transparent border-none p-0 cursor-pointer toggle-abstract"
+                                type="button"
+                                data-target={abstractId}
+                                aria-controls={abstractId}
+                                aria-expanded="false"
+                              >
+                                Abstract
+                              </button>
+                            </>
+                          )}
                         </div>
                       </div>
-                      <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-600 dark:text-gray-400">
-                        <span class="font-medium text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
-                          {paper.venue ?? 'Venue pending'}
-                        </span>
-                        {paper.year && (
-                          <>
-                            <span>•</span>
-                            <span>{paper.year}</span>
-                          </>
-                        )}
-                        {hasAbstract && (
-                          <>
-                            <span>•</span>
-                            <button
-                              class="font-medium text-accent-600 dark:text-accent-400 hover:underline bg-transparent border-none p-0 cursor-pointer toggle-abstract"
-                              type="button"
-                              data-target={abstractId}
-                              aria-controls={abstractId}
-                              aria-expanded="false"
-                            >
-                              Abstract
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    </div>
 
-                    {hasAbstract && (
-                      <div class="hidden text-sm leading-relaxed text-gray-600 dark:text-gray-400 pl-4 border-l-2 border-accent-600/30 dark:border-accent-400/30 mt-1" id={abstractId}>
-                        {paper.abstract}
-                      </div>
-                    )}
-                  </article>
-                );
-              })}
+                      {hasAbstract && (
+                        <div
+                          class="hidden text-sm leading-relaxed text-gray-600 dark:text-gray-400 pl-4 border-l-2 border-accent-600/30 dark:border-accent-400/30 mt-1"
+                          id={abstractId}
+                        >
+                          {paper.abstract}
+                        </div>
+                      )}
+                    </article>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })
+      }
     </div>
   </div>
 </Layout>
 
 <script is:inline>
-	document.addEventListener('DOMContentLoaded', () => {
-		document.querySelectorAll('.toggle-abstract').forEach((toggle) => {
-			toggle.addEventListener('click', () => {
-				const targetId = toggle.getAttribute('data-target');
-				if (!targetId) return;
-				const abstract = document.getElementById(targetId);
-				if (!abstract) return;
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".toggle-abstract").forEach((toggle) => {
+      toggle.addEventListener("click", () => {
+        const targetId = toggle.getAttribute("data-target");
+        if (!targetId) return;
+        const abstract = document.getElementById(targetId);
+        if (!abstract) return;
 
-				abstract.classList.toggle('hidden');
-				const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
-				toggle.setAttribute('aria-expanded', (!isExpanded).toString());
-			});
-		});
-	});
+        abstract.classList.toggle("hidden");
+        const isExpanded = toggle.getAttribute("aria-expanded") === "true";
+        toggle.setAttribute("aria-expanded", (!isExpanded).toString());
+      });
+    });
+  });
 </script>
