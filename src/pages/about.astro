@@ -34,15 +34,17 @@ const { hero, profile, experience, service, education = [] } = aboutData;
       </p>
     </header>
 
-    <div class="fade-in-up animation-delay-200 space-y-8">
+    <div class="fade-in-up animation-delay-200 flex flex-col gap-12">
       {education.length > 0 && (
-        <section class="space-y-6">
-          <h2 class="font-heading text-2xl font-bold text-[#111111] dark:text-[#f5f5f7]">
-            Education
-          </h2>
-          <div class="flex flex-col border-t border-gray-200 dark:border-gray-800">
+        <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4 md:gap-8">
+          <div class="md:py-1">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-[#666666] dark:text-[#c4c7c5] md:text-right sticky top-24">
+              Education
+            </h2>
+          </div>
+          <div class="flex flex-col gap-6">
             {education.map((edu) => (
-              <div class="flex flex-col border-b border-gray-200 dark:border-gray-800 py-2">
+              <div class="flex flex-col gap-1">
                 <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
                   <div class="flex flex-col sm:flex-row sm:items-baseline gap-x-2">
                     <h3 class="text-lg font-bold text-[#111111] dark:text-[#f5f5f7] leading-snug font-heading">
@@ -60,16 +62,18 @@ const { hero, profile, experience, service, education = [] } = aboutData;
               </div>
             ))}
           </div>
-        </section>
+        </div>
       )}
 
-      <section class="space-y-6">
-        <h2 class="font-heading text-2xl font-bold text-[#111111] dark:text-[#f5f5f7]">
-          Experience
-        </h2>
-        <div class="flex flex-col border-t border-gray-200 dark:border-gray-800">
+      <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4 md:gap-8">
+        <div class="md:py-1">
+          <h2 class="text-sm font-bold uppercase tracking-wider text-[#666666] dark:text-[#c4c7c5] md:text-right sticky top-24">
+            Experience
+          </h2>
+        </div>
+        <div class="flex flex-col gap-6">
           {experience.map((exp) => (
-            <div class="flex flex-col gap-2 border-b border-gray-200 dark:border-gray-800 py-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 -mx-4 px-4 transition-colors rounded-lg">
+            <div class="flex flex-col gap-2">
               <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
                 <div class="flex flex-col sm:flex-row sm:items-baseline gap-x-2">
                   <h3 class="text-lg font-bold text-[#111111] dark:text-[#f5f5f7] leading-snug font-heading">
@@ -92,18 +96,22 @@ const { hero, profile, experience, service, education = [] } = aboutData;
             </div>
           ))}
         </div>
-      </section>
+      </div>
 
-      <section class="space-y-6">
-        <h2 class="font-heading text-2xl font-bold text-[#111111] dark:text-[#f5f5f7]">
-          Selected Service
-        </h2>
-        <ul class="list-disc pl-5 space-y-2 text-[#666666] dark:text-[#c4c7c5]">
-          {service.map((item) => (
-            <li>{item}</li>
-          ))}
-        </ul>
-      </section>
+      <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4 md:gap-8">
+        <div class="md:py-1">
+          <h2 class="text-sm font-bold uppercase tracking-wider text-[#666666] dark:text-[#c4c7c5] md:text-right sticky top-24">
+            Service
+          </h2>
+        </div>
+        <div>
+          <ul class="list-disc pl-5 space-y-2 text-[#666666] dark:text-[#c4c7c5]">
+            {service.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </Layout>

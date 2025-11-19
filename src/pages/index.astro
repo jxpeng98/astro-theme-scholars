@@ -80,10 +80,10 @@ const about = {
         View all
       </a>
     </div>
-    <div class="flex flex-col">
+    <div class="flex flex-col gap-6">
       {
         recentPosts.map((post) => (
-          <a href={`/posts/${post.slug}`} class="group block no-underline border-b border-gray-100 dark:border-gray-800 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-800/50 -mx-4 px-4 py-2 transition-colors rounded-lg">
+          <a href={`/posts/${post.slug}`} class="group block no-underline">
             <article class="flex flex-col gap-1 md:flex-row md:items-baseline md:gap-8">
               <time datetime={post.data.publishedAt.toISOString()} class="shrink-0 text-sm text-[#666666] dark:text-[#c4c7c5] w-32 font-mono">
                 {post.data.publishedAt.toLocaleDateString("en-US", {
@@ -116,10 +116,10 @@ const about = {
         View all
       </a>
     </div>
-    <div class="flex flex-col">
+    <div class="flex flex-col gap-6">
       {
         selectedPapers.map((paper) => (
-          <article class="group border-b border-gray-100 dark:border-gray-800 last:border-0 hover:bg-gray-50 dark:hover:bg-gray-800/50 -mx-4 px-4 py-3 transition-colors rounded-lg flex flex-col gap-1.5">
+          <article class="group flex flex-col gap-1.5">
             <div class="flex flex-col gap-0">
               <h3 class="text-lg font-bold text-[#111111] dark:text-[#f5f5f7] font-heading leading-snug">
                 <a href={paper.url} target="_blank" class="group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors no-underline text-inherit">

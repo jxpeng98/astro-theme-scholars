@@ -8,10 +8,20 @@ const posts = (await getCollection('posts'))
 		(a, b) =>
 			new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime()
 	);
+
+const groupedPosts = new Map<string, typeof posts>();
+for (const post of posts) {
+    const year = post.data.publishedAt.getFullYear().toString();
+    if (!groupedPosts.has(year)) {
+        groupedPosts.set(year, []);
+    }
+    groupedPosts.get(year)?.push(post);
+}
+const years = Array.from(groupedPosts.keys()).sort((a, b) => b.localeCompare(a));
 ---
 
 <Layout title="Posts">
-  <div class="space-y-6">
+  <div class="space-y-8">
     <header class="fade-in-up max-w-2xl">
       <h1 class="font-heading text-4xl font-bold text-[#111111] dark:text-[#f5f5f7] md:text-5xl">
         Posts
@@ -21,29 +31,39 @@ const posts = (await getCollection('posts'))
       </p>
     </header>
 
-    <div class="fade-in-up animation-delay-200 flex flex-col border-t border-gray-200 dark:border-gray-800">
-      {posts.map((post) => (
-        <a href={`/posts/${post.slug}`} class="group block no-underline border-b border-gray-200 dark:border-gray-800 py-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 -mx-4 px-4 transition-colors">
-          <article class="flex flex-col gap-1">
-            <div class="flex flex-col gap-1">
-              <h2 class="text-lg font-bold text-[#111111] group-hover:text-accent-600 dark:text-[#f5f5f7] dark:group-hover:text-accent-400 transition-colors leading-snug font-heading">
-                {post.data.title}
-              </h2>
-              <div class="text-sm text-[#666666] dark:text-[#c4c7c5]">
-                <time datetime={post.data.publishedAt.toISOString()}>
-                  {post.data.publishedAt.toLocaleDateString('en-us', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </time>
-              </div>
-              <p class="text-sm text-[#666666] dark:text-[#c4c7c5] line-clamp-2">
-                {post.data.description}
-              </p>
-            </div>
-          </article>
-        </a>
+    <div class="fade-in-up animation-delay-200 flex flex-col gap-12">
+      {years.map((year) => (
+        <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4 md:gap-8">
+          <div class="md:py-1">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-[#666666] dark:text-[#c4c7c5] md:text-right sticky top-24">
+              {year}
+            </h2>
+          </div>
+          <div class="flex flex-col gap-6">
+            {groupedPosts.get(year)?.map((post) => (
+              <a href={`/posts/${post.slug}`} class="group block no-underline">
+                <article class="flex flex-col gap-1">
+                  <div class="flex flex-col gap-1">
+                    <h2 class="text-lg font-bold text-[#111111] group-hover:text-accent-600 dark:text-[#f5f5f7] dark:group-hover:text-accent-400 transition-colors leading-snug font-heading">
+                      {post.data.title}
+                    </h2>
+                    <div class="text-sm text-[#666666] dark:text-[#c4c7c5]">
+                      <time datetime={post.data.publishedAt.toISOString()}>
+                        {post.data.publishedAt.toLocaleDateString('en-us', {
+                          month: 'long',
+                          day: 'numeric',
+                        })}
+                      </time>
+                    </div>
+                    <p class="text-sm text-[#666666] dark:text-[#c4c7c5] line-clamp-2">
+                      {post.data.description}
+                    </p>
+                  </div>
+                </article>
+              </a>
+            ))}
+          </div>
+        </div>
       ))}
     </div>
   </div>
