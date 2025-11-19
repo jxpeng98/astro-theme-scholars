@@ -41,43 +41,42 @@ export default defineConfig({
 	},
 	theme: {
 		colors: {
-			// Apple-style grays and accents
+			// Sketch-style warm grays and monochrome accents
 			gray: {
-				50: '#fbfbfd',
-				100: '#f5f5f7',
-				200: '#e5e5e7',
-				300: '#d2d2d7',
-				400: '#aeaeb2',
-				500: '#86868b',
-				600: '#6e6e73',
-				700: '#424245',
-				800: '#1d1d1f',
-				900: '#121212',
+				50: '#faf9f6', // Paper white
+				100: '#f5f5f0',
+				200: '#e6e6e0',
+				300: '#d4d4cc',
+				400: '#a8a8a0',
+				500: '#787870',
+				600: '#5c5c55',
+				700: '#40403a',
+				800: '#262624',
+				900: '#1a1a19',
 			},
 			accent: {
-				50: '#F5F8FF',
-				100: '#EBF1FF',
-				200: '#D6E4FF',
-				300: '#B3CCFF',
-				400: '#80A8FF',
-				500: '#4D84FF',
-				600: '#2E6BE6', // Apple-like blue
-				700: '#1A4DB3',
-				800: '#103380',
-				900: '#0A2159'
+				50: '#f5f5f5',
+				100: '#e5e5e5',
+				200: '#cccccc',
+				300: '#b3b3b3',
+				400: '#999999',
+				500: '#808080',
+				600: '#404040', // Pencil lead
+				700: '#262626',
+				800: '#171717',
+				900: '#0a0a0a'
 			},
 		},
 		fontFamily: {
-			// Apple prioritizes system sans-serif
+			// Clean sans-serif for a technical sketch look
 			sans:
 				"-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
 			heading:
 				"-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
 		},
 		boxShadow: {
-			'apple': '0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02)',
-			'apple-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02)',
-			'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
+			'sketch': '2px 2px 0px 0px rgba(0,0,0,0.1)',
+			'sketch-hover': '4px 4px 0px 0px rgba(0,0,0,0.15)',
 		},
 		animation: {
 			'fade-in': 'fadeIn 0.5s ease-out forwards',

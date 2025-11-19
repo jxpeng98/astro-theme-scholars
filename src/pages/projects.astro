@@ -5,11 +5,11 @@ import { projects } from '../components/projects';
 
 <Layout title="Projects">
   <div class="space-y-6">
-    <header class="fade-in-up max-w-2xl">
-      <h1 class="font-heading text-4xl font-bold text-[#111111] dark:text-[#f5f5f7] md:text-5xl">
+        <header class="fade-in-up max-w-2xl">
+      <h1 class="font-heading text-4xl font-bold text-gray-900 dark:text-gray-100 md:text-5xl">
         Projects
       </h1>
-      <p class="mt-4 text-lg text-[#666666] dark:text-[#c4c7c5]">
+      <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
         Selected lab and community projects with a focus on reproducible research infrastructure,
         learning analytics, and open collaboration.
       </p>
@@ -25,18 +25,18 @@ import { projects } from '../components/projects';
             class="group block space-y-0.5 py-4 first:pt-0 last:pb-0 no-underline"
           >
             <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2">
-              <h2 class="font-heading text-xl font-bold text-[#111111] group-hover:text-accent-600 dark:text-[#f5f5f7] dark:group-hover:text-accent-400 transition-colors">
+              <h2 class="font-heading text-xl font-bold text-gray-900 group-hover:text-accent-600 dark:text-gray-100 dark:group-hover:text-accent-400 transition-colors">
                 {project.title}
               </h2>
               <div class="flex flex-wrap gap-2">
                 {project.tech.map((tag) => (
-                  <span class="text-xs font-medium text-[#666666] dark:text-[#c4c7c5] bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
+                  <span class="text-xs font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
                     {tag}
                   </span>
                 ))}
               </div>
             </div>
-            <p class="text-sm leading-relaxed text-[#666666] dark:text-[#c4c7c5] max-w-3xl">
+            <p class="text-sm leading-relaxed text-gray-600 dark:text-gray-400 max-w-3xl">
               {project.description}
             </p>
           </a>

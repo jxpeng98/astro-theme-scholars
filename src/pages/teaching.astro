@@ -29,10 +29,10 @@ const { current = [], past = [] } = teachingData;
 <Layout title="Teaching">
   <div class="space-y-8">
     <header class="fade-in-up max-w-2xl">
-      <h1 class="font-heading text-4xl font-bold text-[#111111] dark:text-[#f5f5f7] md:text-5xl">
+      <h1 class="font-heading text-4xl font-bold text-gray-900 dark:text-gray-100 md:text-5xl">
         Teaching
       </h1>
-      <p class="mt-4 text-lg text-[#666666] dark:text-[#c4c7c5]">
+      <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
         Courses designed to bridge technical skills with critical inquiry.
       </p>
     </header>
@@ -40,14 +40,14 @@ const { current = [], past = [] } = teachingData;
     <div class="fade-in-up animation-delay-200 space-y-8">
       {current.length > 0 && (
         <section class="space-y-8">
-          <h2 class="font-heading text-2xl font-bold text-[#111111] dark:text-[#f5f5f7]">
+          <h2 class="font-heading text-2xl font-bold text-gray-900 dark:text-gray-100">
             Current Modules
           </h2>
           <div class="flex flex-col gap-6">
             {current.map((section) => (
               <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4">
                 <div class="md:py-1">
-                  <h3 class="text-sm font-bold uppercase tracking-wider text-[#666666] dark:text-[#c4c7c5] md:text-right sticky top-24">
+                  <h3 class="text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 md:text-right sticky top-24">
                     {section.term}
                   </h3>
                 </div>
@@ -56,15 +56,15 @@ const { current = [], past = [] } = teachingData;
                     <div class="flex flex-col gap-0.5 py-3 first:pt-0 last:pb-0">
                       <div class="flex flex-col gap-1">
                         <div class="flex items-baseline justify-between gap-4">
-                          <h4 class="text-lg font-bold text-[#111111] dark:text-[#f5f5f7] leading-snug font-heading">
+                          <h4 class="text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug font-heading">
                             {module.title}
                           </h4>
-                          <span class="shrink-0 text-sm text-[#666666] dark:text-[#c4c7c5]">
+                          <span class="shrink-0 text-sm text-gray-600 dark:text-gray-400">
                             {module.code}
                           </span>
                         </div>
                       </div>
-                      <p class="text-sm text-[#666666] dark:text-[#c4c7c5] max-w-2xl">
+                      <p class="text-sm text-gray-600 dark:text-gray-400 max-w-2xl">
                         {module.summary}
                       </p>
                       {(module.tags?.length || module.link) && (
@@ -72,7 +72,7 @@ const { current = [], past = [] } = teachingData;
                           {module.tags?.length && (
                             <div class="flex flex-wrap gap-2">
                               {module.tags.map((tag) => (
-                                <span class="text-xs font-medium text-[#666666] dark:text-[#c4c7c5] bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
+                                <span class="text-xs font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
                                   #{tag}
                                 </span>
                               ))}
@@ -101,14 +101,14 @@ const { current = [], past = [] } = teachingData;
 
       {past.length > 0 && (
         <section class="space-y-8">
-          <h2 class="font-heading text-2xl font-bold text-[#111111] dark:text-[#f5f5f7]">
+          <h2 class="font-heading text-2xl font-bold text-gray-900 dark:text-gray-100">
             Past Modules
           </h2>
           <div class="flex flex-col gap-6">
             {past.map((section) => (
               <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4">
                 <div class="md:py-1">
-                  <h3 class="text-sm font-bold uppercase tracking-wider text-[#666666] dark:text-[#c4c7c5] md:text-right sticky top-24">
+                  <h3 class="text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 md:text-right sticky top-24">
                     {section.term}
                   </h3>
                 </div>
@@ -117,15 +117,15 @@ const { current = [], past = [] } = teachingData;
                     <div class="flex flex-col gap-0.5 py-3 first:pt-0 last:pb-0">
                       <div class="flex flex-col gap-1">
                         <div class="flex items-baseline justify-between gap-4">
-                          <h4 class="text-lg font-bold text-[#111111] dark:text-[#f5f5f7] leading-snug font-heading">
+                          <h4 class="text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug font-heading">
                             {module.title}
                           </h4>
-                          <span class="shrink-0 text-sm text-[#666666] dark:text-[#c4c7c5]">
+                          <span class="shrink-0 text-sm text-gray-600 dark:text-gray-400">
                             {module.code}
                           </span>
                         </div>
                       </div>
-                      <p class="text-sm text-[#666666] dark:text-[#c4c7c5] max-w-2xl">
+                      <p class="text-sm text-gray-600 dark:text-gray-400 max-w-2xl">
                         {module.summary}
                       </p>
                     </div>

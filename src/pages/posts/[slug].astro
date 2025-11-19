@@ -18,10 +18,10 @@ const { Content } = await post.render();
 	<Fragment slot="title">{post.data.title} · Your Name</Fragment>
 	<section class="flex flex-col gap-3 mb-8">
 		<p class="uppercase tracking-[0.12em] text-xs text-accent-600 font-bold m-0">Post</p>
-		<h1 class="font-heading text-[clamp(2rem,3vw,2.8rem)] font-bold text-[#111111] dark:text-[#f5f5f7] m-0">
+		<h1 class="font-heading text-[clamp(2rem,3vw,2.8rem)] font-bold text-gray-900 dark:text-gray-100 m-0">
 			{post.data.title}
 		</h1>
-		<p class="flex flex-wrap gap-4 text-sm text-[#666666] dark:text-[#c4c7c5] m-0">
+		<p class="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400 m-0">
 			<time class="font-medium" datetime={post.data.publishedAt.toISOString()}>
 				{new Date(post.data.publishedAt).toLocaleDateString(undefined, {
 					year: 'numeric',
@@ -42,10 +42,10 @@ const { Content } = await post.render();
 				</span>
 			)}
 		</p>
-		<p class="m-0 text-[#333333] dark:text-[#e3e3e3] max-w-[65ch]">{post.data.description}</p>
+		<p class="m-0 text-gray-800 dark:text-gray-200 max-w-[65ch]">{post.data.description}</p>
 	</section>
 
-	<article class="prose prose-neutral dark:prose-invert max-w-none text-[1.05rem] leading-7 prose-headings:font-heading prose-headings:font-bold prose-headings:text-[#111111] dark:prose-headings:text-[#f5f5f7] prose-p:text-[#333333] dark:prose-p:text-[#e3e3e3]">
+	<article class="prose prose-neutral dark:prose-invert max-w-none text-[1.05rem] leading-7 prose-headings:font-heading prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-gray-100 prose-p:text-gray-800 dark:prose-p:text-gray-200">
 		<Content />
 	</article>
 

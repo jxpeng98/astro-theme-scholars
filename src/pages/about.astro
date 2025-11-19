@@ -26,10 +26,10 @@ const { hero, profile, experience, service, education = [] } = aboutData;
 <Layout title="About">
   <div class="space-y-8">
     <header class="fade-in-up max-w-2xl">
-      <h1 class="font-heading text-4xl font-bold text-[#111111] dark:text-[#f5f5f7] md:text-5xl">
+      <h1 class="font-heading text-4xl font-bold text-gray-900 dark:text-gray-100 md:text-5xl">
         {hero.title}
       </h1>
-      <p class="mt-4 text-lg text-[#666666] dark:text-[#c4c7c5]">
+      <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
         {hero.description}
       </p>
     </header>
@@ -38,7 +38,7 @@ const { hero, profile, experience, service, education = [] } = aboutData;
       {education.length > 0 && (
         <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4">
           <div class="md:py-1">
-            <h2 class="text-sm font-bold uppercase tracking-wider text-[#666666] dark:text-[#c4c7c5] md:text-right sticky top-24">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 md:text-right sticky top-24">
               Education
             </h2>
           </div>
@@ -47,15 +47,15 @@ const { hero, profile, experience, service, education = [] } = aboutData;
               <div class="flex flex-col gap-1">
                 <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
                   <div class="flex flex-col sm:flex-row sm:items-baseline gap-x-2">
-                    <h3 class="text-lg font-bold text-[#111111] dark:text-[#f5f5f7] leading-snug font-heading">
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug font-heading">
                       {edu.institution}
                     </h3>
                     <span class="hidden sm:inline text-gray-300 dark:text-gray-700">/</span>
-                    <div class="text-base text-[#333333] dark:text-[#e3e3e3]">
+                    <div class="text-base text-gray-800 dark:text-gray-200">
                       {edu.degree}
                     </div>
                   </div>
-                  <span class="shrink-0 text-sm text-[#666666] dark:text-[#c4c7c5]">
+                  <span class="shrink-0 text-sm text-gray-600 dark:text-gray-400">
                     {edu.year}
                   </span>
                 </div>
@@ -67,7 +67,7 @@ const { hero, profile, experience, service, education = [] } = aboutData;
 
       <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4">
         <div class="md:py-1">
-          <h2 class="text-sm font-bold uppercase tracking-wider text-[#666666] dark:text-[#c4c7c5] md:text-right sticky top-24">
+          <h2 class="text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 md:text-right sticky top-24">
             Experience
           </h2>
         </div>
@@ -76,19 +76,19 @@ const { hero, profile, experience, service, education = [] } = aboutData;
             <div class="flex flex-col gap-2">
               <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
                 <div class="flex flex-col sm:flex-row sm:items-baseline gap-x-2">
-                  <h3 class="text-lg font-bold text-[#111111] dark:text-[#f5f5f7] leading-snug font-heading">
+                  <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug font-heading">
                     {exp.role}
                   </h3>
                   <span class="hidden sm:inline text-gray-300 dark:text-gray-700">/</span>
-                  <div class="text-base text-[#333333] dark:text-[#e3e3e3]">
+                  <div class="text-base text-gray-800 dark:text-gray-200">
                     {exp.organization}
                   </div>
                 </div>
-                <span class="shrink-0 text-sm text-[#666666] dark:text-[#c4c7c5]">
+                <span class="shrink-0 text-sm text-gray-600 dark:text-gray-400">
                   {exp.period}
                 </span>
               </div>
-              <ul class="list-disc pl-5 space-y-1 text-[#666666] dark:text-[#c4c7c5]">
+              <ul class="list-disc pl-5 space-y-1 text-gray-600 dark:text-gray-400">
                 {exp.bullets.map((bullet) => (
                   <li>{bullet}</li>
                 ))}
@@ -100,12 +100,12 @@ const { hero, profile, experience, service, education = [] } = aboutData;
 
       <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4">
         <div class="md:py-1">
-          <h2 class="text-sm font-bold uppercase tracking-wider text-[#666666] dark:text-[#c4c7c5] md:text-right sticky top-24">
+          <h2 class="text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 md:text-right sticky top-24">
             Service
           </h2>
         </div>
         <div>
-          <ul class="list-disc pl-5 space-y-2 text-[#666666] dark:text-[#c4c7c5]">
+          <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
             {service.map((item) => (
               <li>{item}</li>
             ))}
