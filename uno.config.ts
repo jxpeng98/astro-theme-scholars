@@ -17,9 +17,6 @@ export default defineConfig({
 					'font-family':
 						"'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif"
 				},
-				':where(h1, h2, h3, h4, h5, h6)': {
-					'font-family': "'Playfair Display', Georgia, 'Times New Roman', serif"
-				}
 			}
 		}),
 		presetIcons({
@@ -44,27 +41,56 @@ export default defineConfig({
 	},
 	theme: {
 		colors: {
-			accent: {
-				50: '#FBF7FE',
-                100: '#F3E4FD',
-                200: '#E8C5FB',
-                300: '#D99FF8',
-                400: '#C979F5',
-                500: '#B754E9',
-                600: '#A033D4',
-                700: '#851AB6',
-                800: '#6B0099',
-                900: '#58007E'
+			// Sketch-style warm grays and monochrome accents
+			gray: {
+				50: '#faf9f6', // Paper white
+				100: '#f5f5f0',
+				200: '#e6e6e0',
+				300: '#d4d4cc',
+				400: '#a8a8a0',
+				500: '#787870',
+				600: '#5c5c55',
+				700: '#40403a',
+				800: '#262624',
+				900: '#1a1a19',
 			},
-			muted: '#475569'
+			accent: {
+				50: '#f5f5f5',
+				100: '#e5e5e5',
+				200: '#cccccc',
+				300: '#b3b3b3',
+				400: '#999999',
+				500: '#808080',
+				600: '#404040', // Pencil lead
+				700: '#262626',
+				800: '#171717',
+				900: '#0a0a0a'
+			},
 		},
 		fontFamily: {
+			// Clean sans-serif for a technical sketch look
 			sans:
-				"'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif",
-			heading: "'Playfair Display', Georgia, 'Times New Roman', serif"
+				"-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+			heading:
+				"-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
 		},
 		boxShadow: {
-			card: '0 16px 32px rgba(15, 23, 42, 0.05)'
+			'sketch': '2px 2px 0px 0px rgba(0,0,0,0.1)',
+			'sketch-hover': '4px 4px 0px 0px rgba(0,0,0,0.15)',
+		},
+		animation: {
+			'fade-in': 'fadeIn 0.5s ease-out forwards',
+			'fade-in-up': 'fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+		},
+		keyframes: {
+			fadeIn: {
+				'0%': { opacity: '0' },
+				'100%': { opacity: '1' },
+			},
+			fadeInUp: {
+				'0%': { opacity: '0', transform: 'translateY(20px)' },
+				'100%': { opacity: '1', transform: 'translateY(0)' },
+			},
 		}
 	},
 	transformers: [transformerDirectives()]

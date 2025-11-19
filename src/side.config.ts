@@ -48,7 +48,6 @@ export const siteConfig: SiteConfig = {
 		{ label: 'LinkedIn', href: 'https://www.linkedin.com/in/your-handle', icon: 'i-mdi:linkedin'},
 	],
 	navLinks: [
-		{ href: '/', label: 'Home' },
 		{ href: '/about', label: 'About' },
 		{ href: '/researches', label: 'Researches' },
 		{ href: '/teaching', label: 'Teaching' },

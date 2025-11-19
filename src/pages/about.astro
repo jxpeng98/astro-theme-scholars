@@ -3,6 +3,19 @@ import Layout from '../layouts/Layout.astro';
 import aboutRaw from '../data/about.yml?raw';
 import { parse } from 'yaml';
 
+interface CustomItem {
+  title?: string;
+  subtitle?: string;
+  date?: string;
+  description?: string;
+  link?: string;
+}
+
+interface CustomSection {
+  title: string;
+  items: (string | CustomItem)[];
+}
+
 interface AboutData {
 	hero: {
 		title: string;
@@ -15,70 +28,178 @@ interface AboutData {
 		period: string;
 		bullets: string[];
 	}>;
-	service: string[];
+	service: Array<string | { role: string; organization: string; period: string }>;
 	education?: Array<{ degree: string; institution: string; year: string | number }>;
+  sections?: CustomSection[];
 }
 
 const aboutData = parse(aboutRaw) as AboutData;
-const { hero, profile, experience, service, education = [] } = aboutData;
+const { hero, profile, experience, service, education = [], sections = [] } = aboutData;
 ---
 
-<Layout>
-	<section class="flex flex-col gap-3 mb-8">
-		<h1 class="font-heading text-[clamp(2rem,3vw,2.6rem)] font-semibold text-slate-900 dark:text-slate-100">
-			{hero.title}
-		</h1>
-		<p class="m-0 text-slate-600 dark:text-slate-300 max-w-[65ch]">{hero.description}</p>
-	</section>
+<Layout title="About">
+  <div class="space-y-8">
+    <header class="fade-in-up max-w-2xl">
+      <h1 class="font-heading text-4xl font-bold text-gray-900 dark:text-gray-100 md:text-5xl">
+        {hero.title}
+      </h1>
+      <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
+        {hero.description}
+      </p>
+    </header>
 
-	{education.length > 0 && (
-		<section class="flex flex-col gap-3">
-			<h2 class="font-heading text-xl font-semibold text-slate-900 dark:text-slate-100">Education</h2>
-			<ul class="list-disc pl-6 space-y-3 text-slate-600 dark:text-slate-300 m-0">
-				{education.map((item) => (
-					<li>
-						<div class="font-semibold text-slate-900 dark:text-slate-100">{item.degree}</div>
-						<div class="text-sm text-slate-500 dark:text-slate-400">{item.institution} · {item.year}</div>
-					</li>
-				))}
-			</ul>
-		</section>
-	)}
+    <div class="fade-in-up animation-delay-200 flex flex-col gap-6">
+      {education.length > 0 && (
+        <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4">
+          <div class="md:py-1">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 md:text-right sticky top-24">
+              Education
+            </h2>
+          </div>
+          <div class="flex flex-col">
+            {education.map((edu) => (
+              <div class="flex flex-col gap-1">
+                <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+                  <div class="flex flex-col sm:flex-row sm:items-baseline gap-x-2">
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug font-heading">
+                      {edu.institution}
+                    </h3>
+                    <span class="hidden sm:inline text-gray-300 dark:text-gray-700">/</span>
+                    <div class="text-base text-gray-800 dark:text-gray-200">
+                      {edu.degree}
+                    </div>
+                  </div>
+                  <span class="shrink-0 text-sm text-gray-600 dark:text-gray-400">
+                    {edu.year}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
-	<section class="mt-8 flex flex-col gap-3">
-		<h2 class="font-heading text-xl font-semibold text-slate-900 dark:text-slate-100">Profile</h2>
-		<ul class="list-disc pl-6 space-y-2 text-slate-600 dark:text-slate-300 m-0">
-			{profile.map((item) => (
-				<li>
-					<strong>{item.label}:</strong> {item.value}
-				</li>
-			))}
-		</ul>
-	</section>
+      <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4">
+        <div class="md:py-1">
+          <h2 class="text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 md:text-right sticky top-24">
+            Experience
+          </h2>
+        </div>
+        <div class="flex flex-col gap-3">
+          {experience.map((exp) => (
+            <div class="flex flex-col gap-2">
+              <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+                <div class="flex flex-col sm:flex-row sm:items-baseline gap-x-2">
+                  <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug font-heading">
+                    {exp.role}
+                  </h3>
+                  <span class="hidden sm:inline text-gray-300 dark:text-gray-700">/</span>
+                  <div class="text-base text-gray-800 dark:text-gray-200">
+                    {exp.organization}
+                  </div>
+                </div>
+                <span class="shrink-0 text-sm text-gray-600 dark:text-gray-400">
+                  {exp.period}
+                </span>
+              </div>
+              <ul class="list-disc pl-5 space-y-1 text-gray-600 dark:text-gray-400">
+                {exp.bullets.map((bullet) => (
+                  <li>{bullet}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
 
-	<section class="mt-8 flex flex-col gap-4">
-		<h2 class="font-heading text-xl font-semibold text-slate-900 dark:text-slate-100">Experience</h2>
-		{experience.map((entry, idx) => (
-			<article class="border-b border-slate-200 dark:border-slate-700 pb-4 mb-6" class:list={{ 'border-none pb-0 mb-0': idx === experience.length - 1 }}>
-				<h3 class="font-heading text-lg font-semibold text-slate-900 dark:text-slate-100">
-					{entry.role} · {entry.organization}
-				</h3>
-				<p class="text-sm text-slate-500 dark:text-slate-400 mt-1">{entry.period}</p>
-				<ul class="list-disc pl-6 space-y-2 text-slate-600 dark:text-slate-300 m-0 mt-2">
-					{entry.bullets.map((bullet) => (
-						<li>{bullet}</li>
-					))}
-				</ul>
-			</article>
-		))}
-	</section>
+      <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4">
+        <div class="md:py-1">
+          <h2 class="text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 md:text-right sticky top-24">
+            Service
+          </h2>
+        </div>
+        <div>
+          <ul class="list-disc pl-5 space-y-2 text-gray-600 dark:text-gray-400">
+            {service.map((item) => {
+              if (typeof item === 'string') {
+                return <li>{item}</li>;
+              }
+              return (
+                <li>
+                  <span class="font-medium text-gray-900 dark:text-gray-100">{item.role}</span>
+                  <span class="text-gray-400 dark:text-gray-600 mx-1">—</span>
+                  <span>{item.organization}</span>
+                  <span class="text-gray-400 dark:text-gray-600 mx-1">({item.period})</span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
 
-	<section class="mt-8 flex flex-col gap-3">
-		<h2 class="font-heading text-xl font-semibold text-slate-900 dark:text-slate-100">Selected Service</h2>
-		<ul class="list-disc pl-6 space-y-2 text-slate-600 dark:text-slate-300 m-0">
-			{service.map((item) => (
-				<li>{item}</li>
-			))}
-		</ul>
-	</section>
+      {sections.map((section) => (
+        <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4">
+          <div class="md:py-1">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 md:text-right sticky top-24">
+              {section.title}
+            </h2>
+          </div>
+          <div class="flex flex-col gap-3">
+            {section.items.map((item) => {
+              if (typeof item === 'string') {
+                return (
+                  <div class="flex items-start gap-2 text-gray-600 dark:text-gray-400">
+                    <span class="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gray-400 dark:bg-gray-600" />
+                    <span>{item}</span>
+                  </div>
+                );
+              }
+              return (
+                <div class="flex flex-col gap-1">
+                  <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+                    <div class="flex flex-col sm:flex-row sm:items-baseline gap-x-2">
+                      {item.title && (
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug font-heading">
+                          {item.link ? (
+                            <a
+                              href={item.link}
+                              target="_blank"
+                              rel="noreferrer"
+                              class="hover:text-accent-600 dark:hover:text-accent-400 transition-colors no-underline text-inherit"
+                            >
+                              {item.title}
+                            </a>
+                          ) : (
+                            item.title
+                          )}
+                        </h3>
+                      )}
+                      {item.subtitle && (
+                        <>
+                          <span class="hidden sm:inline text-gray-300 dark:text-gray-700">/</span>
+                          <div class="text-base text-gray-800 dark:text-gray-200">
+                            {item.subtitle}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                    {item.date && (
+                      <span class="shrink-0 text-sm text-gray-600 dark:text-gray-400">
+                        {item.date}
+                      </span>
+                    )}
+                  </div>
+                  {item.description && (
+                    <p class="text-sm text-gray-600 dark:text-gray-400 max-w-2xl">
+                      {item.description}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
 </Layout>

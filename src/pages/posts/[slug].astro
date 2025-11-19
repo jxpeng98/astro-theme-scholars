@@ -17,11 +17,11 @@ const { Content } = await post.render();
 <Layout>
 	<Fragment slot="title">{post.data.title} · Your Name</Fragment>
 	<section class="flex flex-col gap-3 mb-8">
-		<p class="uppercase tracking-[0.12em] text-xs text-accent-600 font-semibold m-0">Post</p>
-		<h1 class="font-heading text-[clamp(2rem,3vw,2.8rem)] font-semibold text-slate-900 dark:text-slate-100 m-0">
+		<p class="uppercase tracking-[0.12em] text-xs text-accent-600 font-bold m-0">Post</p>
+		<h1 class="font-heading text-[clamp(2rem,3vw,2.8rem)] font-bold text-gray-900 dark:text-gray-100 m-0">
 			{post.data.title}
 		</h1>
-		<p class="flex flex-wrap gap-4 text-sm text-slate-500 dark:text-slate-400 m-0">
+		<p class="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400 m-0">
 			<time class="font-medium" datetime={post.data.publishedAt.toISOString()}>
 				{new Date(post.data.publishedAt).toLocaleDateString(undefined, {
 					year: 'numeric',
@@ -42,14 +42,14 @@ const { Content } = await post.render();
 				</span>
 			)}
 		</p>
-		<p class="m-0 text-slate-600 dark:text-slate-300 max-w-[65ch]">{post.data.description}</p>
+		<p class="m-0 text-gray-800 dark:text-gray-200 max-w-[65ch]">{post.data.description}</p>
 	</section>
 
-	<article class="prose prose-slate dark:prose-invert max-w-none text-[1.05rem] leading-7">
+	<article class="prose prose-neutral dark:prose-invert max-w-none text-[1.05rem] leading-7 prose-headings:font-heading prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-gray-100 prose-p:text-gray-800 dark:prose-p:text-gray-200">
 		<Content />
 	</article>
 
 	<section class="mt-10">
-		<a class="text-accent-600 dark:text-accent-200 no-underline font-medium" href="/posts">← Back to posts</a>
+		<a class="text-accent-600 dark:text-accent-400 no-underline font-medium hover:text-accent-700 dark:hover:text-accent-300" href="/posts">← Back to posts</a>
 	</section>
 </Layout>

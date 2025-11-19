@@ -54,69 +54,122 @@ const inlineLinkClasses =
     <slot name="head" />
   </head>
   <body
-    class="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors"
+    class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans transition-colors duration-300"
   >
     <div
-      class="mx-auto flex min-h-screen max-w-4xl flex-col px-5 py-8 md:px-10"
+      class="mx-auto flex min-h-screen max-w-5xl flex-col px-6 md:px-12"
     >
-      <header
-        class="relative mb-12 flex flex-wrap items-center justify-between gap-y-4 p-4 md:mb-16 md:flex-nowrap md:gap-x-8 md:p-0"
-      >
+      <header class="relative flex items-center justify-between py-6 md:py-10">
         <a
           data-site-title
-          class="font-heading text-2xl font-semibold no-underline text-slate-900 whitespace-nowrap dark:text-slate-100 md:order-1 md:text-3xl"
+          class="font-heading text-2xl font-bold tracking-tight no-underline text-gray-900 dark:text-gray-100 transition-transform duration-200 active:scale-95"
           href="/"
         >
           {siteTitle}
         </a>
-        <div data-actions class="flex items-center gap-3 md:order-3">
+
+        <!-- Desktop Navigation & Actions -->
+        <div class="hidden md:flex md:items-center md:gap-6">
+          <nav>
+            <ul class="m-0 flex list-none items-center gap-2 p-0">
+              {
+                navLinks.map((link) => (
+                  <li>
+                    <a class="block px-4 py-2 text-sm font-medium text-gray-600 no-underline transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800" href={link.href}>
+                      {link.label}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </nav>
           <button
             type="button"
             data-theme-toggle
-						class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-accent-50 text-accent-700 shadow-sm transition-all duration-200 hover:bg-accent-100 hover:text-accent-700 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-300/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 border-none dark:bg-transparent dark:text-accent-200 dark:hover:bg-accent-500/20 dark:focus-visible:ring-offset-slate-950"
+            class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white border border-gray-200 shadow-sketch transition-all hover:shadow-sketch-hover hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 text-gray-600 cursor-pointer"
             aria-label="Toggle color mode"
           >
             <span class="sr-only">Toggle color mode</span>
             <span
-								class="i-ph-moon-stars-duotone block text-sm dark:hidden"
+              class="i-ph-moon-stars-duotone block text-lg dark:hidden"
               aria-hidden="true"></span>
             <span
-								class="i-ph-sun-dim-duotone hidden text-sm dark:block"
+              class="i-ph-sun-dim-duotone hidden text-lg dark:block"
               aria-hidden="true"></span>
           </button>
         </div>
-        <nav
-          class="order-last w-full md:order-2 md:flex-1 md:min-w-0 md:overflow-hidden"
+
+        <!-- Mobile Menu Button -->
+        <button
+          type="button"
+          id="mobile-menu-toggle"
+          class="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-full bg-white border border-gray-200 shadow-sketch transition-all hover:shadow-sketch-hover hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 text-gray-600 cursor-pointer z-50"
+          aria-label="Toggle menu"
+          aria-expanded="false"
         >
-          <ul
-            class="m-0 flex list-none flex-wrap items-center justify-center gap-3 p-0 md:justify-end"
-          >
-            {
-              navLinks.map((link) => (
+          <span class="sr-only">Toggle menu</span>
+          <span id="icon-menu" class="i-ph-list-bold text-lg transition-transform duration-200"></span>
+          <span id="icon-close" class="i-ph-x-bold text-lg hidden transition-transform duration-200"></span>
+        </button>
+
+        <!-- Mobile Dropdown Menu -->
+        <div
+          id="mobile-menu"
+          class="absolute top-full right-0 z-40 mt-2 w-48 origin-top-right rounded-2xl bg-white p-2 shadow-sketch ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700 opacity-0 scale-95 invisible transition-all duration-200 transform"
+        >
+          <nav>
+            <ul class="flex flex-col gap-1 list-none p-0 m-0">
+              {navLinks.map((link) => (
                 <li>
-                  <a class={inlineLinkClasses} href={link.href}>
+                  <a
+                    class="block px-4 py-2 text-sm font-medium text-gray-600 no-underline transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"
+                    href={link.href}
+                  >
                     {link.label}
                   </a>
                 </li>
-              ))
-            }
-          </ul>
-        </nav>
+              ))}
+            </ul>
+          </nav>
+        </div>
       </header>
 
-      <main class="flex-1 space-y-10 md:space-y-12">
+      <main class="flex-1 space-y-10 md:space-y-16">
         <slot />
       </main>
 
       <footer
-        class="mt-10 border-t border-slate-200 pt-6 text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400 md:mt-16"
+        class="mt-12 border-t border-gray-200 pt-8 text-sm text-gray-600 dark:border-gray-800 dark:text-gray-400 md:mt-20 pb-10"
       >
-        <p class="m-0 text-center md:text-left">
+        <p class="m-0 text-center">
           &copy; {
             `${currentYear} ${siteConfig.author}. ${siteConfig.footer.copyright}`
           }
         </p>
       </footer>
+    </div>
+
+    <!-- Mobile Floating Action Buttons -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 md:hidden">
+      <button
+        type="button"
+        id="back-to-top"
+        class="flex h-8 w-8 items-center justify-center rounded-full bg-white border border-gray-200 shadow-sketch transition-all hover:shadow-sketch-hover hover:scale-105 active:scale-95 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 text-gray-600 opacity-0 translate-y-4 pointer-events-none data-[visible=true]:opacity-100 data-[visible=true]:translate-y-0 data-[visible=true]:pointer-events-auto duration-300 cursor-pointer"
+        aria-label="Back to top"
+      >
+        <span class="i-ph-arrow-up-bold text-lg"></span>
+      </button>
+      
+      <button
+        type="button"
+        data-theme-toggle
+        class="flex h-8 w-8 items-center justify-center rounded-full bg-white border border-gray-200 shadow-sketch transition-all hover:shadow-sketch-hover hover:scale-105 active:scale-95 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 text-gray-600 cursor-pointer"
+        aria-label="Toggle color mode"
+      >
+        <span class="sr-only">Toggle color mode</span>
+        <span class="i-ph-moon-stars-duotone block text-lg dark:hidden"></span>
+        <span class="i-ph-sun-dim-duotone hidden text-lg dark:block"></span>
+      </button>
     </div>
 
     <script is:inline>
@@ -151,6 +204,46 @@ const inlineLinkClasses =
 
         // --- Event Listeners ---
         document.addEventListener("DOMContentLoaded", () => {
+          // Mobile menu functionality
+          const menuBtn = document.getElementById("mobile-menu-toggle");
+          const menu = document.getElementById("mobile-menu");
+          const iconMenu = document.getElementById("icon-menu");
+          const iconClose = document.getElementById("icon-close");
+
+          if (menuBtn && menu && iconMenu && iconClose) {
+            const toggleMenu = () => {
+              const isExpanded = menuBtn.getAttribute("aria-expanded") === "true";
+              if (isExpanded) {
+                // Close
+                menuBtn.setAttribute("aria-expanded", "false");
+                menu.classList.add("opacity-0", "scale-95", "invisible");
+                menu.classList.remove("opacity-100", "scale-100", "visible");
+                iconMenu.classList.remove("hidden");
+                iconClose.classList.add("hidden");
+              } else {
+                // Open
+                menuBtn.setAttribute("aria-expanded", "true");
+                menu.classList.remove("opacity-0", "scale-95", "invisible");
+                menu.classList.add("opacity-100", "scale-100", "visible");
+                iconMenu.classList.add("hidden");
+                iconClose.classList.remove("hidden");
+              }
+            };
+
+            menuBtn.addEventListener("click", (e) => {
+              e.stopPropagation();
+              toggleMenu();
+            });
+
+            // Close on click outside
+            document.addEventListener("click", (e) => {
+              const isExpanded = menuBtn.getAttribute("aria-expanded") === "true";
+              if (isExpanded && !menu.contains(e.target) && !menuBtn.contains(e.target)) {
+                toggleMenu();
+              }
+            });
+          }
+
           // Theme toggle buttons
           const toggleButtons = document.querySelectorAll(
             "[data-theme-toggle]"
@@ -175,6 +268,23 @@ const inlineLinkClasses =
                   applyTheme(event.matches ? "dark" : "light");
                 }
               });
+          }
+
+          // Back to top functionality
+          const backToTopBtn = document.getElementById("back-to-top");
+          if (backToTopBtn) {
+            const toggleBackToTop = () => {
+              if (window.scrollY > 300) {
+                backToTopBtn.setAttribute("data-visible", "true");
+              } else {
+                backToTopBtn.setAttribute("data-visible", "false");
+              }
+            };
+
+            window.addEventListener("scroll", toggleBackToTop);
+            backToTopBtn.addEventListener("click", () => {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            });
           }
         });
       })();
