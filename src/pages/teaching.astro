@@ -43,15 +43,15 @@ const { current = [], past = [] } = teachingData;
           <h2 class="font-heading text-2xl font-bold text-[#111111] dark:text-[#f5f5f7]">
             Current Modules
           </h2>
-          <div class="flex flex-col gap-12">
+          <div class="flex flex-col gap-8">
             {current.map((section) => (
-              <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4 md:gap-8">
+              <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4 md:gap-6">
                 <div class="md:py-1">
                   <h3 class="text-sm font-bold uppercase tracking-wider text-[#666666] dark:text-[#c4c7c5] md:text-right sticky top-24">
                     {section.term}
                   </h3>
                 </div>
-                <div class="flex flex-col gap-6">
+                <div class="flex flex-col gap-4">
                   {section.modules.map((module) => (
                     <div class="flex flex-col gap-2">
                       <div class="flex flex-col gap-1">
@@ -104,15 +104,15 @@ const { current = [], past = [] } = teachingData;
           <h2 class="font-heading text-2xl font-bold text-[#111111] dark:text-[#f5f5f7]">
             Past Modules
           </h2>
-          <div class="flex flex-col gap-12">
+          <div class="flex flex-col gap-8">
             {past.map((section) => (
-              <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4 md:gap-8">
+              <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4 md:gap-6">
                 <div class="md:py-1">
                   <h3 class="text-sm font-bold uppercase tracking-wider text-[#666666] dark:text-[#c4c7c5] md:text-right sticky top-24">
                     {section.term}
                   </h3>
                 </div>
-                <div class="flex flex-col gap-6">
+                <div class="flex flex-col gap-4">
                   {section.modules.map((module) => (
                     <div class="flex flex-col gap-2">
                       <div class="flex flex-col gap-1">

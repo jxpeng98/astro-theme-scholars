@@ -34,7 +34,7 @@ const orderedCategories = [
       </p>
     </header>
 
-    <div class="flex flex-col gap-12">
+    <div class="flex flex-col gap-8">
       {orderedCategories.map((category) => {
         const categoryPapers = grouped.get(category);
         if (!categoryPapers?.length) {
@@ -42,13 +42,13 @@ const orderedCategories = [
         }
 
         return (
-          <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4 md:gap-8">
+          <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4 md:gap-6">
             <div class="md:py-1">
               <h3 class="text-sm font-bold uppercase tracking-wider text-[#666666] dark:text-[#c4c7c5] md:text-right sticky top-24">
                 {category}
               </h3>
             </div>
-            <div class="flex flex-col gap-6">
+            <div class="flex flex-col gap-4">
               {categoryPapers.map((paper) => {
                 const abstractId = `abstract-${paper.id}`;
                 const hasAbstract = Boolean(paper.abstract);
