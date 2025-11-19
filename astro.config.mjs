@@ -10,5 +10,6 @@ export default defineConfig({
 	integrations: [icon(), sitemap()],
 	vite: {
 		plugins: [UnoCSS()]
-	}
+	},
+	prefetch: true
 });
