@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
+import siteConfig from '../../side.config';
 
 const posts = (await getCollection('posts'))
 	.filter((post) => !post.data.draft)
@@ -18,61 +19,97 @@ for (const post of posts) {
     groupedPosts.get(year)?.push(post);
 }
 const years = Array.from(groupedPosts.keys()).sort((a, b) => b.localeCompare(a));
+
+const pageDescription = siteConfig.pageDescriptions?.posts ||
+  "Thoughts on education, technology, and the spaces in between.";
+
+const totalPosts = posts.length;
 ---
 
-<Layout title="Posts">
-  <div class="space-y-8">
-        <header class="fade-in-up max-w-2xl">
-      <h1 class="font-heading text-4xl font-bold text-gray-900 dark:text-gray-100 md:text-5xl">
-        Blog
+<Layout title="Blog">
+  <div class="space-y-6">
+    <!-- Page Header -->
+    <header class="space-y-3">
+      <div class="flex items-center gap-2 text-sm font-medium text-accent-600 dark:text-accent-400">
+        <span class="i-mdi:post-outline text-lg"></span>
+        <span>Blog</span>
+      </div>
+      <h1 class="font-heading text-3xl font-bold text-gray-900 dark:text-gray-100 md:text-4xl">
+        Posts & Writing
       </h1>
-      <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
-        Thoughts on education, technology, and the spaces in between.
+      <p class="text-base text-gray-600 dark:text-gray-400 leading-relaxed max-w-3xl">
+        {pageDescription}
       </p>
+      
+      <!-- Stats -->
+      <div class="flex flex-wrap items-center gap-3 pt-1">
+        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-sm">
+          <span class="i-mdi:file-document-multiple text-accent-600 dark:text-accent-400 text-base"></span>
+          <span class="font-medium text-gray-900 dark:text-gray-100">{totalPosts}</span>
+          <span class="text-gray-500 dark:text-gray-500">posts</span>
+        </div>
+        <div class="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-500">
+          <span class="i-mdi:calendar-range text-sm"></span>
+          <span>{years[years.length - 1]} — {years[0]}</span>
+        </div>
+      </div>
     </header>
 
-    <div class="fade-in-up animation-delay-200 space-y-12">
+    <div class="fade-in-up animation-delay-200 space-y-8">
       {
         years.map((year) => (
-          <section class="space-y-8">
-            <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4">
-              <div class="md:py-1">
-                <h3 class="text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 md:text-right sticky top-24">
-                  {year}
-                </h3>
-              </div>
-              <div class="flex flex-col divide-y divide-gray-200 dark:divide-gray-800">
-                {groupedPosts.get(year)?.map((post) => (
-                  <article class="flex flex-col gap-2 py-3 first:pt-0 last:pb-0 group">
-                    <div class="flex flex-col gap-1">
-                      <div class="flex items-baseline justify-between gap-4">
-                        <h4 class="text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug font-heading">
-                          <a
-                            href={`/posts/${post.slug}`}
-                            class="hover:text-accent-600 dark:hover:text-accent-400 transition-colors no-underline text-inherit"
-                          >
-                            {post.data.title}
-                          </a>
-                        </h4>
-                        <time
-                          datetime={post.data.publishedAt.toISOString()}
-                          class="shrink-0 text-sm text-gray-600 dark:text-gray-400 tabular-nums"
-                        >
-                          {post.data.publishedAt.toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                          })}
-                        </time>
-                      </div>
+          <section class="space-y-4">
+            <div class="flex items-center gap-3">
+              <span class="text-2xl font-bold text-accent-600 dark:text-accent-400">
+                {year}
+              </span>
+              <div class="flex-1 h-px bg-gradient-to-r from-accent-200 to-transparent dark:from-accent-800"></div>
+              <span class="px-2 py-0.5 rounded-full text-xs font-medium text-accent-700 dark:text-accent-400 bg-accent-50 dark:bg-accent-900/30">
+                {groupedPosts.get(year)?.length} posts
+              </span>
+            </div>
+            
+            <div class="space-y-3">
+              {groupedPosts.get(year)?.map((post) => (
+                <a 
+                  href={`/posts/${post.slug}`} 
+                  class="group block p-4 rounded-xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 hover:border-accent-300 dark:hover:border-accent-700 hover:shadow-lg hover:shadow-accent-500/5 transition-all duration-300 no-underline"
+                >
+                  <article class="flex flex-col sm:flex-row sm:items-start gap-3">
+                    <div class="flex items-center gap-2 sm:flex-col sm:items-start sm:gap-0.5 shrink-0 sm:w-20">
+                      <time
+                        datetime={post.data.publishedAt.toISOString()}
+                        class="text-xs font-medium text-gray-500 dark:text-gray-500 tabular-nums"
+                      >
+                        {post.data.publishedAt.toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                        })}
+                      </time>
+                      <span class="sm:hidden text-gray-300 dark:text-gray-600">·</span>
+                      <span class="text-xs text-gray-400 dark:text-gray-600 hidden sm:block">
+                        {Math.ceil(post.body?.length / 1000) || 3} min read
+                      </span>
+                    </div>
+                    
+                    <div class="flex-1 min-w-0 space-y-1.5">
+                      <h2 class="font-bold text-gray-900 group-hover:text-accent-600 dark:text-gray-100 dark:group-hover:text-accent-400 transition-colors leading-snug">
+                        {post.data.title}
+                      </h2>
                       {post.data.description && (
-                        <p class="text-sm text-gray-600 dark:text-gray-400 max-w-2xl line-clamp-2">
+                        <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed">
                           {post.data.description}
                         </p>
                       )}
+                      
+                      <div class="flex items-center gap-1 text-xs font-medium text-accent-600 dark:text-accent-400 pt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span>Read more</span>
+                        <span class="i-mdi:arrow-right"></span>
+                      </div>
                     </div>
                   </article>
-                ))}
-              </div>
+                </a>
+              ))}
             </div>
           </section>
         ))
