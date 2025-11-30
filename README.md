@@ -2,163 +2,518 @@
 
 # Scholar Pages Theme for Astro
 
-Your academic and research portfolio, beautifully crafted. This Astro theme helps you build a professional, fast, and content-driven personal website with ease.
+A modern, elegant academic portfolio theme for Astro. Build your professional research homepage with beautiful card-based designs, automatic BibTeX parsing, and seamless dark mode support.
 
 ![Desktop and Mobile Previews of Scholar Pages Theme](https://r2imga.jxpeng.dev/2025/10/9dfa4106fa05badc9f5e80b4694c9309.png)
 
-## Introduction
+## ✨ Features
 
-Welcome to Scholar Pages! This feature-rich Astro theme is designed to give academics, researchers, and students a compelling online presence. We blend the power of Astro's static site generation with simple data-driven content management, so you can focus on your work while we handle the heavy lifting of building your site.
+- **⚡ Astro Powered** - Lightning-fast static site generation with zero JavaScript by default
+- **🎨 Modern Card Design** - Elegant card-based UI with hover effects, gradients, and micro-animations
+- **📚 BibTeX Integration** - Automatic parsing of publications with category filtering
+- **🌙 Dark Mode** - Seamless light/dark theme switching with system preference detection
+- **📱 Fully Responsive** - Mobile-first design with adaptive navigation
+- **🎯 SEO Optimized** - Built-in meta tags, sitemap, and semantic HTML
+- **🔧 Easy Configuration** - Single TypeScript config file for all site settings
+- **📝 YAML Data Sources** - Simple content management through YAML files
+- **🏷️ Filter System** - Interactive category filters on Research, Projects, and Teaching pages
+- **🎭 UnoCSS Styling** - Utility-first CSS with customizable accent colors
 
-The theme is built with performance and customization in mind, featuring automatic BibTeX parsing, YAML-based content for your profile and projects, and utility-first styling with UnoCSS.
+## 🚀 Quick Start
 
-## Features
+### Prerequisites
 
-- **Astro Framework**: Built with Astro for fast, optimized static site generation.
-- **Sketch Style Design**: A unique, minimalist aesthetic featuring warm gray tones, paper-like textures, and hand-drawn style shadows.
-- **BibTeX Integration**: Automatically parse and display publications from a BibTeX file.
-- **YAML Data Sources**: Manage profile, projects, and teaching data through easy-to-edit YAML files.
-- **UnoCSS Styling**: Utilize UnoCSS for utility-first styling with customizable themes.
-- **Modular Components**: Reusable components for easy customization and extension.
-- **Responsive Design**: Mobile-friendly layouts with a smart navigation menu that adapts to screen size.
-- **SEO Optimized**: Built-in SEO best practices to enhance discoverability.
-- **Dark Mode Support**: Automatic dark mode styling for improved readability in low-light environments.
-- **Easy Deployment**: Ready for deployment on popular static site hosting platforms.
+- [Node.js](https://nodejs.org/) (v18+ recommended)
+- [Bun](https://bun.sh/) (recommended) or npm/pnpm
 
-## Getting Started
-
-### What You'll Need
-
-- [Node.js](https://nodejs.org/) (LTS version recommended)
-- [Bun](https://bun.sh/)
-
-### 1. Set Up Your Site
-
-Clone the repository and install the dependencies:
+### Installation
 
 ```bash
+# Clone the repository
 git clone https://github.com/jxpeng98/astro-scholars.git
 cd astro-scholars
+
+# Install dependencies
 bun install
-```
 
-### 2. Run in Development Mode
-
-Start the local development server and see your site in action:
-
-```bash
+# Start development server
 bun dev
 ```
 
-Your site will be available at `http://localhost:4321`.
+Your site will be running at `http://localhost:4321`
 
-## Available Commands
+### Available Commands
 
-| Command           | Action                                             |
-| :---------------- | :------------------------------------------------- |
-| `bun install`     | Install dependencies                               |
-| `bun dev`         | Start the local dev server at `http://localhost:4321` |
-| `bun build`       | Build the production site to `./dist/`              |
-| `bun preview`     | Preview the production build locally                |
-| `bun astro ...`   | Access Astro CLI commands (e.g., `bun astro check`) |
+| Command         | Description                                    |
+| --------------- | ---------------------------------------------- |
+| `bun dev`       | Start development server with hot reload       |
+| `bun build`     | Build production site to `./dist/`             |
+| `bun preview`   | Preview production build locally               |
+| `bun astro ...` | Run Astro CLI commands (e.g., `astro check`)   |
 
-## Customization Guide
+---
 
-Make it your own! Customize your site by editing the configuration and data files.
+## 📖 Configuration Guide
 
-### Branding & Navigation
+### Site Configuration (`src/side.config.ts`)
 
-- Edit `src/side.config.ts` to change site title, author name, hero copy, social links, navigation, and footer text.
-- `hero.profileImage` accepts either a CDN URL or a relative path (e.g., `assets/profile.svg`).
-- Social link icons can use UnoCSS icon class names (e.g., `i-logos:github-icon`). These are safelisted in `uno.config.ts`.
+This is the central configuration file for your entire site. Here's a complete breakdown:
 
-### About Page Content
+```typescript
+export const siteConfig: SiteConfig = {
+  // ─────────────────────────────────────────────────────────────
+  // 🏠 BASIC INFORMATION
+  // ─────────────────────────────────────────────────────────────
+  
+  /** Browser tab title */
+  title: 'Your Name | Academic Portfolio',
+  
+  /** Your full name (displayed in header and footer) */
+  author: 'Your Name',
+  
+  /** SEO description (appears in search results) */
+  description: 'Your research focus and expertise...',
+  
+  /** Favicon path (relative to /public) */
+  favicon: '/favicon.svg',
+  
+  /** SEO keywords */
+  keywords: ['learning analytics', 'HCI', 'research'],
 
-Modify `src/data/about.yml` to update your profile. This file supports standard sections and custom expandable sections.
+  // ─────────────────────────────────────────────────────────────
+  // 🎓 ACADEMIC PROFILE
+  // ─────────────────────────────────────────────────────────────
+  
+  /** Your institutional affiliations (displayed on home page) */
+  affiliations: [
+    {
+      role: 'Assistant Professor',
+      department: 'School of Information',  // optional
+      institution: 'University Name',
+      url: 'https://example.edu',           // optional, makes it a link
+    },
+  ],
 
-**Standard Sections:**
+  /** Research interests (displayed as tags on home page) */
+  researchInterests: [
+    'Learning Analytics',
+    'Human-Computer Interaction',
+  ],
 
-- `hero`: Page title and introduction.
-- `profile`: Key-value pairs displayed in the sidebar (e.g., Role, Research Areas).
-- `education`: List of degrees.
-- `experience`: Professional history with bullet points.
-- `service`: Academic service (supports simple strings or structured objects with role/organization).
+  // ─────────────────────────────────────────────────────────────
+  // 🔗 SOCIAL LINKS
+  // Icons: https://icones.js.org (use 'academicons' or 'mdi' collections)
+  // ─────────────────────────────────────────────────────────────
+  
+  socialLinks: [
+    { label: 'Google Scholar', href: 'https://scholar.google.com/...', icon: 'i-academicons:google-scholar' },
+    { label: 'ORCID', href: 'https://orcid.org/...', icon: 'i-academicons:orcid' },
+    { label: 'GitHub', href: 'https://github.com/...', icon: 'i-mdi:github' },
+    { label: 'Email', href: 'mailto:you@example.edu', icon: 'i-mdi:email-outline' },
+    { label: 'Twitter', href: 'https://twitter.com/...', icon: 'i-mdi:twitter' },
+  ],
 
-**Custom Sections (New):**
-You can add arbitrary sections like "Awards", "Invited Talks", or "Press" using the `sections` key.
+  // ─────────────────────────────────────────────────────────────
+  // 🧭 NAVIGATION
+  // ─────────────────────────────────────────────────────────────
+  
+  navLinks: [
+    { href: '/about', label: 'About' },
+    { href: '/researches', label: 'Research' },
+    { href: '/teaching', label: 'Teaching' },
+    { href: '/projects', label: 'Projects' },
+    { href: '/posts', label: 'Blog' },
+  ],
+
+  // ─────────────────────────────────────────────────────────────
+  // 📝 FOOTER
+  // ─────────────────────────────────────────────────────────────
+  
+  footer: {
+    copyright: 'All rights reserved.',
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  // 🏠 HERO SECTION (Home Page)
+  // ─────────────────────────────────────────────────────────────
+  
+  hero: {
+    headline: 'Your research focus in one sentence.',
+    subheadline: 'A longer bio describing your work and interests...',
+    profileAlt: 'Portrait of Your Name',
+    profileImage: '/profile.svg',  // or full URL
+    statusBadge: '📬 Open to collaboration',  // optional
+  },
+
+  // ─────────────────────────────────────────────────────────────
+  // 📄 PAGE DESCRIPTIONS (SEO & subtitles)
+  // ─────────────────────────────────────────────────────────────
+  
+  pageDescriptions: {
+    about: 'Your brief bio for the About page...',
+    researches: 'Description of your research focus...',
+    projects: 'Description of your projects...',
+    teaching: 'Description of your teaching philosophy...',
+    posts: 'Description of your blog...',
+  },
+};
+```
+
+---
+
+## 📄 Page Documentation
+
+### 🏠 Home Page (`/`)
+
+The home page displays:
+
+- **Hero Section**: Profile image, name, affiliations, status badge, bio, research interests, and social links
+- **Selected Publications**: Top 3 featured papers from your BibTeX file (papers with `public = {yes}`)
+- **Latest Posts**: 3 most recent blog posts
+
+**Card Design Features:**
+- Hover effect with accent-colored left border gradient
+- Expandable abstract with quote icon styling
+- Action buttons for Abstract and PDF links
+
+### 👤 About Page (`/about`)
+
+**Data Source:** `src/data/about.yml`
 
 ```yaml
+hero:
+  title: About
+  description: Your brief introduction...
+
+education:
+  - degree: Ph.D., Human-Computer Interaction
+    institution: University Name
+    year: 2021
+  - degree: M.S., Learning Sciences
+    institution: Institute Name
+    year: 2016
+
+experience:
+  - role: Assistant Professor
+    organization: School of Information
+    period: 2022 — Present
+    bullets:
+      - Lead the Learning Signals Lab
+      - Teach graduate seminars on human-centered AI
+
+service:
+  # Structured format
+  - role: Program Chair
+    organization: ACM Conference
+    period: 2023 — 2024
+  # Simple string format
+  - Editorial Board — Journal Name
+
+# Custom sections (Awards, Talks, etc.)
 sections:
   - title: Awards
     items:
+      # Detailed item
       - title: Best Paper Award
         subtitle: ACM CHI 2023
         date: 2023
-        description: For the paper "Social Learning Signals in the Wild"
+        description: For the paper "..."
         link: https://example.com/award
-      - title: NSF Graduate Research Fellowship
-        date: 2016 — 2021
-      # Simple string items are also supported
-      - Dean's List, Clearwater College (2010-2014)
+      # Simple item
+      - Dean's List (2010-2014)
 ```
 
-The page at `src/pages/about.astro` automatically renders these sections—no code changes required.
+**Card Design Features:**
+- Education cards with school icon and year badge
+- Experience cards with timeline dot indicator
+- Service items in 2-column grid with star icons
+- Awards with trophy icon and gradient background
 
-### Publications & Projects
+### 📚 Research Page (`/researches`)
 
-- Update `src/data/publications.bib` with BibTeX entries. Parsed entries are rendered on the Researches page.
-- Define projects in `src/data/projects.yml`; the helper in `src/components/projects.ts` converts that YAML into the cards displayed on the Projects page.
+**Data Source:** `src/data/publications.bib`
 
-### Blog Posts
+**BibTeX Fields:**
 
-- Content lives under `src/content/posts/`. Add Markdown/MDX files with frontmatter matching the schema in `src/content/config.ts`.
+```bibtex
+@inproceedings{key2024paper,
+  title = {Your Paper Title},
+  author = {Last, First and Other, Author},
+  booktitle = {Conference Name},        % or journal = {...}
+  year = {2024},
+  url = {https://doi.org/...},          % optional, adds PDF link
+  abstract = {Paper abstract...},       % optional, adds expandable abstract
+  public = {yes},                       % yes = Publication, wp = Working Paper, wip = Work in Progress
+  keywords = {keyword1, keyword2}       % optional
+}
+```
 
-### Teaching Modules
+**Category Classification:**
+| `public` value | Category |
+|----------------|----------|
+| `yes` | Publication |
+| `wp` | Working Paper |
+| `wip` | Work in Progress |
+| (other/missing) | Other |
 
-- Edit `src/data/teaching.yml` to manage current and past modules. The Teaching page reads this data and groups modules by term with tag chips.
+**Page Features:**
+- **Filter Bar**: Click to filter by category (all / publication / working paper / work in progress)
+- **Numbered Cards**: Each paper has an accent-colored index badge
+- **Meta Badges**: Venue badge with bookmark icon, year badge with calendar icon
+- **Action Buttons**: Expandable abstract with quote styling, PDF link
+- **Conditional Display**: Empty fields (authors, venue) are automatically hidden
 
-### Styling
+### 💼 Projects Page (`/projects`)
 
-- Utility classes come from UnoCSS. Modify shortcuts, presets, or safelist entries in `uno.config.ts` to adjust theme styling.
-- Global layout styling (header/footer/grid) is located within `src/layouts/Layout.astro`.
+**Data Source:** `src/data/projects.yml`
 
-## Project Structure
+```yaml
+- title: Project Name
+  period: 2023 — Present    # Include "Present" for active projects
+  description: What this project does...
+  tech:
+    - Astro
+    - TypeScript
+    - PostgreSQL
+  url: https://github.com/...   # optional
+```
 
-```text
+**Page Features:**
+- **Auto-grouping**: Projects with "Present" in period → Active; others → Past
+- **Filter Bar**: All / Active / Past filters
+- **Active Indicator**: Green pulsing dot + "Active" label
+- **Tech Stack Tags**: Code icon + technology name
+- **Hover Action**: "View Project →" appears on hover (if URL exists)
+
+### 📖 Teaching Page (`/teaching`)
+
+**Data Source:** `src/data/teaching.yml`
+
+```yaml
+current:
+  - term: Spring 2025
+    modules:
+      - title: Course Title
+        code: INFO 742
+        summary: Course description...
+        tags:                    # optional
+          - graduate
+          - seminar
+        link:                    # optional
+          label: Course Site
+          href: https://...
+
+past:
+  - term: Fall 2024
+    modules:
+      - title: Past Course
+        code: INFO 511
+        summary: What was covered...
+```
+
+**Page Features:**
+- **Filter Bar**: All / Current / Past filters
+- **Term Grouping**: Courses grouped by semester
+- **Active Indicator**: Left gradient bar for current courses
+- **Course Code Badge**: School icon + course code
+- **Tag Pills**: Hashtag-prefixed category tags
+- **Link Button**: Opens course site in new tab
+
+### ✍️ Blog Page (`/posts`)
+
+**Data Source:** `src/content/posts/*.md`
+
+**Frontmatter Schema:**
+
+```yaml
+---
+title: Post Title
+description: Brief summary...   # optional
+publishedAt: 2024-01-15
+draft: false                    # set true to hide
+---
+```
+
+**Page Features:**
+- **Year Grouping**: Posts organized by year with gradient divider
+- **Post Count**: Badge showing posts per year
+- **Reading Time**: Estimated based on content length
+- **Card Design**: Full-width clickable cards
+- **Hover Action**: "Read more →" appears on hover
+
+---
+
+## 🎨 Design System
+
+### Card Components
+
+All pages use a unified card design system:
+
+```
+┌─────────────────────────────────────────┐
+│  • Title with hover color transition    │
+│  📍 Meta info with icons                │
+│  Description text (line-clamped)        │
+│  [Tag] [Tag] [Tag]                      │
+│  🔗 Action link (appears on hover)      │
+└─────────────────────────────────────────┘
+```
+
+**Common Card Styles:**
+- `rounded-xl` corners
+- White background (dark: gray-900/50)
+- Border that changes to accent color on hover
+- Subtle shadow on hover (`shadow-accent-500/5`)
+- 300ms transition for smooth animations
+
+### Color Palette
+
+The theme uses a semantic color system:
+
+| Color | Usage |
+|-------|-------|
+| `accent-*` | Primary brand color, links, active states |
+| `gray-*` | Text, backgrounds, borders |
+| `emerald-*` | Active/success states (status badges) |
+| `amber-*` | Awards and achievements |
+
+### Icons
+
+Icons are provided via UnoCSS icon presets:
+
+- **Academic**: `i-academicons:*` (Google Scholar, ORCID, ResearchGate)
+- **General**: `i-mdi:*` (GitHub, Email, Calendar, etc.)
+- **UI**: `i-ph:*` (Theme toggle, menu icons)
+
+Find icons at: [icones.js.org](https://icones.js.org)
+
+---
+
+## 📁 Project Structure
+
+```
 /
-├── public/               # Static files served as-is
+├── public/                    # Static assets
+│   ├── favicon.svg
+│   ├── profile.svg
+│   └── robots.txt
 ├── src/
-│   ├── assets/           # Images, icons, and theme graphics
-│   ├── components/       # Reusable UI components
-│   ├── content/          # Markdown/MDX blog posts
+│   ├── assets/                # Processed images
+│   ├── components/            # Shared components
+│   │   └── projects.ts        # Projects data loader
+│   ├── content/               # Blog posts (Astro Content Collections)
+│   │   ├── config.ts          # Content schema
+│   │   └── posts/             # Markdown posts
+│   ├── data/                  # YAML & BibTeX data
+│   │   ├── about.yml          # About page content
+│   │   ├── projects.yml       # Projects list
+│   │   ├── publications.bib   # Academic publications
+│   │   └── teaching.yml       # Teaching modules
+│   ├── layouts/
+│   │   └── Layout.astro       # Main layout (header, footer, theme)
+│   ├── lib/                   # Utility functions
+│   │   ├── bibtex.ts          # BibTeX parser
+│   │   └── papers.ts          # Paper data helpers
+│   ├── pages/                 # Route pages
+│   │   ├── index.astro        # Home
+│   │   ├── about.astro        # About
+│   │   ├── researches.astro   # Publications
+│   │   ├── projects.astro     # Projects
+│   │   ├── teaching.astro     # Teaching
 │   │   └── posts/
-│   ├── data/             # Content data (BibTeX & YAML sources)
-│   │   ├── about.yml
-│   │   ├── projects.yml
-│   │   ├── publications.bib
-│   │   └── teaching.yml
-│   ├── layouts/          # Site-wide layouts (header/footer)
-│   ├── lib/              # Utility helpers (BibTeX parser, paper helpers)
-│   ├── pages/            # Route pages (home, about, posts, projects, researches, teaching)
-│   └── side.config.ts    # Global site configuration (branding, links, hero)
-├── uno.config.ts         # UnoCSS presets, shortcuts, and safelist
-├── astro.config.mjs      # Astro configuration
-└── bun.lock / package.json
+│   │       ├── index.astro    # Blog listing
+│   │       └── [slug].astro   # Individual post
+│   ├── types/
+│   │   └── config.ts          # TypeScript interfaces
+│   └── side.config.ts         # ⭐ Main configuration
+├── uno.config.ts              # UnoCSS configuration
+├── astro.config.mjs           # Astro configuration
+└── package.json
 ```
 
-## Deployment
+---
 
-This Astro project is a static site. To deploy, run `bun build` and upload the contents of the `dist/` directory to any static hosting provider, such as:
+## 🚀 Deployment
 
-- [Vercel](https://vercel.com/)
-- [Netlify](https://www.netlify.com/)
-- [GitHub Pages](https://pages.github.com/)
-- [Cloudflare Pages](https://pages.cloudflare.com/)
+Build and deploy to any static hosting provider:
 
-## Contributing
+```bash
+bun build
+```
 
-We love contributions! Please feel free to submit a pull request or open an issue to discuss your ideas.
+Upload the `dist/` folder to:
 
-## License
+- [Vercel](https://vercel.com/) - Zero config, auto-deploys
+- [Netlify](https://netlify.com/) - Drag & drop deployment
+- [Cloudflare Pages](https://pages.cloudflare.com/) - Global CDN
+- [GitHub Pages](https://pages.github.com/) - Free hosting
 
-This project is licensed under the [MIT License](./LICENSE). You are free to use, modify, and distribute the theme under the terms described in the license.
+### Vercel (Recommended)
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Deploy
+vercel
+```
+
+### Netlify
+
+```bash
+# Build command: bun build
+# Publish directory: dist
+```
+
+---
+
+## 🔧 Customization Tips
+
+### Changing Accent Color
+
+Edit `uno.config.ts` to modify the accent color palette:
+
+```typescript
+theme: {
+  colors: {
+    accent: {
+      50: '#f0f9ff',
+      // ... customize shades
+      600: '#0284c7',
+    }
+  }
+}
+```
+
+### Adding New Social Links
+
+1. Find icon class at [icones.js.org](https://icones.js.org)
+2. Add to `socialLinks` in `side.config.ts`
+3. Add icon to safelist in `uno.config.ts` if needed
+
+### Custom Page Sections
+
+For the About page, add new sections in `about.yml`:
+
+```yaml
+sections:
+  - title: Your Section Title
+    items:
+      - Your item content
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to:
+
+- 🐛 Report bugs via [Issues](https://github.com/jxpeng98/astro-scholars/issues)
+- 💡 Suggest features
+- 🔧 Submit pull requests
+
+---
+
+## 📄 License
+
+[MIT License](./LICENSE) - Free to use, modify, and distribute.
