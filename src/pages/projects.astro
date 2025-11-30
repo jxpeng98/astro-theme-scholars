@@ -1,47 +1,275 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { projects } from '../components/projects';
+import Layout from "../layouts/Layout.astro";
+import { projects } from "../components/projects";
+import siteConfig from "../side.config";
+
+const pageDescription = siteConfig.pageDescriptions?.projects ||
+  "Selected lab and community projects with a focus on reproducible research infrastructure, learning analytics, and open collaboration.";
+
+// Group projects by status (if they have period info)
+const activeProjects = projects.filter(p => p.period?.includes('Present'));
+const pastProjects = projects.filter(p => !p.period?.includes('Present'));
 ---
 
 <Layout title="Projects">
   <div class="space-y-6">
-        <header class="fade-in-up max-w-2xl">
-      <h1 class="font-heading text-4xl font-bold text-gray-900 dark:text-gray-100 md:text-5xl">
-        Projects
-      </h1>
-      <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
-        Selected lab and community projects with a focus on reproducible research infrastructure,
-        learning analytics, and open collaboration.
-      </p>
+    <!-- Page Header -->
+    <header class="space-y-4">
+      <div class="space-y-1">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          Projects
+        </h1>
+        <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl">
+          {pageDescription}
+        </p>
+      </div>
+      
+      <!-- Filter Bar -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button 
+          type="button"
+          data-filter="all"
+          class="filter-btn active flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-accent-100 dark:bg-accent-900/30 text-sm cursor-pointer border-none transition-all"
+        >
+          <span class="i-mdi:code-braces text-accent-600 dark:text-accent-400 text-base"></span>
+          <span class="font-medium text-accent-700 dark:text-accent-300">{projects.length}</span>
+          <span class="text-accent-600 dark:text-accent-400">all</span>
+        </button>
+        {activeProjects.length > 0 && (
+          <button 
+            type="button"
+            data-filter="active"
+            class="filter-btn flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-sm cursor-pointer border-none hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+          >
+            <span class="i-mdi:rocket-launch text-gray-500 dark:text-gray-400 text-base"></span>
+            <span class="font-medium text-gray-700 dark:text-gray-300">{activeProjects.length}</span>
+            <span class="text-gray-500 dark:text-gray-500">active</span>
+          </button>
+        )}
+        {pastProjects.length > 0 && (
+          <button 
+            type="button"
+            data-filter="past"
+            class="filter-btn flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-sm cursor-pointer border-none hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+          >
+            <span class="i-mdi:archive text-gray-500 dark:text-gray-400 text-base"></span>
+            <span class="font-medium text-gray-700 dark:text-gray-300">{pastProjects.length}</span>
+            <span class="text-gray-500 dark:text-gray-500">past</span>
+          </button>
+        )}
+      </div>
     </header>
 
-    <div class="fade-in-up animation-delay-200 flex flex-col divide-y divide-gray-200 dark:divide-gray-800">
-      {
-        projects.map((project) => (
-          <a
-            href={project.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="group block space-y-0.5 py-4 first:pt-0 last:pb-0 no-underline"
-          >
-            <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2">
-              <h2 class="font-heading text-xl font-bold text-gray-900 group-hover:text-accent-600 dark:text-gray-100 dark:group-hover:text-accent-400 transition-colors">
-                {project.title}
-              </h2>
-              <div class="flex flex-wrap gap-2">
-                {project.tech.map((tag) => (
-                  <span class="text-xs font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <p class="text-sm leading-relaxed text-gray-600 dark:text-gray-400 max-w-3xl">
-              {project.description}
-            </p>
-          </a>
-        ))
-      }
+    <div class="fade-in-up animation-delay-200 space-y-6" id="projects-container">
+      <!-- Active Projects -->
+      {activeProjects.length > 0 && (
+        <section class="space-y-3 project-section" data-category="active">
+          <h2 class="text-sm font-semibold text-accent-600 dark:text-accent-400 uppercase tracking-wide">
+            Active
+          </h2>
+          
+          <div class="grid gap-4 sm:grid-cols-2">
+            {activeProjects.map((project) => {
+              const hasUrl = Boolean(project.url);
+              const Wrapper = hasUrl ? 'a' : 'div';
+              return (
+                <Wrapper
+                  {...(hasUrl ? { href: project.url, target: "_blank", rel: "noopener noreferrer" } : {})}
+                  class={`group relative block p-5 rounded-xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 hover:border-accent-300 dark:hover:border-accent-700 hover:shadow-lg hover:shadow-accent-500/5 transition-all duration-300 no-underline ${hasUrl ? 'cursor-pointer' : ''}`}
+                >
+                  <!-- Status indicator -->
+                  <div class="absolute top-4 right-4 flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="text-xs font-medium text-emerald-600 dark:text-emerald-400">Active</span>
+                  </div>
+                  
+                  <div class="space-y-3">
+                    <div class="space-y-1 pr-16">
+                      <h3 class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors leading-snug">
+                        {project.title}
+                      </h3>
+                      {project.period && (
+                        <p class="text-xs text-gray-500 dark:text-gray-500 flex items-center gap-1">
+                          <span class="i-mdi:calendar-range"></span>
+                          {project.period}
+                        </p>
+                      )}
+                    </div>
+                    
+                    <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed">
+                      {project.description}
+                    </p>
+                    
+                    <div class="flex flex-wrap items-center gap-1.5 pt-1">
+                      {project.tech.slice(0, 4).map((tag) => (
+                        <span class="inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-md text-accent-700 dark:text-accent-300 bg-accent-50 dark:bg-accent-900/40 border border-accent-200 dark:border-accent-800">
+                          <span class="i-mdi:code-tags text-accent-500 text-xs"></span>
+                          {tag}
+                        </span>
+                      ))}
+                      {project.tech.length > 4 && (
+                        <span class="text-xs text-gray-500 dark:text-gray-500">+{project.tech.length - 4} more</span>
+                      )}
+                    </div>
+                    
+                    {hasUrl && (
+                      <div class="flex items-center gap-1 text-xs font-medium text-accent-600 dark:text-accent-400 pt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span>View Project</span>
+                        <span class="i-mdi:arrow-right"></span>
+                      </div>
+                    )}
+                  </div>
+                </Wrapper>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      <!-- Past/Other Projects -->
+      {pastProjects.length > 0 && (
+        <section class="space-y-3 project-section" data-category="past">
+          <h2 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+            Past
+          </h2>
+          
+          <div class="grid gap-4 sm:grid-cols-2">
+            {pastProjects.map((project) => {
+              const hasUrl = Boolean(project.url);
+              const Wrapper = hasUrl ? 'a' : 'div';
+              return (
+                <Wrapper
+                  {...(hasUrl ? { href: project.url, target: "_blank", rel: "noopener noreferrer" } : {})}
+                  class={`group relative block p-5 rounded-xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 hover:border-accent-300 dark:hover:border-accent-700 hover:shadow-lg hover:shadow-accent-500/5 transition-all duration-300 no-underline ${hasUrl ? 'cursor-pointer' : ''}`}
+                >
+                  <div class="space-y-3">
+                    <div class="space-y-1">
+                      <h3 class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors leading-snug">
+                        {project.title}
+                      </h3>
+                      {project.period && (
+                        <p class="text-xs text-gray-500 dark:text-gray-500 flex items-center gap-1">
+                          <span class="i-mdi:calendar-range"></span>
+                          {project.period}
+                        </p>
+                      )}
+                    </div>
+                    
+                    <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed">
+                      {project.description}
+                    </p>
+                    
+                    <div class="flex flex-wrap items-center gap-1.5 pt-1">
+                      {project.tech.slice(0, 4).map((tag) => (
+                        <span class="inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-md text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800">
+                          {tag}
+                        </span>
+                      ))}
+                      {project.tech.length > 4 && (
+                        <span class="text-xs text-gray-500 dark:text-gray-500">+{project.tech.length - 4} more</span>
+                      )}
+                    </div>
+                    
+                    {hasUrl && (
+                      <div class="flex items-center gap-1 text-xs font-medium text-accent-600 dark:text-accent-400 pt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span>View Project</span>
+                        <span class="i-mdi:arrow-right"></span>
+                      </div>
+                    )}
+                  </div>
+                </Wrapper>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
+      {/* If no period info, show all projects in a grid */}
+      {activeProjects.length === 0 && pastProjects.length === 0 && (
+        <div class="grid gap-4 sm:grid-cols-2">
+          {projects.map((project) => {
+            const hasUrl = Boolean(project.url);
+            const Wrapper = hasUrl ? 'a' : 'div';
+            return (
+              <Wrapper
+                {...(hasUrl ? { href: project.url, target: "_blank", rel: "noopener noreferrer" } : {})}
+                class={`group relative block p-5 rounded-xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 hover:border-accent-300 dark:hover:border-accent-700 hover:shadow-lg hover:shadow-accent-500/5 transition-all duration-300 no-underline ${hasUrl ? 'cursor-pointer' : ''}`}
+              >
+                <div class="space-y-3">
+                  <h3 class="font-bold text-gray-900 dark:text-gray-100 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors leading-snug">
+                    {project.title}
+                  </h3>
+                  
+                  <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed">
+                    {project.description}
+                  </p>
+                  
+                  <div class="flex flex-wrap items-center gap-1.5 pt-1">
+                    {project.tech.slice(0, 4).map((tag) => (
+                      <span class="inline-flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-md text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800">
+                        {tag}
+                      </span>
+                    ))}
+                    {project.tech.length > 4 && (
+                      <span class="text-xs text-gray-500 dark:text-gray-500">+{project.tech.length - 4} more</span>
+                    )}
+                  </div>
+                  
+                  {hasUrl && (
+                    <div class="flex items-center gap-1 text-xs font-medium text-accent-600 dark:text-accent-400 pt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span>View Project</span>
+                      <span class="i-mdi:arrow-right"></span>
+                    </div>
+                  )}
+                </div>
+              </Wrapper>
+            );
+          })}
+        </div>
+      )}
     </div>
   </div>
 </Layout>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    const filterBtns = document.querySelectorAll(".filter-btn");
+    const sections = document.querySelectorAll(".project-section");
+
+    filterBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const filter = btn.getAttribute("data-filter");
+        
+        // Update active button styles
+        filterBtns.forEach((b) => {
+          b.classList.remove("bg-accent-100", "dark:bg-accent-900/30");
+          b.classList.add("bg-gray-100", "dark:bg-gray-800");
+          b.querySelector("span:first-child")?.classList.remove("text-accent-600", "dark:text-accent-400");
+          b.querySelector("span:first-child")?.classList.add("text-gray-500", "dark:text-gray-400");
+          b.querySelector("span:nth-child(2)")?.classList.remove("text-accent-700", "dark:text-accent-300");
+          b.querySelector("span:nth-child(2)")?.classList.add("text-gray-700", "dark:text-gray-300");
+          b.querySelector("span:nth-child(3)")?.classList.remove("text-accent-600", "dark:text-accent-400");
+          b.querySelector("span:nth-child(3)")?.classList.add("text-gray-500", "dark:text-gray-500");
+        });
+        
+        btn.classList.remove("bg-gray-100", "dark:bg-gray-800");
+        btn.classList.add("bg-accent-100", "dark:bg-accent-900/30");
+        btn.querySelector("span:first-child")?.classList.remove("text-gray-500", "dark:text-gray-400");
+        btn.querySelector("span:first-child")?.classList.add("text-accent-600", "dark:text-accent-400");
+        btn.querySelector("span:nth-child(2)")?.classList.remove("text-gray-700", "dark:text-gray-300");
+        btn.querySelector("span:nth-child(2)")?.classList.add("text-accent-700", "dark:text-accent-300");
+        btn.querySelector("span:nth-child(3)")?.classList.remove("text-gray-500", "dark:text-gray-500");
+        btn.querySelector("span:nth-child(3)")?.classList.add("text-accent-600", "dark:text-accent-400");
+
+        // Filter sections
+        sections.forEach((section) => {
+          if (filter === "all" || section.getAttribute("data-category") === filter) {
+            section.classList.remove("hidden");
+          } else {
+            section.classList.add("hidden");
+          }
+        });
+      });
+    });
+  });
+</script>

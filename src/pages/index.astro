@@ -1,174 +1,247 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
-import { getFeaturedPapers } from '../lib/papers';
-import siteConfig from '../side.config';
-import { Image } from 'astro:assets';
+import Layout from "../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import { getFeaturedPapers } from "../lib/papers";
+import siteConfig from "../side.config";
+import { Image } from "astro:assets";
 
-const recentPosts = (await getCollection('posts'))
-	.filter((post) => !post.data.draft)
-	.sort(
-		(a, b) =>
-			new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime()
-	)
-	.slice(0, 3);
+const recentPosts = (await getCollection("posts"))
+  .filter((post) => !post.data.draft)
+  .sort(
+    (a, b) =>
+      new Date(b.data.publishedAt).getTime() -
+      new Date(a.data.publishedAt).getTime(),
+  )
+  .slice(0, 3);
 
 const selectedPapers = getFeaturedPapers(3);
 
 const rawProfileImage = siteConfig.hero.profileImage.trim();
 const profileImageUrl = /^https?:/i.test(rawProfileImage)
-	? rawProfileImage
-	: rawProfileImage.startsWith('/')
-		? rawProfileImage
-		: new URL(
-			rawProfileImage.startsWith('.') ? rawProfileImage : `../${rawProfileImage}`,
-			import.meta.url
-		  ).href;
+  ? rawProfileImage
+  : rawProfileImage.startsWith("/")
+    ? rawProfileImage
+    : new URL(
+        rawProfileImage.startsWith(".")
+          ? rawProfileImage
+          : `../${rawProfileImage}`,
+        import.meta.url,
+      ).href;
 
 const about = {
   name: siteConfig.author,
   bio: siteConfig.hero.subheadline,
   avatar: profileImageUrl,
-  socialLinks: siteConfig.socialLinks
+  socialLinks: siteConfig.socialLinks,
 };
+
+// Get affiliations and research interests from config
+const affiliations = siteConfig.affiliations || [];
+const researchInterests = siteConfig.researchInterests || [];
+const statusBadge = siteConfig.hero.statusBadge;
 ---
 
 <Layout title="Home">
-  <section class="fade-in-up">
-    <div class="flex flex-col-reverse gap-6 md:flex-row md:items-center md:justify-between md:gap-8">
+  <!-- Hero Section -->
+  <section class="relative">
+    <div class="flex flex-col-reverse gap-6 sm:flex-row sm:items-start sm:justify-between sm:gap-8">
       <div class="flex-1 space-y-4">
-        <h1 class="font-heading text-4xl font-bold leading-tight text-gray-900 dark:text-gray-100 md:text-5xl lg:text-6xl">
-          Hello, I'm <span class="text-accent-600 dark:text-accent-400">{about.name}</span>.
-        </h1>
-        <p class="text-lg leading-relaxed text-gray-800 dark:text-gray-200 md:text-xl">
+        <!-- Name & Title -->
+        <div class="space-y-2">
+          <h1 class="font-heading text-3xl font-bold leading-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
+            {about.name}
+          </h1>
+          
+          <!-- Affiliations -->
+          {affiliations.length > 0 && (
+            <div class="space-y-0.5">
+              {affiliations.map((aff) => (
+                <p class="text-base text-gray-600 dark:text-gray-400">
+                  {aff.role}
+                  {aff.department && <span>, {aff.department}</span>}
+                  {aff.url ? (
+                    <a 
+                      href={aff.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      class="text-accent-600 dark:text-accent-400 hover:underline no-underline"
+                    >
+                      @ {aff.institution}
+                    </a>
+                  ) : (
+                    <span>, {aff.institution}</span>
+                  )}
+                </p>
+              ))}
+            </div>
+          )}
+          
+          <!-- Status Badge -->
+          {statusBadge && (
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 rounded-full border border-emerald-200 dark:border-emerald-800">
+              {statusBadge}
+            </span>
+          )}
+        </div>
+        
+        <!-- Bio -->
+        <p class="text-sm leading-relaxed text-gray-700 dark:text-gray-300 max-w-2xl">
           {about.bio}
         </p>
-        <div class="flex flex-wrap gap-4 pt-2">
+        
+        <!-- Research Interests -->
+        {researchInterests.length > 0 && (
+          <div class="flex flex-wrap gap-1.5">
+            {researchInterests.map((interest) => (
+              <span class="px-2 py-0.5 text-xs font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 rounded">
+                {interest}
+              </span>
+            ))}
+          </div>
+        )}
+        
+        <!-- Social Links -->
+        <div class="flex flex-wrap gap-2">
           {
-            about.socialLinks.map((link) => (
+            about.socialLinks.slice(0, 5).map((link) => (
               <a
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="inline-flex items-center justify-center gap-2 rounded-full border border-gray-400 px-4 py-2 md:px-6 md:py-2.5 text-sm font-medium text-gray-900 transition-all hover:bg-gray-900/5 dark:border-gray-500 dark:text-gray-100 dark:hover:bg-gray-100/10 no-underline flex-1 md:flex-none min-w-[120px] md:min-w-0"
+                class="inline-flex items-center justify-center gap-1.5 rounded-full border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 transition-all hover:border-gray-400 hover:bg-gray-50 dark:hover:border-gray-600 dark:hover:bg-gray-800/50 no-underline"
+                title={link.label}
               >
-                <span class={`${link.icon} text-lg`} />
-                {link.label}
+                <span class={`${link.icon} text-base`} />
+                <span class="hidden sm:inline text-xs">{link.label}</span>
               </a>
             ))
           }
         </div>
       </div>
-      <div class="relative h-32 w-32 shrink-0 overflow-hidden rounded-full md:h-48 md:w-48 lg:h-64 lg:w-64 mx-auto md:mx-0">
-        <Image
-          src={about.avatar}
-          alt={about.name}
-          width={300}
-          height={300}
-          class="h-full w-full object-cover"
-        />
+      
+      <!-- Profile Image -->
+      <div class="relative shrink-0 mx-auto sm:mx-0">
+        <div class="relative h-32 w-32 sm:h-40 sm:w-40 overflow-hidden rounded-xl shadow-md ring-2 ring-white dark:ring-gray-800">
+          <Image
+            src={about.avatar}
+            alt={about.name}
+            width={300}
+            height={300}
+            class="h-full w-full object-cover"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
+        <!-- Decorative element -->
+        <div class="absolute -z-10 -bottom-1.5 -right-1.5 h-full w-full rounded-xl bg-accent-100 dark:bg-accent-900/30"></div>
       </div>
     </div>
   </section>
 
+  <!-- Selected Publications Section -->
   <section class="fade-in-up animation-delay-200 space-y-3">
     <div class="flex items-baseline justify-between border-b border-gray-200 dark:border-gray-800 pb-2">
-      <h2 class="font-heading text-2xl font-bold text-gray-900 dark:text-gray-100">
-        Recent Posts
-      </h2>
-      <a href="/posts" class="text-sm font-medium text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300 no-underline">
-        View all
+      <div class="space-y-0.5">
+        <h2 class="font-heading text-xl font-bold text-gray-900 dark:text-gray-100">
+          Selected Publications
+        </h2>
+        <p class="text-xs text-gray-500 dark:text-gray-500">Recent peer-reviewed work</p>
+      </div>
+      <a
+        href="/researches"
+        class="text-xs font-medium text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300 no-underline flex items-center gap-1"
+      >
+        View all <span class="i-mdi:arrow-right text-sm"></span>
       </a>
     </div>
     <div class="flex flex-col gap-3">
       {
-        recentPosts.map((post) => (
-          <a href={`/posts/${post.slug}`} class="group block no-underline">
-            <article class="flex flex-col gap-1 md:flex-row md:items-baseline md:gap-8">
-              <time datetime={post.data.publishedAt.toISOString()} class="shrink-0 text-sm text-gray-600 dark:text-gray-400 w-32 font-mono">
-                {post.data.publishedAt.toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                })}
-              </time>
-              <div class="space-y-1">
-                <h3 class="text-lg font-bold text-gray-900 group-hover:text-accent-600 dark:text-gray-100 dark:group-hover:text-accent-400 transition-colors font-heading">
-                  {post.data.title}
-                </h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-                  {post.data.description}
-                </p>
-              </div>
-            </article>
-          </a>
-        ))
-      }
-    </div>
-  </section>
-
-  <section class="fade-in-up animation-delay-400 space-y-3">
-    <div class="flex items-baseline justify-between border-b border-gray-200 dark:border-gray-800 pb-2">
-      <h2 class="font-heading text-2xl font-bold text-gray-900 dark:text-gray-100">
-        Selected Papers
-      </h2>
-      <a href="/researches" class="text-sm font-medium text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300 no-underline">
-        View all
-      </a>
-    </div>
-    <div class="flex flex-col gap-3">
-      {
-        selectedPapers.map((paper) => {
+        selectedPapers.map((paper, index) => {
           const abstractId = `abstract-home-${paper.id}`;
           const hasAbstract = Boolean(paper.abstract);
 
           return (
-            <article class="group relative flex flex-col gap-2">
-              <div class="flex flex-col gap-1.5">
-                <div class="flex flex-col gap-0">
-                  <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug font-heading">
-                    {paper.url ? (
-                      <a href={paper.url} target="_blank" rel="noreferrer" class="group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors no-underline text-inherit">
-                        {paper.title}
-                      </a>
-                    ) : (
-                      paper.title
-                    )}
-                  </h3>
-                  <div class="text-sm text-gray-600 dark:text-gray-400">
-                    {paper.authors.join(', ')}
-                  </div>
-                </div>
-                <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-600 dark:text-gray-400">
-                  <span class="font-medium text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
-                    {paper.venue ?? 'Venue pending'}
-                  </span>
-                  {paper.year && (
-                    <>
-                      <span>•</span>
-                      <span>{paper.year}</span>
-                    </>
+            <article class="group relative p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/50 hover:border-accent-300 dark:hover:border-accent-700 hover:shadow-lg hover:shadow-accent-500/5 transition-all duration-300">
+              <!-- Accent line -->
+              <div class="absolute left-0 top-4 bottom-4 w-1 rounded-full bg-gradient-to-b from-accent-400 to-accent-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              
+              <div class="space-y-2">
+                <!-- Title -->
+                <h3 class="font-bold text-gray-900 dark:text-gray-100 leading-snug">
+                  {paper.url ? (
+                    <a
+                      href={paper.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      class="hover:text-accent-600 dark:hover:text-accent-400 transition-colors no-underline text-inherit inline-flex items-start gap-1"
+                    >
+                      {paper.title}
+                      <span class="i-mdi:open-in-new text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 mt-1"></span>
+                    </a>
+                  ) : paper.title}
+                </h3>
+                
+                <!-- Authors -->
+                {paper.authors.length > 0 && (
+                  <p class="text-xs text-gray-600 dark:text-gray-400 flex items-center gap-1.5">
+                    <span class="i-mdi:account-group text-gray-400 dark:text-gray-500 shrink-0"></span>
+                    {paper.authors.join(", ")}
+                  </p>
+                )}
+                
+                <!-- Meta info -->
+                <div class="flex flex-wrap items-center gap-2">
+                  {paper.venue && (
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-semibold text-accent-700 dark:text-accent-300 bg-accent-50 dark:bg-accent-900/40 border border-accent-200 dark:border-accent-800">
+                      <span class="i-mdi:bookmark text-accent-500 text-xs"></span>
+                      {paper.venue}
+                    </span>
                   )}
+                  {paper.year && (
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800">
+                      <span class="i-mdi:calendar text-gray-400 dark:text-gray-500 text-xs"></span>
+                      {paper.year}
+                    </span>
+                  )}
+                </div>
+                
+                <!-- Action buttons -->
+                <div class="flex flex-wrap items-center gap-1">
                   {hasAbstract && (
-                    <>
-                      <span>•</span>
-                      <button
-                        class="font-medium text-accent-600 dark:text-accent-400 hover:underline bg-transparent border-none p-0 cursor-pointer toggle-abstract"
-                        type="button"
-                        data-target={abstractId}
-                        aria-controls={abstractId}
-                        aria-expanded="false"
-                      >
-                        Abstract
-                      </button>
-                    </>
+                    <button
+                      class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-accent-600 dark:hover:text-accent-400 hover:bg-accent-50 dark:hover:bg-accent-900/30 rounded-md bg-transparent border-none cursor-pointer toggle-abstract transition-all"
+                      type="button"
+                      data-target={abstractId}
+                      aria-controls={abstractId}
+                      aria-expanded="false"
+                    >
+                      <span class="i-mdi:text-box-outline text-sm"></span>
+                      Abstract
+                    </button>
+                  )}
+                  {paper.url && (
+                    <a 
+                      href={paper.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-accent-600 dark:hover:text-accent-400 hover:bg-accent-50 dark:hover:bg-accent-900/30 rounded-md no-underline transition-all"
+                    >
+                      <span class="i-mdi:file-pdf-box text-sm"></span>
+                      PDF
+                    </a>
                   )}
                 </div>
               </div>
 
               {hasAbstract && (
-                <div class="hidden text-sm leading-relaxed text-gray-600 dark:text-gray-400 pl-4 border-l-2 border-accent-600/30 dark:border-accent-400/30 mt-1" id={abstractId}>
-                  {paper.abstract}
+                <div
+                  class="hidden mt-3 p-3 text-xs leading-relaxed text-gray-600 dark:text-gray-400 bg-gradient-to-br from-gray-50 to-gray-100/50 dark:from-gray-800/50 dark:to-gray-800/30 rounded-lg border-l-3 border-accent-500"
+                  id={abstractId}
+                >
+                  <div class="flex items-start gap-2">
+                    <span class="i-mdi:format-quote-open text-base text-accent-400 shrink-0"></span>
+                    <p class="flex-1">{paper.abstract}</p>
+                  </div>
                 </div>
               )}
             </article>
@@ -177,19 +250,66 @@ const about = {
       }
     </div>
   </section>
-</Layout><script is:inline>
-	document.addEventListener('DOMContentLoaded', () => {
-		document.querySelectorAll('.toggle-abstract').forEach((toggle) => {
-			toggle.addEventListener('click', () => {
-				const targetId = toggle.getAttribute('data-target');
-				if (!targetId) return;
-				const abstract = document.getElementById(targetId);
-				if (!abstract) return;
 
-				abstract.classList.toggle('hidden');
-				const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
-				toggle.setAttribute('aria-expanded', (!isExpanded).toString());
-			});
-		});
-	});
+  <!-- Recent Posts Section -->
+  <section class="fade-in-up animation-delay-400 space-y-3">
+    <div class="flex items-baseline justify-between border-b border-gray-200 dark:border-gray-800 pb-2">
+      <div class="space-y-0.5">
+        <h2 class="font-heading text-xl font-bold text-gray-900 dark:text-gray-100">
+          Latest Posts
+        </h2>
+        <p class="text-xs text-gray-500 dark:text-gray-500">Thoughts and updates</p>
+      </div>
+      <a
+        href="/posts"
+        class="text-xs font-medium text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300 no-underline flex items-center gap-1"
+      >
+        View all <span class="i-mdi:arrow-right text-sm"></span>
+      </a>
+    </div>
+    <div class="flex flex-col">
+      {
+        recentPosts.map((post) => (
+          <a href={`/posts/${post.slug}`} class="group block no-underline p-2 -mx-2 rounded-lg transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
+            <article class="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:gap-4">
+              <time
+                datetime={post.data.publishedAt.toISOString()}
+                class="shrink-0 text-xs text-gray-500 dark:text-gray-500 w-20 font-mono"
+              >
+                {post.data.publishedAt.toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                })}
+              </time>
+              <div class="flex-1 min-w-0">
+                <h3 class="text-sm font-semibold text-gray-900 group-hover:text-accent-600 dark:text-gray-100 dark:group-hover:text-accent-400 transition-colors truncate">
+                  {post.data.title}
+                </h3>
+                {post.data.description && (
+                  <p class="text-xs text-gray-500 dark:text-gray-500 line-clamp-1">
+                    {post.data.description}
+                  </p>
+                )}
+              </div>
+            </article>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</Layout><script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".toggle-abstract").forEach((toggle) => {
+      toggle.addEventListener("click", () => {
+        const targetId = toggle.getAttribute("data-target");
+        if (!targetId) return;
+        const abstract = document.getElementById(targetId);
+        if (!abstract) return;
+
+        abstract.classList.toggle("hidden");
+        const isExpanded = toggle.getAttribute("aria-expanded") === "true";
+        toggle.setAttribute("aria-expanded", (!isExpanded).toString());
+      });
+    });
+  });
 </script>

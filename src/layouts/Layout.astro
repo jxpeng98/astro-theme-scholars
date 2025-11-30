@@ -57,25 +57,25 @@ const inlineLinkClasses =
     class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans transition-colors duration-300"
   >
     <div
-      class="mx-auto flex min-h-screen max-w-5xl flex-col px-6 md:px-12"
+      class="mx-auto flex min-h-screen max-w-4xl flex-col px-4 sm:px-6 md:px-8"
     >
-      <header class="relative flex items-center justify-between py-6 md:py-10">
+      <header class="relative flex items-center justify-between py-4 sm:py-6">
         <a
           data-site-title
-          class="font-heading text-2xl font-bold tracking-tight no-underline text-gray-900 dark:text-gray-100 transition-transform duration-200 active:scale-95"
+          class="font-heading text-xl font-bold tracking-tight no-underline text-gray-900 dark:text-gray-100 transition-transform duration-200 active:scale-95"
           href="/"
         >
           {siteTitle}
         </a>
 
         <!-- Desktop Navigation & Actions -->
-        <div class="hidden md:flex md:items-center md:gap-6">
+        <div class="hidden sm:flex sm:items-center sm:gap-4">
           <nav>
-            <ul class="m-0 flex list-none items-center gap-2 p-0">
+            <ul class="m-0 flex list-none items-center gap-1 p-0">
               {
                 navLinks.map((link) => (
                   <li>
-                    <a class="block px-4 py-2 text-sm font-medium text-gray-600 no-underline transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800" href={link.href}>
+                    <a class="block px-3 py-1.5 text-sm font-medium text-gray-600 no-underline transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800" href={link.href}>
                       {link.label}
                     </a>
                   </li>
@@ -103,7 +103,7 @@ const inlineLinkClasses =
         <button
           type="button"
           id="mobile-menu-toggle"
-          class="md:hidden inline-flex h-9 w-9 items-center justify-center rounded-full bg-white border border-gray-200 shadow-sketch transition-all hover:shadow-sketch-hover hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 text-gray-600 cursor-pointer z-50"
+          class="sm:hidden inline-flex h-8 w-8 items-center justify-center rounded-full bg-white border border-gray-200 shadow-sketch transition-all hover:shadow-sketch-hover hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 text-gray-600 cursor-pointer z-50"
           aria-label="Toggle menu"
           aria-expanded="false"
         >
@@ -115,14 +115,14 @@ const inlineLinkClasses =
         <!-- Mobile Dropdown Menu -->
         <div
           id="mobile-menu"
-          class="absolute top-full right-0 z-40 mt-2 w-48 origin-top-right rounded-2xl bg-white p-2 shadow-sketch ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700 opacity-0 scale-95 invisible transition-all duration-200 transform"
+          class="absolute top-full right-0 z-40 mt-2 w-44 origin-top-right rounded-xl bg-white p-1.5 shadow-sketch ring-1 ring-gray-200 dark:bg-gray-800 dark:ring-gray-700 opacity-0 scale-95 invisible transition-all duration-200 transform"
         >
           <nav>
-            <ul class="flex flex-col gap-1 list-none p-0 m-0">
+            <ul class="flex flex-col gap-0.5 list-none p-0 m-0">
               {navLinks.map((link) => (
                 <li>
                   <a
-                    class="block px-4 py-2 text-sm font-medium text-gray-600 no-underline transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800"
+                    class="block px-3 py-2 text-sm font-medium text-gray-600 no-underline transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
                     href={link.href}
                   >
                     {link.label}
@@ -134,12 +134,12 @@ const inlineLinkClasses =
         </div>
       </header>
 
-      <main class="flex-1 space-y-10 md:space-y-16">
+      <main class="flex-1 space-y-8 sm:space-y-10">
         <slot />
       </main>
 
       <footer
-        class="mt-12 border-t border-gray-200 pt-8 text-sm text-gray-600 dark:border-gray-800 dark:text-gray-400 md:mt-20 pb-10"
+        class="mt-8 border-t border-gray-200 pt-6 text-xs text-gray-500 dark:border-gray-800 dark:text-gray-500 sm:mt-12 pb-8"
       >
         <p class="m-0 text-center">
           &copy; {
@@ -150,14 +150,14 @@ const inlineLinkClasses =
     </div>
 
     <!-- Mobile Floating Action Buttons -->
-    <div class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 md:hidden">
+    <div class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 sm:hidden">
       <button
         type="button"
         id="back-to-top"
         class="flex h-8 w-8 items-center justify-center rounded-full bg-white border border-gray-200 shadow-sketch transition-all hover:shadow-sketch-hover hover:scale-105 active:scale-95 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 text-gray-600 opacity-0 translate-y-4 pointer-events-none data-[visible=true]:opacity-100 data-[visible=true]:translate-y-0 data-[visible=true]:pointer-events-auto duration-300 cursor-pointer"
         aria-label="Back to top"
       >
-        <span class="i-ph-arrow-up-bold text-lg"></span>
+        <span class="i-ph-arrow-up-bold text-base"></span>
       </button>
       
       <button
@@ -167,8 +167,8 @@ const inlineLinkClasses =
         aria-label="Toggle color mode"
       >
         <span class="sr-only">Toggle color mode</span>
-        <span class="i-ph-moon-stars-duotone block text-lg dark:hidden"></span>
-        <span class="i-ph-sun-dim-duotone hidden text-lg dark:block"></span>
+        <span class="i-ph-moon-stars-duotone block text-base dark:hidden"></span>
+        <span class="i-ph-sun-dim-duotone hidden text-base dark:block"></span>
       </button>
     </div>
 
