@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import teachingRaw from "../data/teaching.yml?raw";
+import siteConfig from "../side.config";
 import { parse } from "yaml";
 
 interface TeachingSection {
@@ -24,75 +25,126 @@ interface TeachingData {
 
 const teachingData = parse(teachingRaw) as TeachingData;
 const { current = [], past = [] } = teachingData;
+
+const pageDescription = siteConfig.pageDescriptions?.teaching ||
+  "Courses designed to bridge technical skills with critical inquiry.";
+
+// Count total courses
+const totalCurrent = current.reduce((acc, s) => acc + s.modules.length, 0);
+const totalPast = past.reduce((acc, s) => acc + s.modules.length, 0);
 ---
 
 <Layout title="Teaching">
-  <div class="space-y-8">
-    <header class="max-w-2xl">
-      <h1
-        class="font-heading text-4xl font-bold text-gray-900 dark:text-gray-100 md:text-5xl"
-      >
-        Teaching
-      </h1>
-      <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
-        Courses designed to bridge technical skills with critical inquiry.
-      </p>
+  <div class="space-y-6">
+    <!-- Page Header -->
+    <header class="space-y-4">
+      <div class="space-y-1">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          Teaching
+        </h1>
+        <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl">
+          {pageDescription}
+        </p>
+      </div>
+      
+      <!-- Filter Bar -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button 
+          type="button"
+          data-filter="all"
+          class="filter-btn active flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-accent-100 dark:bg-accent-900/30 text-sm cursor-pointer border-none transition-all"
+        >
+          <span class="i-mdi:school text-accent-600 dark:text-accent-400 text-base"></span>
+          <span class="font-medium text-accent-700 dark:text-accent-300">{totalCurrent + totalPast}</span>
+          <span class="text-accent-600 dark:text-accent-400">all</span>
+        </button>
+        {totalCurrent > 0 && (
+          <button 
+            type="button"
+            data-filter="current"
+            class="filter-btn flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-sm cursor-pointer border-none hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+          >
+            <span class="i-mdi:calendar-check text-gray-500 dark:text-gray-400 text-base"></span>
+            <span class="font-medium text-gray-700 dark:text-gray-300">{totalCurrent}</span>
+            <span class="text-gray-500 dark:text-gray-500">current</span>
+          </button>
+        )}
+        {totalPast > 0 && (
+          <button 
+            type="button"
+            data-filter="past"
+            class="filter-btn flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-sm cursor-pointer border-none hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+          >
+            <span class="i-mdi:history text-gray-500 dark:text-gray-400 text-base"></span>
+            <span class="font-medium text-gray-700 dark:text-gray-300">{totalPast}</span>
+            <span class="text-gray-500 dark:text-gray-500">past</span>
+          </button>
+        )}
+      </div>
     </header>
 
-    <div class="fade-in-up animation-delay-200 space-y-8">
+    <div class="fade-in-up animation-delay-200 space-y-8" id="teaching-container">
+      <!-- Current Modules -->
       {
         current.length > 0 && (
-          <section class="space-y-8">
-            <h2 class="font-heading text-2xl font-bold text-gray-900 dark:text-gray-100">
-              Current Modules
+          <section class="space-y-4 teaching-section" data-category="current">
+            <h2 class="text-sm font-semibold text-accent-600 dark:text-accent-400 uppercase tracking-wide">
+              Current Courses
             </h2>
-            <div class="flex flex-col gap-6">
+            
+            <div class="space-y-5">
               {current.map((section) => (
-                <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4">
-                  <div class="md:py-1">
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 md:text-right sticky top-24">
+                <div class="space-y-3">
+                  <div class="flex items-center gap-2">
+                    <span class="i-mdi:calendar text-sm text-accent-600 dark:text-accent-400"></span>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-accent-600 dark:text-accent-400">
                       {section.term}
                     </h3>
                   </div>
-                  <div class="flex flex-col divide-y divide-gray-200 dark:divide-gray-800">
+                  
+                  <div class="grid gap-4 sm:grid-cols-2">
                     {section.modules.map((module) => (
-                      <div class="flex flex-col gap-0.5 py-3 first:pt-0 last:pb-0">
-                        <div class="flex flex-col gap-1">
-                          <div class="flex items-baseline justify-between gap-4">
-                            <h4 class="text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug font-heading">
-                              {module.title}
-                            </h4>
-                            <span class="shrink-0 text-sm text-gray-600 dark:text-gray-400">
+                      <div class="group relative p-5 rounded-xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 hover:border-accent-300 dark:hover:border-accent-700 hover:shadow-lg hover:shadow-accent-500/5 transition-all duration-300">
+                        <!-- Active indicator -->
+                        <div class="absolute left-0 top-5 bottom-5 w-1 rounded-full bg-gradient-to-b from-accent-400 to-accent-600"></div>
+                        
+                        <div class="space-y-3 pl-3">
+                          <div class="flex items-start justify-between gap-2">
+                            <span class="inline-flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-md text-accent-700 dark:text-accent-300 bg-accent-50 dark:bg-accent-900/40 border border-accent-200 dark:border-accent-800">
+                              <span class="i-mdi:school text-accent-500"></span>
                               {module.code}
                             </span>
-                          </div>
-                        </div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 max-w-2xl">
-                          {module.summary}
-                        </p>
-                        {(module.tags?.length || module.link) && (
-                          <div class="flex flex-wrap items-center gap-3 pt-1">
-                            {module.tags?.length && (
-                              <div class="flex flex-wrap gap-2">
-                                {module.tags.map((tag) => (
-                                  <span class="text-xs font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
-                                    #{tag}
-                                  </span>
-                                ))}
-                              </div>
-                            )}
                             {module.link && (
                               <a
-                                class="ml-auto text-sm font-medium text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300 no-underline"
                                 href={module.link.href}
                                 target="_blank"
                                 rel="noreferrer"
+                                class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium no-underline text-gray-600 dark:text-gray-400 hover:text-accent-600 dark:hover:text-accent-400 hover:bg-accent-50 dark:hover:bg-accent-900/30 rounded-md transition-all"
                               >
-                                {module.link.label ?? "Course website"}
+                                <span class="i-mdi:open-in-new"></span>
+                                {module.link.label ?? "Course Site"}
                               </a>
                             )}
                           </div>
-                        )}
+                          
+                          <h4 class="font-bold text-gray-900 dark:text-gray-100 leading-snug">
+                            {module.title}
+                          </h4>
+                          
+                          <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed">
+                            {module.summary}
+                          </p>
+                          
+                          {module.tags && module.tags.length > 0 && (
+                            <div class="flex flex-wrap gap-1.5 pt-1">
+                              {module.tags.map((tag) => (
+                                <span class="inline-flex items-center text-xs px-2 py-0.5 rounded-full text-accent-600 dark:text-accent-400 bg-accent-50 dark:bg-accent-900/30">
+                                  #{tag}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -103,36 +155,64 @@ const { current = [], past = [] } = teachingData;
         )
       }
 
+      <!-- Past Modules -->
       {
         past.length > 0 && (
-          <section class="space-y-8">
-            <h2 class="font-heading text-2xl font-bold text-gray-900 dark:text-gray-100">
-              Past Modules
+          <section class="space-y-4 teaching-section" data-category="past">
+            <h2 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+              Past Courses
             </h2>
-            <div class="flex flex-col gap-6">
+            
+            <div class="space-y-5">
               {past.map((section) => (
-                <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4">
-                  <div class="md:py-1">
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 md:text-right sticky top-24">
+                <div class="space-y-3">
+                  <div class="flex items-center gap-2">
+                    <span class="i-mdi:calendar-blank text-sm text-gray-400 dark:text-gray-600"></span>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-500">
                       {section.term}
                     </h3>
                   </div>
-                  <div class="flex flex-col divide-y divide-gray-200 dark:divide-gray-800">
+                  
+                  <div class="grid gap-4 sm:grid-cols-2">
                     {section.modules.map((module) => (
-                      <div class="flex flex-col gap-0.5 py-3 first:pt-0 last:pb-0">
-                        <div class="flex flex-col gap-1">
-                          <div class="flex items-baseline justify-between gap-4">
-                            <h4 class="text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug font-heading">
-                              {module.title}
-                            </h4>
-                            <span class="shrink-0 text-sm text-gray-600 dark:text-gray-400">
+                      <div class="group relative p-5 rounded-xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 hover:border-accent-300 dark:hover:border-accent-700 hover:shadow-lg hover:shadow-accent-500/5 transition-all duration-300">
+                        <div class="space-y-3">
+                          <div class="flex items-start justify-between gap-2">
+                            <span class="inline-flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-md text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800">
+                              <span class="i-mdi:school text-gray-400 dark:text-gray-500"></span>
                               {module.code}
                             </span>
+                            {module.link && (
+                              <a
+                                href={module.link.href}
+                                target="_blank"
+                                rel="noreferrer"
+                                class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-gray-500 hover:text-accent-600 dark:text-gray-500 dark:hover:text-accent-400 hover:bg-accent-50 dark:hover:bg-accent-900/30 rounded-md no-underline transition-all"
+                              >
+                                <span class="i-mdi:archive"></span>
+                                {module.link.label ?? "Archive"}
+                              </a>
+                            )}
                           </div>
+                          
+                          <h4 class="font-bold text-gray-900 dark:text-gray-100 leading-snug">
+                            {module.title}
+                          </h4>
+                          
+                          <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed">
+                            {module.summary}
+                          </p>
+                          
+                          {module.tags && module.tags.length > 0 && (
+                            <div class="flex flex-wrap gap-1.5 pt-1">
+                              {module.tags.map((tag) => (
+                                <span class="inline-flex items-center text-xs px-2 py-0.5 rounded-full text-gray-500 dark:text-gray-500 bg-gray-100 dark:bg-gray-800">
+                                  #{tag}
+                                </span>
+                              ))}
+                            </div>
+                          )}
                         </div>
-                        <p class="text-sm text-gray-600 dark:text-gray-400 max-w-2xl">
-                          {module.summary}
-                        </p>
                       </div>
                     ))}
                   </div>
@@ -145,3 +225,46 @@ const { current = [], past = [] } = teachingData;
     </div>
   </div>
 </Layout>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", () => {
+    const filterBtns = document.querySelectorAll(".filter-btn");
+    const sections = document.querySelectorAll(".teaching-section");
+
+    filterBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const filter = btn.getAttribute("data-filter");
+        
+        // Update active button styles
+        filterBtns.forEach((b) => {
+          b.classList.remove("bg-accent-100", "dark:bg-accent-900/30");
+          b.classList.add("bg-gray-100", "dark:bg-gray-800");
+          b.querySelector("span:first-child")?.classList.remove("text-accent-600", "dark:text-accent-400");
+          b.querySelector("span:first-child")?.classList.add("text-gray-500", "dark:text-gray-400");
+          b.querySelector("span:nth-child(2)")?.classList.remove("text-accent-700", "dark:text-accent-300");
+          b.querySelector("span:nth-child(2)")?.classList.add("text-gray-700", "dark:text-gray-300");
+          b.querySelector("span:nth-child(3)")?.classList.remove("text-accent-600", "dark:text-accent-400");
+          b.querySelector("span:nth-child(3)")?.classList.add("text-gray-500", "dark:text-gray-500");
+        });
+        
+        btn.classList.remove("bg-gray-100", "dark:bg-gray-800");
+        btn.classList.add("bg-accent-100", "dark:bg-accent-900/30");
+        btn.querySelector("span:first-child")?.classList.remove("text-gray-500", "dark:text-gray-400");
+        btn.querySelector("span:first-child")?.classList.add("text-accent-600", "dark:text-accent-400");
+        btn.querySelector("span:nth-child(2)")?.classList.remove("text-gray-700", "dark:text-gray-300");
+        btn.querySelector("span:nth-child(2)")?.classList.add("text-accent-700", "dark:text-accent-300");
+        btn.querySelector("span:nth-child(3)")?.classList.remove("text-gray-500", "dark:text-gray-500");
+        btn.querySelector("span:nth-child(3)")?.classList.add("text-accent-600", "dark:text-accent-400");
+
+        // Filter sections
+        sections.forEach((section) => {
+          if (filter === "all" || section.getAttribute("data-category") === filter) {
+            section.classList.remove("hidden");
+          } else {
+            section.classList.add("hidden");
+          }
+        });
+      });
+    });
+  });
+</script>

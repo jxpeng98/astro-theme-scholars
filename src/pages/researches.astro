@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { getAllPapers } from "../lib/papers";
+import siteConfig from "../side.config";
 
 const papers = getAllPapers();
 const categoryOrder = [
@@ -28,104 +29,171 @@ const orderedCategories = [
     )
     .sort((a, b) => a.localeCompare(b)),
 ];
+
+// Category icons mapping
+const categoryIcons: Record<string, string> = {
+  "Publication": "i-mdi:file-document-check",
+  "Working Paper": "i-mdi:file-document-edit",
+  "Work in Progress": "i-mdi:file-document-outline",
+  "Other": "i-mdi:file-document",
+};
+
+// Count total papers
+const totalPapers = papers.length;
+const pageDescription = siteConfig.pageDescriptions?.researches || 
+  "Peer-reviewed publications, workshop papers, and essays focusing on the flow of learning signals across scholarly and civic platforms.";
 ---
 
-<Layout title="Researches">
+<Layout title="Research">
   <div class="space-y-6">
-    <header class="max-w-2xl">
-      <h1
-        class="font-heading text-4xl font-bold text-gray-900 dark:text-gray-100 md:text-5xl"
-      >
-        Researches
-      </h1>
-      <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
-        Peer-reviewed publications, workshop papers, and essays focusing on the
-        flow of learning signals across scholarly and civic platforms.
-      </p>
+    <!-- Page Header -->
+    <header class="space-y-4">
+      <div class="space-y-1">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+          Publications
+        </h1>
+        <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl">
+          {pageDescription}
+        </p>
+      </div>
+      
+      <!-- Filter Bar -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button 
+          type="button"
+          data-filter="all"
+          class="filter-btn active flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-accent-100 dark:bg-accent-900/30 text-sm cursor-pointer border-none transition-all"
+        >
+          <span class="i-mdi:file-document-multiple text-accent-600 dark:text-accent-400 text-base"></span>
+          <span class="font-medium text-accent-700 dark:text-accent-300">{totalPapers}</span>
+          <span class="text-accent-600 dark:text-accent-400">all</span>
+        </button>
+        {orderedCategories.map((category) => {
+          const count = grouped.get(category)?.length || 0;
+          const categorySlug = category.toLowerCase().replace(/\s+/g, '-');
+          return (
+            <button 
+              type="button"
+              data-filter={categorySlug}
+              class="filter-btn flex items-center gap-1 px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-sm cursor-pointer border-none hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+            >
+              <span class={`${categoryIcons[category] || 'i-mdi:file-document'} text-sm text-gray-500 dark:text-gray-400`}></span>
+              <span class="font-medium text-gray-700 dark:text-gray-300">{count}</span>
+              <span class="text-gray-500 dark:text-gray-500">{category.toLowerCase()}</span>
+            </button>
+          );
+        })}
+      </div>
     </header>
 
-    <div class="fade-in-up animation-delay-200 flex flex-col gap-6">
+    <div class="fade-in-up animation-delay-200 space-y-8" id="papers-container">
       {
         orderedCategories.map((category) => {
           const categoryPapers = grouped.get(category);
           if (!categoryPapers?.length) {
             return null;
           }
+          const categorySlug = category.toLowerCase().replace(/\s+/g, '-');
 
           return (
-            <div class="grid grid-cols-1 md:grid-cols-[100px_1fr] gap-4">
-              <div class="md:py-1">
-                <h3 class="text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 md:text-right sticky top-24">
-                  {category}
-                </h3>
-              </div>
-              <div class="flex flex-col gap-3">
-                {categoryPapers.map((paper) => {
+            <section class="space-y-3 paper-section" data-category={categorySlug}>
+              <h2 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                {category} <span class="text-gray-400 dark:text-gray-500 font-normal">({categoryPapers.length})</span>
+              </h2>
+              
+              <div class="space-y-3">
+                {categoryPapers.map((paper, index) => {
                   const abstractId = `abstract-${paper.id}`;
                   const hasAbstract = Boolean(paper.abstract);
 
                   return (
-                    <article class="group relative flex flex-col gap-2">
-                      <div class="flex flex-col gap-1.5">
-                        <div class="flex flex-col gap-0">
-                          <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100 leading-snug font-heading">
-                            {paper.url ? (
-                              <a
-                                href={paper.url}
-                                target="_blank"
-                                rel="noreferrer"
-                                class="group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors no-underline text-inherit"
-                              >
-                                {paper.title}
-                              </a>
-                            ) : (
-                              paper.title
-                            )}
-                          </h3>
-                          <div class="text-sm text-gray-600 dark:text-gray-400">
-                            {paper.authors.join(", ")}
-                          </div>
-                        </div>
-                        <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-600 dark:text-gray-400">
-                          <span class="font-medium text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
-                            {paper.venue ?? "Venue pending"}
-                          </span>
-                          {paper.year && (
-                            <>
-                              <span>•</span>
-                              <span>{paper.year}</span>
-                            </>
-                          )}
-                          {hasAbstract && (
-                            <>
-                              <span>•</span>
-                              <button
-                                class="font-medium text-accent-600 dark:text-accent-400 hover:underline bg-transparent border-none p-0 cursor-pointer toggle-abstract"
-                                type="button"
-                                data-target={abstractId}
-                                aria-controls={abstractId}
-                                aria-expanded="false"
-                              >
-                                Abstract
-                              </button>
-                            </>
-                          )}
-                        </div>
+                    <article class="group relative p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/50 hover:border-accent-300 dark:hover:border-accent-700 hover:shadow-lg hover:shadow-accent-500/5 transition-all duration-300">
+                      <!-- Index badge -->
+                      <div class="absolute -left-2 -top-2 w-7 h-7 flex items-center justify-center rounded-lg bg-accent-500 text-white text-xs font-bold shadow-md">
+                        {index + 1}
                       </div>
-
-                      {hasAbstract && (
-                        <div
-                          class="hidden text-sm leading-relaxed text-gray-600 dark:text-gray-400 pl-4 border-l-2 border-accent-600/30 dark:border-accent-400/30 mt-1"
-                          id={abstractId}
-                        >
-                          {paper.abstract}
+                      
+                      <div class="space-y-2">
+                        <!-- Title -->
+                        <h3 class="font-bold text-gray-900 dark:text-gray-100 leading-snug pr-4">
+                          {paper.url ? (
+                            <a
+                              href={paper.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              class="hover:text-accent-600 dark:hover:text-accent-400 transition-colors no-underline text-inherit inline-flex items-start gap-1"
+                            >
+                              {paper.title}
+                              <span class="i-mdi:open-in-new text-xs text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 mt-1"></span>
+                            </a>
+                          ) : paper.title}
+                        </h3>
+                        
+                        <!-- Authors -->
+                        {paper.authors.length > 0 && (
+                          <p class="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-1.5">
+                            <span class="i-mdi:account-group text-gray-400 dark:text-gray-500 shrink-0"></span>
+                            {paper.authors.join(", ")}
+                          </p>
+                        )}
+                        
+                        <!-- Meta info -->
+                        <div class="flex flex-wrap items-center gap-2">
+                          {paper.venue && (
+                            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold text-accent-700 dark:text-accent-300 bg-accent-50 dark:bg-accent-900/40 border border-accent-200 dark:border-accent-800">
+                              <span class="i-mdi:bookmark text-accent-500"></span>
+                              {paper.venue}
+                            </span>
+                          )}
+                          {paper.year && (
+                            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800">
+                              <span class="i-mdi:calendar text-gray-400 dark:text-gray-500"></span>
+                              {paper.year}
+                            </span>
+                          )}
                         </div>
-                      )}
+                        
+                        <!-- Action buttons -->
+                        <div class="flex flex-wrap items-center gap-1 pt-1">
+                          {hasAbstract && (
+                            <button
+                              class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-accent-600 dark:hover:text-accent-400 hover:bg-accent-50 dark:hover:bg-accent-900/30 rounded-lg bg-transparent border-none cursor-pointer toggle-abstract transition-all"
+                              type="button"
+                              data-target={abstractId}
+                              aria-controls={abstractId}
+                              aria-expanded="false"
+                            >
+                              <span class="i-mdi:text-box-outline"></span>
+                              Abstract
+                            </button>
+                          )}
+                          {paper.url && (
+                            <a 
+                              href={paper.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              class="inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-accent-600 dark:hover:text-accent-400 hover:bg-accent-50 dark:hover:bg-accent-900/30 rounded-lg no-underline transition-all"
+                            >
+                              <span class="i-mdi:file-pdf-box"></span>
+                              PDF
+                            </a>
+                          )}
+                        </div>
+
+                        {hasAbstract && (
+                          <div class="hidden mt-3 p-4 text-sm leading-relaxed text-gray-600 dark:text-gray-400 bg-gradient-to-br from-gray-50 to-gray-100/50 dark:from-gray-800/50 dark:to-gray-800/30 rounded-lg border-l-3 border-accent-500" id={abstractId}>
+                            <div class="flex items-start gap-2">
+                              <span class="i-mdi:format-quote-open text-lg text-accent-400 shrink-0 mt-0.5"></span>
+                              <p class="flex-1">{paper.abstract}</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </article>
                   );
                 })}
               </div>
-            </div>
+            </section>
           );
         })
       }
@@ -135,16 +203,56 @@ const orderedCategories = [
 
 <script is:inline>
   document.addEventListener("DOMContentLoaded", () => {
+    // Abstract toggle
     document.querySelectorAll(".toggle-abstract").forEach((toggle) => {
       toggle.addEventListener("click", () => {
         const targetId = toggle.getAttribute("data-target");
         if (!targetId) return;
         const abstract = document.getElementById(targetId);
         if (!abstract) return;
-
         abstract.classList.toggle("hidden");
         const isExpanded = toggle.getAttribute("aria-expanded") === "true";
         toggle.setAttribute("aria-expanded", (!isExpanded).toString());
+      });
+    });
+
+    // Filter functionality
+    const filterBtns = document.querySelectorAll(".filter-btn");
+    const sections = document.querySelectorAll(".paper-section");
+
+    filterBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const filter = btn.getAttribute("data-filter");
+        
+        // Update active button styles
+        filterBtns.forEach((b) => {
+          b.classList.remove("bg-accent-100", "dark:bg-accent-900/30");
+          b.classList.add("bg-gray-100", "dark:bg-gray-800");
+          b.querySelector("span:first-child")?.classList.remove("text-accent-600", "dark:text-accent-400");
+          b.querySelector("span:first-child")?.classList.add("text-gray-500", "dark:text-gray-400");
+          b.querySelector("span:nth-child(2)")?.classList.remove("text-accent-700", "dark:text-accent-300");
+          b.querySelector("span:nth-child(2)")?.classList.add("text-gray-700", "dark:text-gray-300");
+          b.querySelector("span:nth-child(3)")?.classList.remove("text-accent-600", "dark:text-accent-400");
+          b.querySelector("span:nth-child(3)")?.classList.add("text-gray-500", "dark:text-gray-500");
+        });
+        
+        btn.classList.remove("bg-gray-100", "dark:bg-gray-800");
+        btn.classList.add("bg-accent-100", "dark:bg-accent-900/30");
+        btn.querySelector("span:first-child")?.classList.remove("text-gray-500", "dark:text-gray-400");
+        btn.querySelector("span:first-child")?.classList.add("text-accent-600", "dark:text-accent-400");
+        btn.querySelector("span:nth-child(2)")?.classList.remove("text-gray-700", "dark:text-gray-300");
+        btn.querySelector("span:nth-child(2)")?.classList.add("text-accent-700", "dark:text-accent-300");
+        btn.querySelector("span:nth-child(3)")?.classList.remove("text-gray-500", "dark:text-gray-500");
+        btn.querySelector("span:nth-child(3)")?.classList.add("text-accent-600", "dark:text-accent-400");
+
+        // Filter sections
+        sections.forEach((section) => {
+          if (filter === "all" || section.getAttribute("data-category") === filter) {
+            section.classList.remove("hidden");
+          } else {
+            section.classList.add("hidden");
+          }
+        });
       });
     });
   });

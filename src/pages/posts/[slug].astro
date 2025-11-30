@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
+import siteConfig from '../../side.config';
 
 export async function getStaticPaths() {
 	const posts = await getCollection('posts');
@@ -12,44 +13,126 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props as { post: CollectionEntry<'posts'> };
 const { Content } = await post.render();
+
+// Calculate reading time (rough estimate: 200 words per minute)
+const wordCount = post.body.split(/\s+/).length;
+const readingTime = Math.ceil(wordCount / 200);
 ---
 
 <Layout>
-	<Fragment slot="title">{post.data.title} · Your Name</Fragment>
-	<section class="flex flex-col gap-3 mb-8">
-		<p class="uppercase tracking-[0.12em] text-xs text-accent-600 font-bold m-0">Post</p>
-		<h1 class="font-heading text-[clamp(2rem,3vw,2.8rem)] font-bold text-gray-900 dark:text-gray-100 m-0">
-			{post.data.title}
-		</h1>
-		<p class="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400 m-0">
-			<time class="font-medium" datetime={post.data.publishedAt.toISOString()}>
-				{new Date(post.data.publishedAt).toLocaleDateString(undefined, {
-					year: 'numeric',
-					month: 'long',
-					day: 'numeric'
-				})}
-			</time>
-			{post.data.updatedAt && (
-				<span>
-					Updated{' '}
-					<time class="font-medium" datetime={post.data.updatedAt.toISOString()}>
-						{new Date(post.data.updatedAt).toLocaleDateString(undefined, {
+	<Fragment slot="title">{post.data.title} · {siteConfig.author}</Fragment>
+	
+	<article class="max-w-3xl mx-auto">
+		<!-- Post Header -->
+		<header class="space-y-4 mb-8">
+			<!-- Breadcrumb -->
+			<nav class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-500">
+				<a href="/posts" class="hover:text-accent-600 dark:hover:text-accent-400 no-underline transition-colors flex items-center gap-1">
+					<span class="i-mdi:arrow-left text-sm"></span>
+					Blog
+				</a>
+				<span>/</span>
+				<span class="text-gray-700 dark:text-gray-300 truncate">{post.data.title}</span>
+			</nav>
+			
+			<!-- Post Meta -->
+			<div class="space-y-3">
+				<div class="flex flex-wrap items-center gap-2 text-xs">
+					<time 
+						class="flex items-center gap-1 text-gray-600 dark:text-gray-400" 
+						datetime={post.data.publishedAt.toISOString()}
+					>
+						<span class="i-mdi:calendar text-sm text-accent-600 dark:text-accent-400"></span>
+						{new Date(post.data.publishedAt).toLocaleDateString(undefined, {
 							year: 'numeric',
 							month: 'long',
 							day: 'numeric'
 						})}
 					</time>
-				</span>
-			)}
-		</p>
-		<p class="m-0 text-gray-800 dark:text-gray-200 max-w-[65ch]">{post.data.description}</p>
-	</section>
-
-	<article class="prose prose-neutral dark:prose-invert max-w-none text-[1.05rem] leading-7 prose-headings:font-heading prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-gray-100 prose-p:text-gray-800 dark:prose-p:text-gray-200">
-		<Content />
+					
+					<span class="text-gray-300 dark:text-gray-700">·</span>
+					
+					<span class="flex items-center gap-1 text-gray-600 dark:text-gray-400">
+						<span class="i-mdi:clock-outline text-sm text-accent-600 dark:text-accent-400"></span>
+						{readingTime} min read
+					</span>
+					
+					{post.data.updatedAt && (
+						<>
+							<span class="text-gray-300 dark:text-gray-700">·</span>
+							<span class="flex items-center gap-1 text-gray-500 dark:text-gray-500">
+								<span class="i-mdi:update text-sm"></span>
+								Updated {new Date(post.data.updatedAt).toLocaleDateString(undefined, {
+									month: 'short',
+									day: 'numeric',
+									year: 'numeric'
+								})}
+							</span>
+						</>
+					)}
+				</div>
+				
+				<h1 class="font-heading text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 leading-tight">
+					{post.data.title}
+				</h1>
+				
+				{post.data.description && (
+					<p class="text-base text-gray-600 dark:text-gray-400 leading-relaxed">
+						{post.data.description}
+					</p>
+				)}
+			</div>
+		</header>
+		
+		<!-- Post Content -->
+		<div class="prose prose-neutral dark:prose-invert max-w-none 
+			text-base leading-7
+			prose-headings:font-heading prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-gray-100 
+			prose-p:text-gray-700 dark:prose-p:text-gray-300
+			prose-a:text-accent-600 dark:prose-a:text-accent-400 prose-a:no-underline hover:prose-a:underline
+			prose-strong:text-gray-900 dark:prose-strong:text-gray-100
+			prose-code:text-accent-700 dark:prose-code:text-accent-400 prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none
+			prose-pre:bg-gray-900 dark:prose-pre:bg-gray-950 prose-pre:border prose-pre:border-gray-200 dark:prose-pre:border-gray-800
+			prose-blockquote:border-l-accent-500 prose-blockquote:bg-gray-50 dark:prose-blockquote:bg-gray-800/50 prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:rounded-r-lg
+			prose-img:rounded-xl prose-img:shadow-lg
+			prose-hr:border-gray-200 dark:prose-hr:border-gray-800
+		">
+			<Content />
+		</div>
+		
+		<!-- Post Footer -->
+		<footer class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
+			<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+				<a 
+					href="/posts" 
+					class="inline-flex items-center gap-1.5 text-sm text-accent-600 dark:text-accent-400 no-underline font-medium hover:text-accent-700 dark:hover:text-accent-300 transition-colors"
+				>
+					<span class="i-mdi:arrow-left"></span>
+					Back to all posts
+				</a>
+				
+				<div class="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-500">
+					<span>Share:</span>
+					<a 
+						href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.data.title)}&url=${encodeURIComponent(Astro.url.href)}`}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-accent-600 dark:hover:text-accent-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors no-underline"
+						title="Share on Twitter"
+					>
+						<span class="i-mdi:twitter text-sm"></span>
+					</a>
+					<a 
+						href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}`}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="inline-flex items-center justify-center w-7 h-7 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:text-accent-600 dark:hover:text-accent-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors no-underline"
+						title="Share on LinkedIn"
+					>
+						<span class="i-mdi:linkedin text-sm"></span>
+					</a>
+				</div>
+			</div>
+		</footer>
 	</article>
-
-	<section class="mt-10">
-		<a class="text-accent-600 dark:text-accent-400 no-underline font-medium hover:text-accent-700 dark:hover:text-accent-300" href="/posts">← Back to posts</a>
-	</section>
 </Layout>
