@@ -23,9 +23,9 @@
     "url": "https://github.com/jxpeng98/astro-theme-scholars.git"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.5",
+    "@astrojs/check": "0.9.6",
     "@astrojs/sitemap": "^3.6.0",
-    "astro": "^5.15.0",
+    "astro": "5.16.4",
     "astro-icon": "^1.1.5",
     "astro-seo": "^0.8.4",
     "sitemap": "^8.0.1",
