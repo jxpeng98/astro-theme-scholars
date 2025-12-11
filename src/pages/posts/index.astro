@@ -47,7 +47,7 @@ const totalPosts = posts.length;
         {pageTitle}
       </h1>
       <p
-        class="text-base text-gray-600 dark:text-gray-400 leading-relaxed max-w-3xl"
+        class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl"
       >
         {pageDescription}
       </p>
@@ -58,15 +58,15 @@ const totalPosts = posts.length;
           class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-sm"
         >
           <span
-            class="i-mdi:file-document-multiple text-accent-600 dark:text-accent-400 text-base"
+            class="i-mdi:file-document-multiple text-accent-700 dark:text-accent-300 text-base"
           ></span>
           <span class="font-medium text-gray-900 dark:text-gray-100"
             >{totalPosts}</span
           >
-          <span class="text-gray-500 dark:text-gray-500">posts</span>
+          <span class="text-gray-500 dark:text-gray-400">posts</span>
         </div>
         <div
-          class="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-500"
+          class="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400"
         >
           <span class="i-mdi:calendar-range text-sm"></span>
           <span>{years[years.length - 1]} — {years[0]}</span>
@@ -83,7 +83,7 @@ const totalPosts = posts.length;
                 {year}
               </span>
               <div class="flex-1 h-px bg-gradient-to-r from-accent-200 to-transparent dark:from-accent-800" />
-              <span class="px-2 py-0.5 rounded-full text-xs font-medium text-accent-700 dark:text-accent-400 bg-accent-50 dark:bg-accent-900/30">
+              <span class="px-2 py-0.5 rounded-full text-xs font-medium text-accent-800 dark:text-accent-200 bg-accent-100 dark:bg-accent-900/40">
                 {groupedPosts.get(year)?.length} posts
               </span>
             </div>
@@ -98,7 +98,7 @@ const totalPosts = posts.length;
                     <div class="flex items-center gap-2 sm:flex-col sm:items-start sm:gap-0.5 shrink-0 sm:w-20">
                       <time
                         datetime={post.data.publishedAt.toISOString()}
-                        class="text-xs font-medium text-gray-500 dark:text-gray-500 tabular-nums"
+                        class="text-xs font-medium text-gray-500 dark:text-gray-400 tabular-nums"
                       >
                         {post.data.publishedAt.toLocaleDateString("en-US", {
                           month: "short",
@@ -108,7 +108,7 @@ const totalPosts = posts.length;
                       <span class="sm:hidden text-gray-300 dark:text-gray-600">
                         ·
                       </span>
-                      <span class="text-xs text-gray-400 dark:text-gray-600 hidden sm:block">
+                      <span class="text-xs text-gray-400 dark:text-gray-500 hidden sm:block">
                         {Math.ceil(post.body?.length / 1000) || 3} min read
                       </span>
                     </div>
@@ -118,7 +118,7 @@ const totalPosts = posts.length;
                         {post.data.title}
                       </h2>
                       {post.data.description && (
-                        <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed">
+                        <p class="text-sm text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-2">
                           {post.data.description}
                         </p>
                       )}

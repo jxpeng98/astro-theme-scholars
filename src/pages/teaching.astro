@@ -40,10 +40,10 @@ const totalPast = past.reduce((acc, s) => acc + (s.modules?.length || 0), 0);
     <!-- Page Header -->
     <header class="space-y-4">
       <div class="space-y-1">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-50">
           {pageTitle}
         </h1>
-        <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl">
+        <p class="text-sm text-gray-600 dark:text-gray-200 leading-relaxed max-w-2xl">
           {pageDescription}
         </p>
       </div>
@@ -179,8 +179,8 @@ const totalPast = past.reduce((acc, s) => acc + (s.modules?.length || 0), 0);
                       <div class="group relative p-6 rounded-2xl bg-white dark:bg-gray-800/50 shadow-sm hover:shadow-md transition-all duration-300">
                         <div class="space-y-3">
                           <div class="flex items-start justify-between gap-2">
-                            <span class="inline-flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-md text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800">
-                              <span class="i-mdi:school text-gray-400 dark:text-gray-500"></span>
+                            <span class="inline-flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-md text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
+                              <span class="i-mdi:school text-gray-500 dark:text-gray-400"></span>
                               {module.code}
                             </span>
                             {module.link && (
