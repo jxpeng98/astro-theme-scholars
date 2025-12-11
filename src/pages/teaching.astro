@@ -5,42 +5,43 @@ import siteConfig from "../side.config";
 import { parse } from "yaml";
 
 interface TeachingSection {
-  term: string;
-  modules: Array<{
-    title: string;
-    code: string;
-    summary: string;
+  term?: string;
+  modules?: Array<{
+    title?: string;
+    code?: string;
+    summary?: string;
     tags?: string[];
     link?: {
       label?: string;
-      href: string;
+      href?: string;
     };
   }>;
 }
 
 interface TeachingData {
-  current: TeachingSection[];
-  past: TeachingSection[];
+  current?: TeachingSection[];
+  past?: TeachingSection[];
 }
 
-const teachingData = parse(teachingRaw) as TeachingData;
+const teachingData = (parse(teachingRaw) as TeachingData) || {};
 const { current = [], past = [] } = teachingData;
 
-const pageDescription = siteConfig.pageDescriptions?.teaching ||
+const pageTitle = siteConfig.pageTitles.teaching.title || "Teaching";
+const pageDescription = siteConfig.pageTitles.teaching.description ||
   "Courses designed to bridge technical skills with critical inquiry.";
 
 // Count total courses
-const totalCurrent = current.reduce((acc, s) => acc + s.modules.length, 0);
-const totalPast = past.reduce((acc, s) => acc + s.modules.length, 0);
+const totalCurrent = current.reduce((acc, s) => acc + (s.modules?.length || 0), 0);
+const totalPast = past.reduce((acc, s) => acc + (s.modules?.length || 0), 0);
 ---
 
-<Layout title="Teaching">
+<Layout title={pageTitle}>
   <div class="space-y-6">
     <!-- Page Header -->
     <header class="space-y-4">
       <div class="space-y-1">
         <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
-          Teaching
+          {pageTitle}
         </h1>
         <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl">
           {pageDescription}
@@ -103,8 +104,8 @@ const totalPast = past.reduce((acc, s) => acc + s.modules.length, 0);
                   </div>
                   
                   <div class="grid gap-4 sm:grid-cols-2">
-                    {section.modules.map((module) => (
-                      <div class="group relative p-5 rounded-xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 hover:border-accent-300 dark:hover:border-accent-700 hover:shadow-lg hover:shadow-accent-500/5 transition-all duration-300">
+                    {(section.modules || []).map((module) => (
+                      <div class="group relative p-6 rounded-2xl bg-white dark:bg-gray-800/50 shadow-sm hover:shadow-md transition-all duration-300">
                         <!-- Active indicator -->
                         <div class="absolute left-0 top-5 bottom-5 w-1 rounded-full bg-gradient-to-b from-accent-400 to-accent-600"></div>
                         
@@ -174,8 +175,8 @@ const totalPast = past.reduce((acc, s) => acc + s.modules.length, 0);
                   </div>
                   
                   <div class="grid gap-4 sm:grid-cols-2">
-                    {section.modules.map((module) => (
-                      <div class="group relative p-5 rounded-xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 hover:border-accent-300 dark:hover:border-accent-700 hover:shadow-lg hover:shadow-accent-500/5 transition-all duration-300">
+                    {(section.modules || []).map((module) => (
+                      <div class="group relative p-6 rounded-2xl bg-white dark:bg-gray-800/50 shadow-sm hover:shadow-md transition-all duration-300">
                         <div class="space-y-3">
                           <div class="flex items-start justify-between gap-2">
                             <span class="inline-flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-md text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800">

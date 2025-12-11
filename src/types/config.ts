@@ -54,14 +54,23 @@ export interface SiteConfig {
 		subheadline: string;
 		profileAlt: string;
 		profileImage: string;
+		/** Optional: Profile image height in pixels (default: 160) */
+		profileImageHeight?: number;
+		/** Optional: Profile image width in pixels (default: 160) */
+		profileImageWidth?: number;
 		statusBadge?: string;
 	};
-	// --- Page Descriptions ---
-	pageDescriptions: {
-		about: string;
-		researches: string;
-		projects: string;
-		teaching: string;
-		posts: string;
+	// --- Page Titles and Descriptions ---
+	pageTitles: {
+		about: { title: string; description: string };
+		researches: { title: string; description: string };
+		projects: { title: string; description: string };
+		teaching: { title: string; description: string };
+		posts: { title: string; description: string };
+	};
+	// --- Home Page Blocks ---
+	homeBlocks: {
+		publications: { title: string; description: string };
+		posts: { title: string; description: string };
 	};
 }

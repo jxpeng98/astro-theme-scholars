@@ -121,12 +121,18 @@ const statusBadge = siteConfig.hero.statusBadge;
       
       <!-- Profile Image -->
       <div class="relative shrink-0 mx-auto sm:mx-0">
-        <div class="relative h-32 w-32 sm:h-40 sm:w-40 overflow-hidden rounded-xl shadow-md ring-2 ring-white dark:ring-gray-800">
+        <div 
+          class="relative overflow-hidden rounded-xl shadow-md ring-2 ring-white dark:ring-gray-800"
+          style={{ 
+            width: `${siteConfig.hero.profileImageWidth || 160}px`, 
+            height: `${siteConfig.hero.profileImageHeight || 160}px` 
+          }}
+        >
           <Image
             src={about.avatar}
             alt={about.name}
-            width={300}
-            height={300}
+            width={siteConfig.hero.profileImageWidth || 160}
+            height={siteConfig.hero.profileImageHeight || 160}
             class="h-full w-full object-cover"
             loading="eager"
             fetchpriority="high"
@@ -143,9 +149,9 @@ const statusBadge = siteConfig.hero.statusBadge;
     <div class="flex items-baseline justify-between border-b border-gray-200 dark:border-gray-800 pb-2">
       <div class="space-y-0.5">
         <h2 class="font-heading text-xl font-bold text-gray-900 dark:text-gray-100">
-          Selected Publications
+          {siteConfig.homeBlocks.publications.title}
         </h2>
-        <p class="text-xs text-gray-500 dark:text-gray-500">Recent peer-reviewed work</p>
+        <p class="text-xs text-gray-500 dark:text-gray-500">{siteConfig.homeBlocks.publications.description}</p>
       </div>
       <a
         href="/researches"
@@ -161,7 +167,7 @@ const statusBadge = siteConfig.hero.statusBadge;
           const hasAbstract = Boolean(paper.abstract);
 
           return (
-            <article class="group relative p-4 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900/50 hover:border-accent-300 dark:hover:border-accent-700 hover:shadow-lg hover:shadow-accent-500/5 transition-all duration-300">
+            <article class="group relative p-6 rounded-2xl bg-white dark:bg-gray-800/50 shadow-sm hover:shadow-md transition-all duration-300">
               <!-- Accent line -->
               <div class="absolute left-0 top-4 bottom-4 w-1 rounded-full bg-gradient-to-b from-accent-400 to-accent-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               
@@ -256,9 +262,9 @@ const statusBadge = siteConfig.hero.statusBadge;
     <div class="flex items-baseline justify-between border-b border-gray-200 dark:border-gray-800 pb-2">
       <div class="space-y-0.5">
         <h2 class="font-heading text-xl font-bold text-gray-900 dark:text-gray-100">
-          Latest Posts
+          {siteConfig.homeBlocks.posts.title}
         </h2>
-        <p class="text-xs text-gray-500 dark:text-gray-500">Thoughts and updates</p>
+        <p class="text-xs text-gray-500 dark:text-gray-500">{siteConfig.homeBlocks.posts.description}</p>
       </div>
       <a
         href="/posts"
@@ -267,29 +273,35 @@ const statusBadge = siteConfig.hero.statusBadge;
         View all <span class="i-mdi:arrow-right text-sm"></span>
       </a>
     </div>
-    <div class="flex flex-col">
+    <div class="grid gap-3 sm:grid-cols-3">
       {
         recentPosts.map((post) => (
-          <a href={`/posts/${post.slug}`} class="group block no-underline p-2 -mx-2 rounded-lg transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50">
-            <article class="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:gap-4">
+          <a href={`/posts/${post.slug}`} class="group block no-underline h-full">
+            <article class="flex flex-col h-full p-6 rounded-2xl bg-white dark:bg-gray-800/50 shadow-sm hover:shadow-md transition-shadow duration-300">
               <time
                 datetime={post.data.publishedAt.toISOString()}
-                class="shrink-0 text-xs text-gray-500 dark:text-gray-500 w-20 font-mono"
+                class="text-xs text-gray-500 dark:text-gray-500 font-mono mb-2"
               >
                 {post.data.publishedAt.toLocaleDateString("en-US", {
+                  year: "numeric",
                   month: "short",
                   day: "numeric",
                 })}
               </time>
-              <div class="flex-1 min-w-0">
-                <h3 class="text-sm font-semibold text-gray-900 group-hover:text-accent-600 dark:text-gray-100 dark:group-hover:text-accent-400 transition-colors truncate">
-                  {post.data.title}
-                </h3>
-                {post.data.description && (
-                  <p class="text-xs text-gray-500 dark:text-gray-500 line-clamp-1">
-                    {post.data.description}
-                  </p>
-                )}
+              
+              <h3 class="text-sm font-bold text-gray-900 dark:text-gray-100 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors line-clamp-2 mb-2">
+                {post.data.title}
+              </h3>
+              
+              {post.data.description && (
+                <p class="text-xs text-gray-600 dark:text-gray-400 line-clamp-3 leading-relaxed mb-auto">
+                  {post.data.description}
+                </p>
+              )}
+              
+              <div class="flex items-center gap-1 text-xs font-medium text-accent-600 dark:text-accent-400 pt-3 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <span>Read more</span>
+                <span class="i-mdi:arrow-right"></span>
               </div>
             </article>
           </a>
