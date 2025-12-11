@@ -151,7 +151,7 @@ const statusBadge = siteConfig.hero.statusBadge;
         <h2 class="font-heading text-xl font-bold text-gray-900 dark:text-gray-100">
           {siteConfig.homeBlocks.publications.title}
         </h2>
-        {siteConfig.homeBlocks.publications.description && <p class="text-xs text-gray-500 dark:text-gray-500">{siteConfig.homeBlocks.publications.description}</p>}
+        {siteConfig.homeBlocks.publications.description && <p class="text-xs text-gray-600 dark:text-gray-400">{siteConfig.homeBlocks.publications.description}</p>}
       </div>
       <a
         href="/researches"
@@ -173,7 +173,7 @@ const statusBadge = siteConfig.hero.statusBadge;
               
               <div class="space-y-2">
                 <!-- Title -->
-                <h3 class="font-bold text-gray-900 dark:text-gray-100 leading-snug">
+                <h3 class="font-bold text-gray-900 dark:text-gray-50 leading-snug">
                   {paper.url ? (
                     <a
                       href={paper.url}
@@ -198,14 +198,14 @@ const statusBadge = siteConfig.hero.statusBadge;
                 <!-- Meta info -->
                 <div class="flex flex-wrap items-center gap-2">
                   {paper.venue && (
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-semibold text-accent-700 dark:text-accent-300 bg-accent-50 dark:bg-accent-900/40 border border-accent-200 dark:border-accent-800">
-                      <span class="i-mdi:bookmark text-accent-500 text-xs"></span>
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-semibold text-accent-800 dark:text-accent-200 bg-accent-100 dark:bg-accent-900/40 border border-accent-200 dark:border-accent-800">
+                      <span class="i-mdi:bookmark text-accent-600 dark:text-accent-300 text-xs"></span>
                       {paper.venue}
                     </span>
                   )}
                   {paper.year && (
-                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800">
-                      <span class="i-mdi:calendar text-gray-400 dark:text-gray-500 text-xs"></span>
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800">
+                      <span class="i-mdi:calendar text-gray-500 dark:text-gray-400 text-xs"></span>
                       {paper.year}
                     </span>
                   )}
@@ -264,7 +264,7 @@ const statusBadge = siteConfig.hero.statusBadge;
         <h2 class="font-heading text-xl font-bold text-gray-900 dark:text-gray-100">
           {siteConfig.homeBlocks.posts.title}
         </h2>
-        {siteConfig.homeBlocks.posts.description && <p class="text-xs text-gray-500 dark:text-gray-500">{siteConfig.homeBlocks.posts.description}</p>}
+        {siteConfig.homeBlocks.posts.description && <p class="text-xs text-gray-600 dark:text-gray-400">{siteConfig.homeBlocks.posts.description}</p>}
       </div>
       <a
         href="/posts"
@@ -280,7 +280,7 @@ const statusBadge = siteConfig.hero.statusBadge;
             <article class="flex flex-col h-full p-6 rounded-2xl bg-white dark:bg-gray-800/50 shadow-sm hover:shadow-md transition-shadow duration-300">
               <time
                 datetime={post.data.publishedAt.toISOString()}
-                class="text-xs text-gray-500 dark:text-gray-500 font-mono mb-2"
+                class="text-xs text-gray-600 dark:text-gray-400 font-mono mb-2"
               >
                 {post.data.publishedAt.toLocaleDateString("en-US", {
                   year: "numeric",
@@ -289,12 +289,12 @@ const statusBadge = siteConfig.hero.statusBadge;
                 })}
               </time>
               
-              <h3 class="text-sm font-bold text-gray-900 dark:text-gray-100 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors line-clamp-2 mb-2">
+              <h3 class="text-sm font-bold text-gray-900 dark:text-gray-50 group-hover:text-accent-600 dark:group-hover:text-accent-400 transition-colors line-clamp-2 mb-2">
                 {post.data.title}
               </h3>
               
               {post.data.description && (
-                <p class="text-xs text-gray-600 dark:text-gray-400 line-clamp-3 leading-relaxed mb-auto">
+                <p class="text-xs text-gray-600 dark:text-gray-300 line-clamp-3 leading-relaxed mb-auto">
                   {post.data.description}
                 </p>
               )}

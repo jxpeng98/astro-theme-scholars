@@ -83,7 +83,7 @@ export default defineConfig({
 			'inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-100 text-gray-700 font-medium text-sm transition-all duration-200 hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-300/70 focus-visible:ring-offset-2 no-underline border border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 dark:hover:bg-gray-700',
 		'btn-ghost':
 			'inline-flex items-center gap-2 px-4 py-2 rounded-full text-gray-600 font-medium text-sm transition-all duration-200 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 no-underline',
-		
+
 		// Cards
 		'card':
 			'rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-gray-900',
@@ -91,26 +91,26 @@ export default defineConfig({
 			'rounded-xl border border-gray-200 bg-white p-5 transition-all hover:shadow-lg hover:border-gray-300 dark:border-gray-800 dark:bg-gray-900 dark:hover:border-gray-700',
 		'card-accent':
 			'rounded-xl bg-gradient-to-br from-accent-50 to-accent-100 border border-accent-200 p-5 dark:from-accent-900/20 dark:to-accent-800/20 dark:border-accent-800/50',
-		
+
 		// Chips/Tags
 		'chip':
-			'px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300',
+			'px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200',
 		'chip-accent':
-			'px-3 py-1 rounded-full text-sm font-medium bg-accent-100 text-accent-700 dark:bg-accent-900/30 dark:text-accent-400',
+			'px-3 py-1 rounded-full text-sm font-medium bg-accent-100 text-accent-800 dark:bg-accent-900/40 dark:text-accent-200',
 		'chip-success':
-			'px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
-		
+			'px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300',
+
 		// Section headers
 		'section-title':
-			'font-heading text-2xl font-bold text-gray-900 dark:text-gray-100',
+			'font-heading text-2xl font-bold text-gray-900 dark:text-gray-50',
 		'section-subtitle':
-			'text-sm text-gray-500 dark:text-gray-500',
-		
+			'text-sm text-gray-600 dark:text-gray-400',
+
 		// Links
 		'link':
-			'text-accent-600 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-300 no-underline transition-colors',
+			'text-accent-700 hover:text-accent-800 dark:text-accent-300 dark:hover:text-accent-200 no-underline transition-colors',
 		'link-muted':
-			'text-gray-500 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-300 no-underline transition-colors',
+			'text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 no-underline transition-colors',
 	},
 	theme: {
 		colors: {
