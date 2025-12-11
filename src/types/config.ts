@@ -35,7 +35,7 @@ export interface SiteConfig {
 	// --- Basic Information ---
 	title: string;
 	author: string;
-	description: string;
+	description?: string;
 	favicon: string;
 	keywords: string[];
 	// --- Academic Profile ---
@@ -62,15 +62,15 @@ export interface SiteConfig {
 	};
 	// --- Page Titles and Descriptions ---
 	pageTitles: {
-		about: { title: string; description: string };
-		researches: { title: string; description: string };
-		projects: { title: string; description: string };
-		teaching: { title: string; description: string };
-		posts: { title: string; description: string };
+		about: { title: string; description?: string };
+		researches: { title: string; description?: string };
+		projects: { title: string; description?: string };
+		teaching: { title: string; description?: string };
+		posts: { title: string; description?: string };
 	};
 	// --- Home Page Blocks ---
 	homeBlocks: {
-		publications: { title: string; description: string };
-		posts: { title: string; description: string };
+		publications: { title: string; description?: string };
+		posts: { title: string; description?: string };
 	};
 }

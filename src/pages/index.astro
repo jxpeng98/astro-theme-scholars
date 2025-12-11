@@ -151,7 +151,7 @@ const statusBadge = siteConfig.hero.statusBadge;
         <h2 class="font-heading text-xl font-bold text-gray-900 dark:text-gray-100">
           {siteConfig.homeBlocks.publications.title}
         </h2>
-        <p class="text-xs text-gray-500 dark:text-gray-500">{siteConfig.homeBlocks.publications.description}</p>
+        {siteConfig.homeBlocks.publications.description && <p class="text-xs text-gray-500 dark:text-gray-500">{siteConfig.homeBlocks.publications.description}</p>}
       </div>
       <a
         href="/researches"
@@ -264,7 +264,7 @@ const statusBadge = siteConfig.hero.statusBadge;
         <h2 class="font-heading text-xl font-bold text-gray-900 dark:text-gray-100">
           {siteConfig.homeBlocks.posts.title}
         </h2>
-        <p class="text-xs text-gray-500 dark:text-gray-500">{siteConfig.homeBlocks.posts.description}</p>
+        {siteConfig.homeBlocks.posts.description && <p class="text-xs text-gray-500 dark:text-gray-500">{siteConfig.homeBlocks.posts.description}</p>}
       </div>
       <a
         href="/posts"

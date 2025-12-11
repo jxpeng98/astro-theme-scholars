@@ -21,7 +21,7 @@ const currentYear = new Date().getFullYear();
 const siteTitle = siteConfig.author || siteConfig.title;
 const navLinks = siteConfig.navLinks;
 const inlineLinkClasses =
-	"block px-3 py-2 text-center font-medium text-slate-600 no-underline transition-colors duration-200 hover:bg-accent-100 hover:text-accent-700 dark:text-slate-300 dark:hover:bg-accent-500/20 dark:hover:text-accent-200 rounded-full";
+  "block px-3 py-2 text-center font-medium text-slate-600 no-underline transition-colors duration-200 hover:bg-accent-100 hover:text-accent-700 dark:text-slate-300 dark:hover:bg-accent-500/20 dark:hover:text-accent-200 rounded-full";
 ---
 
 <!doctype html>
@@ -30,7 +30,7 @@ const inlineLinkClasses =
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href={siteConfig.favicon} />
-    <meta name="description" content={siteConfig.description} />
+
     <meta name="keywords" content={siteConfig.keywords.join(", ")} />
     <meta name="generator" content={Astro.generator} />
     <title>{siteConfig.title}</title>
@@ -75,7 +75,10 @@ const inlineLinkClasses =
               {
                 navLinks.map((link) => (
                   <li>
-                    <a class="block px-3 py-1.5 text-sm font-medium text-gray-600 no-underline transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800" href={link.href}>
+                    <a
+                      class="block px-3 py-1.5 text-sm font-medium text-gray-600 no-underline transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+                      href={link.href}
+                    >
                       {link.label}
                     </a>
                   </li>
@@ -108,8 +111,14 @@ const inlineLinkClasses =
           aria-expanded="false"
         >
           <span class="sr-only">Toggle menu</span>
-          <span id="icon-menu" class="i-ph-list-bold text-lg transition-transform duration-200"></span>
-          <span id="icon-close" class="i-ph-x-bold text-lg hidden transition-transform duration-200"></span>
+          <span
+            id="icon-menu"
+            class="i-ph-list-bold text-lg transition-transform duration-200"
+          ></span>
+          <span
+            id="icon-close"
+            class="i-ph-x-bold text-lg hidden transition-transform duration-200"
+          ></span>
         </button>
 
         <!-- Mobile Dropdown Menu -->
@@ -119,16 +128,18 @@ const inlineLinkClasses =
         >
           <nav>
             <ul class="flex flex-col gap-0.5 list-none p-0 m-0">
-              {navLinks.map((link) => (
-                <li>
-                  <a
-                    class="block px-3 py-2 text-sm font-medium text-gray-600 no-underline transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
-                    href={link.href}
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
+              {
+                navLinks.map((link) => (
+                  <li>
+                    <a
+                      class="block px-3 py-2 text-sm font-medium text-gray-600 no-underline transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+                      href={link.href}
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))
+              }
             </ul>
           </nav>
         </div>
@@ -159,7 +170,7 @@ const inlineLinkClasses =
       >
         <span class="i-ph-arrow-up-bold text-base"></span>
       </button>
-      
+
       <button
         type="button"
         data-theme-toggle
@@ -167,7 +178,8 @@ const inlineLinkClasses =
         aria-label="Toggle color mode"
       >
         <span class="sr-only">Toggle color mode</span>
-        <span class="i-ph-moon-stars-duotone block text-base dark:hidden"></span>
+        <span class="i-ph-moon-stars-duotone block text-base dark:hidden"
+        ></span>
         <span class="i-ph-sun-dim-duotone hidden text-base dark:block"></span>
       </button>
     </div>
@@ -212,7 +224,8 @@ const inlineLinkClasses =
 
           if (menuBtn && menu && iconMenu && iconClose) {
             const toggleMenu = () => {
-              const isExpanded = menuBtn.getAttribute("aria-expanded") === "true";
+              const isExpanded =
+                menuBtn.getAttribute("aria-expanded") === "true";
               if (isExpanded) {
                 // Close
                 menuBtn.setAttribute("aria-expanded", "false");
@@ -237,8 +250,13 @@ const inlineLinkClasses =
 
             // Close on click outside
             document.addEventListener("click", (e) => {
-              const isExpanded = menuBtn.getAttribute("aria-expanded") === "true";
-              if (isExpanded && !menu.contains(e.target) && !menuBtn.contains(e.target)) {
+              const isExpanded =
+                menuBtn.getAttribute("aria-expanded") === "true";
+              if (
+                isExpanded &&
+                !menu.contains(e.target) &&
+                !menuBtn.contains(e.target)
+              ) {
                 toggleMenu();
               }
             });
@@ -246,7 +264,7 @@ const inlineLinkClasses =
 
           // Theme toggle buttons
           const toggleButtons = document.querySelectorAll(
-            "[data-theme-toggle]"
+            "[data-theme-toggle]",
           );
           toggleButtons.forEach((btn) => {
             btn.addEventListener("click", () => {
