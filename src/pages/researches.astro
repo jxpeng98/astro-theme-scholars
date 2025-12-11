@@ -162,13 +162,13 @@ const pageDescription = siteConfig.pageTitles.researches.description ||
                           <div class="flex items-center gap-2">
                             {hasAbstract && (
                               <button
-                                class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-accent-600 dark:hover:text-accent-400 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md border border-transparent hover:border-gray-200 dark:hover:border-gray-700 cursor-pointer toggle-abstract transition-all"
+                                class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-gray-700 dark:text-gray-300 bg-gray-100 hover:bg-accent-100 hover:text-accent-700 dark:bg-gray-800 dark:hover:bg-accent-900/40 dark:hover:text-accent-300 rounded-lg border-none cursor-pointer toggle-abstract transition-colors"
                                 type="button"
                                 data-target={abstractId}
                                 aria-controls={abstractId}
                                 aria-expanded="false"
                               >
-                                <span class="i-mdi:text-box-outline"></span>
+                                <span class="i-mdi:chevron-down text-base transition-transform duration-200"></span>
                                 Abstract
                               </button>
                             )}
@@ -177,9 +177,9 @@ const pageDescription = siteConfig.pageTitles.researches.description ||
                                 href={paper.url}
                                 target="_blank"
                                 rel="noreferrer"
-                                class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-accent-600 dark:hover:text-accent-400 bg-transparent hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md border border-transparent hover:border-gray-200 dark:hover:border-gray-700 no-underline transition-all"
+                                class="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-gray-700 dark:text-gray-300 bg-gray-100 hover:bg-accent-100 hover:text-accent-700 dark:bg-gray-800 dark:hover:bg-accent-900/40 dark:hover:text-accent-300 rounded-lg border-none no-underline transition-colors"
                               >
-                                <span class="i-mdi:file-pdf-box"></span>
+                                <span class="i-mdi:file-pdf-box text-base"></span>
                                 PDF
                               </a>
                             )}
@@ -219,6 +219,12 @@ const pageDescription = siteConfig.pageTitles.researches.description ||
         abstract.classList.toggle("hidden");
         const isExpanded = toggle.getAttribute("aria-expanded") === "true";
         toggle.setAttribute("aria-expanded", (!isExpanded).toString());
+        
+        // Rotate icon
+        const icon = toggle.querySelector("span:first-child");
+        if (icon) {
+            icon.classList.toggle("rotate-180");
+        }
       });
     });
 
