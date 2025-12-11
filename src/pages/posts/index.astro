@@ -1,54 +1,73 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
-import siteConfig from '../../side.config';
+import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import siteConfig from "../../side.config";
 
-const posts = (await getCollection('posts'))
-	.filter((post) => !post.data.draft)
-	.sort(
-		(a, b) =>
-			new Date(b.data.publishedAt).getTime() - new Date(a.data.publishedAt).getTime()
-	);
+const posts = (await getCollection("posts"))
+  .filter((post) => !post.data.draft)
+  .sort(
+    (a, b) =>
+      new Date(b.data.publishedAt).getTime() -
+      new Date(a.data.publishedAt).getTime(),
+  );
 
 const groupedPosts = new Map<string, typeof posts>();
 for (const post of posts) {
-    const year = post.data.publishedAt.getFullYear().toString();
-    if (!groupedPosts.has(year)) {
-        groupedPosts.set(year, []);
-    }
-    groupedPosts.get(year)?.push(post);
+  const year = post.data.publishedAt.getFullYear().toString();
+  if (!groupedPosts.has(year)) {
+    groupedPosts.set(year, []);
+  }
+  groupedPosts.get(year)?.push(post);
 }
-const years = Array.from(groupedPosts.keys()).sort((a, b) => b.localeCompare(a));
+const years = Array.from(groupedPosts.keys()).sort((a, b) =>
+  b.localeCompare(a),
+);
 
-const pageDescription = siteConfig.pageDescriptions?.posts ||
+const pageTitle = siteConfig.pageTitles.posts.title || "Blog";
+const pageDescription =
+  siteConfig.pageTitles.posts.description ||
   "Thoughts on education, technology, and the spaces in between.";
 
 const totalPosts = posts.length;
 ---
 
-<Layout title="Blog">
+<Layout title={pageTitle}>
   <div class="space-y-6">
     <!-- Page Header -->
     <header class="space-y-3">
-      <div class="flex items-center gap-2 text-sm font-medium text-accent-600 dark:text-accent-400">
+      <div
+        class="flex items-center gap-2 text-sm font-medium text-accent-600 dark:text-accent-400"
+      >
         <span class="i-mdi:post-outline text-lg"></span>
-        <span>Blog</span>
+        <span>{pageTitle}</span>
       </div>
-      <h1 class="font-heading text-3xl font-bold text-gray-900 dark:text-gray-100 md:text-4xl">
-        Posts & Writing
+      <h1
+        class="font-heading text-3xl font-bold text-gray-900 dark:text-gray-100 md:text-4xl"
+      >
+        {pageTitle}
       </h1>
-      <p class="text-base text-gray-600 dark:text-gray-400 leading-relaxed max-w-3xl">
+      <p
+        class="text-base text-gray-600 dark:text-gray-400 leading-relaxed max-w-3xl"
+      >
         {pageDescription}
       </p>
-      
+
       <!-- Stats -->
       <div class="flex flex-wrap items-center gap-3 pt-1">
-        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-sm">
-          <span class="i-mdi:file-document-multiple text-accent-600 dark:text-accent-400 text-base"></span>
-          <span class="font-medium text-gray-900 dark:text-gray-100">{totalPosts}</span>
+        <div
+          class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-sm"
+        >
+          <span
+            class="i-mdi:file-document-multiple text-accent-600 dark:text-accent-400 text-base"
+          ></span>
+          <span class="font-medium text-gray-900 dark:text-gray-100"
+            >{totalPosts}</span
+          >
           <span class="text-gray-500 dark:text-gray-500">posts</span>
         </div>
-        <div class="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-500">
+        <div
+          class="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-500"
+        >
           <span class="i-mdi:calendar-range text-sm"></span>
           <span>{years[years.length - 1]} — {years[0]}</span>
         </div>
@@ -63,17 +82,17 @@ const totalPosts = posts.length;
               <span class="text-2xl font-bold text-accent-600 dark:text-accent-400">
                 {year}
               </span>
-              <div class="flex-1 h-px bg-gradient-to-r from-accent-200 to-transparent dark:from-accent-800"></div>
+              <div class="flex-1 h-px bg-gradient-to-r from-accent-200 to-transparent dark:from-accent-800" />
               <span class="px-2 py-0.5 rounded-full text-xs font-medium text-accent-700 dark:text-accent-400 bg-accent-50 dark:bg-accent-900/30">
                 {groupedPosts.get(year)?.length} posts
               </span>
             </div>
-            
+
             <div class="space-y-3">
               {groupedPosts.get(year)?.map((post) => (
-                <a 
-                  href={`/posts/${post.slug}`} 
-                  class="group block p-4 rounded-xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 hover:border-accent-300 dark:hover:border-accent-700 hover:shadow-lg hover:shadow-accent-500/5 transition-all duration-300 no-underline"
+                <a
+                  href={`/posts/${post.slug}`}
+                  class="group block p-6 rounded-2xl bg-white dark:bg-gray-800/50 shadow-sm hover:shadow-md transition-shadow duration-300 no-underline"
                 >
                   <article class="flex flex-col sm:flex-row sm:items-start gap-3">
                     <div class="flex items-center gap-2 sm:flex-col sm:items-start sm:gap-0.5 shrink-0 sm:w-20">
@@ -81,17 +100,19 @@ const totalPosts = posts.length;
                         datetime={post.data.publishedAt.toISOString()}
                         class="text-xs font-medium text-gray-500 dark:text-gray-500 tabular-nums"
                       >
-                        {post.data.publishedAt.toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
+                        {post.data.publishedAt.toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
                         })}
                       </time>
-                      <span class="sm:hidden text-gray-300 dark:text-gray-600">·</span>
+                      <span class="sm:hidden text-gray-300 dark:text-gray-600">
+                        ·
+                      </span>
                       <span class="text-xs text-gray-400 dark:text-gray-600 hidden sm:block">
                         {Math.ceil(post.body?.length / 1000) || 3} min read
                       </span>
                     </div>
-                    
+
                     <div class="flex-1 min-w-0 space-y-1.5">
                       <h2 class="font-bold text-gray-900 group-hover:text-accent-600 dark:text-gray-100 dark:group-hover:text-accent-400 transition-colors leading-snug">
                         {post.data.title}
@@ -101,10 +122,10 @@ const totalPosts = posts.length;
                           {post.data.description}
                         </p>
                       )}
-                      
+
                       <div class="flex items-center gap-1 text-xs font-medium text-accent-600 dark:text-accent-400 pt-1 opacity-0 group-hover:opacity-100 transition-opacity">
                         <span>Read more</span>
-                        <span class="i-mdi:arrow-right"></span>
+                        <span class="i-mdi:arrow-right" />
                       </div>
                     </div>
                   </article>

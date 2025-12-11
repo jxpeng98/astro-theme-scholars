@@ -3,7 +3,8 @@ import Layout from "../layouts/Layout.astro";
 import { projects } from "../components/projects";
 import siteConfig from "../side.config";
 
-const pageDescription = siteConfig.pageDescriptions?.projects ||
+const pageTitle = siteConfig.pageTitles.projects.title || "Projects";
+const pageDescription = siteConfig.pageTitles.projects.description ||
   "Selected lab and community projects with a focus on reproducible research infrastructure, learning analytics, and open collaboration.";
 
 // Group projects by status (if they have period info)
@@ -11,13 +12,13 @@ const activeProjects = projects.filter(p => p.period?.includes('Present'));
 const pastProjects = projects.filter(p => !p.period?.includes('Present'));
 ---
 
-<Layout title="Projects">
+<Layout title={pageTitle}>
   <div class="space-y-6">
     <!-- Page Header -->
     <header class="space-y-4">
       <div class="space-y-1">
         <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
-          Projects
+          {pageTitle}
         </h1>
         <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed max-w-2xl">
           {pageDescription}
@@ -75,7 +76,7 @@ const pastProjects = projects.filter(p => !p.period?.includes('Present'));
               return (
                 <Wrapper
                   {...(hasUrl ? { href: project.url, target: "_blank", rel: "noopener noreferrer" } : {})}
-                  class={`group relative block p-5 rounded-xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 hover:border-accent-300 dark:hover:border-accent-700 hover:shadow-lg hover:shadow-accent-500/5 transition-all duration-300 no-underline ${hasUrl ? 'cursor-pointer' : ''}`}
+                  class={`group relative block p-6 rounded-2xl bg-white dark:bg-gray-800/50 shadow-sm hover:shadow-md transition-all duration-300 no-underline ${hasUrl ? 'cursor-pointer' : ''}`}
                 >
                   <!-- Status indicator -->
                   <div class="absolute top-4 right-4 flex items-center gap-1.5">
@@ -140,7 +141,7 @@ const pastProjects = projects.filter(p => !p.period?.includes('Present'));
               return (
                 <Wrapper
                   {...(hasUrl ? { href: project.url, target: "_blank", rel: "noopener noreferrer" } : {})}
-                  class={`group relative block p-5 rounded-xl bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 hover:border-accent-300 dark:hover:border-accent-700 hover:shadow-lg hover:shadow-accent-500/5 transition-all duration-300 no-underline ${hasUrl ? 'cursor-pointer' : ''}`}
+                  class={`group relative block p-6 rounded-2xl bg-white dark:bg-gray-800/50 shadow-sm hover:shadow-md transition-all duration-300 no-underline ${hasUrl ? 'cursor-pointer' : ''}`}
                 >
                   <div class="space-y-3">
                     <div class="space-y-1">
