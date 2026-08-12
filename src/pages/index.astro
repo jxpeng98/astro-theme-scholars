@@ -58,8 +58,8 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
   <div class="page-stack">
     {showHero && (
       <section class="relative border-y border-paper-300/90 py-8 dark:border-ink-700 sm:py-10 lg:py-12">
-      <div class="relative grid gap-8 lg:grid-cols-[minmax(0,1fr)_12rem] lg:items-start lg:gap-12">
-        <div class="min-w-0">
+      <div class="relative grid gap-5 lg:grid-cols-[minmax(0,1fr)_12rem] lg:items-start lg:gap-x-12">
+        <div class="min-w-0 lg:col-start-1 lg:row-start-1">
           <h1 class="max-w-4xl font-heading text-[clamp(2.5rem,5vw,4.25rem)] font-semibold leading-[0.98] tracking-[-0.035em] text-gray-900 dark:text-gray-50">
             {headline}
           </h1>
@@ -88,7 +88,30 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
               </div>
             </div>
           )}
+        </div>
 
+        <aside class="flex w-full items-center gap-4 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:block" aria-label="Profile">
+          <div class="relative w-24 shrink-0 overflow-hidden rounded-lg border border-paper-300 bg-white/64 p-1.5 dark:border-ink-700 dark:bg-ink-900/68 lg:w-full">
+            <Image
+              src={about.avatar}
+              alt={profileAlt}
+              width={siteConfig.hero.profileImageWidth || 160}
+              height={siteConfig.hero.profileImageHeight || 160}
+              layout="constrained"
+              fit="cover"
+              priority
+              class="aspect-square h-auto w-full rounded-md object-cover"
+            />
+          </div>
+          {statusBadge && (
+            <p class="flex items-center gap-2 text-left text-xs font-semibold uppercase tracking-[0.1em] text-emerald-700 dark:text-emerald-300 lg:mt-4">
+              <span class="h-2 w-2 rounded-full bg-emerald-500 ring-4 ring-emerald-100 dark:ring-emerald-900/40" aria-hidden="true"></span>
+              {statusBadge}
+            </p>
+          )}
+        </aside>
+
+        <div class="min-w-0 lg:col-start-1 lg:row-start-2">
           <p class="mt-5 max-w-[43rem] text-[1.0625rem] leading-7 text-gray-700 dark:text-gray-200">
             {about.bio}
           </p>
@@ -105,7 +128,7 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
           )}
 
           <div class="mt-6 flex flex-wrap gap-2">
-            {about.socialLinks.slice(0, 5).map((link) => (
+            {about.socialLinks.map((link) => (
               <a
                 href={link.href}
                 target="_blank"
@@ -119,27 +142,6 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
             ))}
           </div>
         </div>
-
-        <aside class="mx-auto w-full max-w-48 lg:mx-0" aria-label="Profile">
-          <div class="relative overflow-hidden rounded-lg border border-paper-300 bg-white/64 p-1.5 dark:border-ink-700 dark:bg-ink-900/68">
-              <Image
-                src={about.avatar}
-                alt={profileAlt}
-                width={siteConfig.hero.profileImageWidth || 160}
-                height={siteConfig.hero.profileImageHeight || 160}
-                layout="constrained"
-                fit="cover"
-                priority
-                class="aspect-square h-auto w-full rounded-md object-cover"
-              />
-          </div>
-          {statusBadge && (
-            <p class="mt-4 flex items-center justify-center gap-2 text-center text-xs font-semibold uppercase tracking-[0.1em] text-emerald-700 dark:text-emerald-300 lg:justify-start">
-              <span class="h-2 w-2 rounded-full bg-emerald-500 ring-4 ring-emerald-100 dark:ring-emerald-900/40" aria-hidden="true"></span>
-              {statusBadge}
-            </p>
-          )}
-        </aside>
       </div>
       </section>
     )}
@@ -164,7 +166,6 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
 
       <div class="divide-y divide-gray-200 border-b border-gray-200 dark:divide-gray-700 dark:border-gray-700">
         {selectedPapers.map((paper, index) => {
-          const abstractId = `abstract-home-${paper.id}`;
           const hasAbstract = Boolean(paper.abstract);
 
           return (
@@ -199,32 +200,25 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
 				  {paper.year && <span class="tabular-nums text-gray-600 dark:text-gray-300">{paper.year}</span>}
                 </div>
 
-                <div class="mt-3 flex flex-wrap items-center gap-2">
-                  {hasAbstract && (
-                    <button
-                      class="glass-control inline-flex min-h-11 cursor-pointer items-center gap-2 px-3.5 py-2 text-sm font-semibold text-gray-700 transition-colors hover:text-accent-800 dark:text-gray-200 dark:hover:text-accent-200"
-                      type="button"
-                      data-abstract-toggle
-                      data-target={abstractId}
-                      aria-controls={abstractId}
-                      aria-expanded="false"
-                    >
-                      <span data-abstract-icon class="i-ph-caret-down text-base transition-transform duration-200" aria-hidden="true"></span>
-                      Abstract
-                    </button>
-                  )}
-                  {paper.url && (
+                {paper.url && (
+                  <div class="mt-3 flex flex-wrap items-center gap-2">
                     <a href={paper.url} target="_blank" rel="noreferrer" class="action-link glass-control px-3.5">
                       <span class="i-ph-file-pdf text-lg" aria-hidden="true"></span>
                       View paper
                     </a>
-                  )}
-                </div>
+                  </div>
+                )}
 
                 {hasAbstract && (
-                  <div hidden class="body-copy hidden mt-3 rounded-lg border-l-2 border-accent-500 bg-accent-50/70 px-4 py-3 dark:bg-accent-900/20" id={abstractId}>
-                    <p>{paper.abstract}</p>
-                  </div>
+                  <details class="group mt-3">
+                    <summary class="glass-control inline-flex min-h-11 cursor-pointer list-none items-center gap-2 px-3.5 py-2 text-sm font-semibold text-gray-700 transition-colors hover:text-accent-800 dark:text-gray-200 dark:hover:text-accent-200">
+                      <span class="i-ph-caret-down text-base transition-transform duration-200 group-open:rotate-180" aria-hidden="true"></span>
+                      Abstract
+                    </summary>
+                    <div class="body-copy mt-3 rounded-lg border-l-2 border-accent-500 bg-accent-50/70 px-4 py-3 dark:bg-accent-900/20">
+                      <p>{paper.abstract}</p>
+                    </div>
+                  </details>
                 )}
               </div>
             </article>
@@ -284,11 +278,3 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
     )}
   </div>
 </Layout>
-
-<script>
-  import { setupAbstractToggles } from "../scripts/ui";
-
-  document.addEventListener("astro:page-load", () => {
-    setupAbstractToggles();
-  });
-</script>

@@ -319,12 +319,12 @@ function isActiveNav(href: string): boolean {
         display: none !important;
       }
 
-      :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+      :where(a, button, input, select, summary, textarea, [tabindex]):focus-visible {
         outline: 2px solid #396779;
         outline-offset: 2px;
       }
 
-      html.dark :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+      html.dark :where(a, button, input, select, summary, textarea, [tabindex]):focus-visible {
         outline-color: #96bdc9;
       }
 
@@ -639,7 +639,6 @@ function isActiveNav(href: string): boolean {
             data-site-title
             class="group inline-flex min-h-11 min-w-0 items-center gap-2.5 rounded-md text-ink-950 no-underline dark:text-paper-50"
             href="/"
-            aria-label={`${siteTitle} home`}
           >
             <span
               aria-hidden="true"

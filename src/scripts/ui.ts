@@ -5,7 +5,6 @@ import {
 } from "../lib/filter-state";
 
 const boundFilterButtons = new WeakSet<HTMLElement>();
-const boundAbstractToggles = new WeakSet<HTMLButtonElement>();
 
 function toggleClasses(element: Element, enabled: boolean, classes: string[]) {
 	for (const className of classes) {
@@ -39,23 +38,6 @@ function setActiveButton(buttons: NodeListOf<HTMLElement>, activeButton: HTMLEle
 	});
 }
 
-function syncPageSectionNavigation(root: ParentNode, activeFilter: string) {
-	const navigation = root.querySelector<HTMLElement>("[aria-label='Page sections']");
-	if (!navigation) return;
-
-	const links = navigation.querySelectorAll<HTMLAnchorElement>("a[href^='#']");
-	links.forEach((link) => {
-		const sectionId = link.hash.slice(1);
-		const isVisible = activeFilter === "all" || sectionId === activeFilter;
-		link.hidden = !isVisible;
-		link.classList.toggle("hidden", !isVisible);
-	});
-
-	const shouldHideNavigation = activeFilter !== "all";
-	navigation.hidden = shouldHideNavigation;
-	navigation.classList.toggle("hidden", shouldHideNavigation);
-}
-
 export function setupFilterControls(root: ParentNode = document) {
 	const buttons = root.querySelectorAll<HTMLElement>("[data-filter]");
 	const sections = root.querySelectorAll<HTMLElement>("[data-filter-section]");
@@ -82,7 +64,6 @@ export function setupFilterControls(root: ParentNode = document) {
 			section.classList.toggle("hidden", !visible);
 		});
 
-		syncPageSectionNavigation(root, initialFilter ?? "all");
 	}
 
 	buttons.forEach((button) => {
@@ -101,35 +82,9 @@ export function setupFilterControls(root: ParentNode = document) {
 				section.classList.toggle("hidden", !visible);
 			});
 
-			syncPageSectionNavigation(root, filter);
-
 			const nextSearch = buildFilterSearch(window.location.search, filter);
 			const nextUrl = `${window.location.pathname}${nextSearch}${window.location.hash}`;
 			window.history.replaceState({}, "", nextUrl);
-		});
-	});
-}
-
-export function setupAbstractToggles(root: ParentNode = document) {
-	root.querySelectorAll<HTMLButtonElement>("[data-abstract-toggle]").forEach((toggle) => {
-		if (boundAbstractToggles.has(toggle)) return;
-		boundAbstractToggles.add(toggle);
-
-		toggle.addEventListener("click", () => {
-			const targetId = toggle.dataset.target;
-			if (!targetId) return;
-
-			const abstract = document.getElementById(targetId);
-			if (!abstract) return;
-
-			const expanded = toggle.getAttribute("aria-expanded") === "true";
-			const nextExpanded = !expanded;
-			toggle.setAttribute("aria-expanded", String(nextExpanded));
-			abstract.hidden = !nextExpanded;
-			abstract.classList.toggle("hidden", !nextExpanded);
-			toggle
-				.querySelector("[data-abstract-icon]")
-				?.classList.toggle("rotate-180", nextExpanded);
 		});
 	});
 }

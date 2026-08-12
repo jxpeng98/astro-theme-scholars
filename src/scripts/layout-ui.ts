@@ -23,14 +23,13 @@ function getAppliedTheme(): ThemeMode {
 	return document.documentElement.classList.contains("dark") ? "dark" : "light";
 }
 
-function updateThemeToggleLabels(root: ParentNode, mode: ThemeMode) {
+export function updateThemeToggleLabels(root: ParentNode, mode: ThemeMode) {
 	const nextMode: ThemeMode = mode === "dark" ? "light" : "dark";
 	const label = `Switch to ${nextMode} mode`;
 	const visibleLabel = `${nextMode === "dark" ? "Dark" : "Light"} mode`;
 
 	root.querySelectorAll<HTMLElement>("[data-theme-toggle]").forEach((button) => {
 		button.setAttribute("aria-label", label);
-		button.setAttribute("aria-pressed", String(mode === "dark"));
 		button.setAttribute("title", label);
 		button.querySelectorAll<HTMLElement>("[data-theme-label]").forEach((text) => {
 			text.textContent = visibleLabel;
