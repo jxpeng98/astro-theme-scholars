@@ -17,7 +17,7 @@ TypeScript 配置文件中，论文、项目、教学经历与文章则分别使
 - **内容优先的维护方式**：使用 BibTeX 管理论文，使用 YAML 管理结构化经历，
   使用 Markdown 或 MDX 撰写文章。
 - **响应式与主题适配**：桌面端和移动端均经过细致适配，并内置浅色、深色模式。
-- **高效浏览研究内容**：论文、项目与教学页面支持分类筛选和区块快速跳转。
+- **高效浏览研究内容**：论文、项目与教学页面支持分类筛选，且不会重复页面导航。
 - **灵活组合首页**：无需修改页面模板，即可启用或隐藏头图、精选论文和最新文章。
 - **完善的 SEO 基础**：内置 canonical URL、Open Graph、JSON-LD、站点地图和
   动态 `robots.txt`。
@@ -46,7 +46,21 @@ TypeScript 配置文件中，论文、项目、教学经历与文章则分别使
 - [Node.js](https://nodejs.org/) 22.13 或更高版本
 - [pnpm](https://pnpm.io/) 11 或更高版本
 
-### 安装并运行
+### 创建自己的站点
+
+点击仓库中的
+[**Use this template**](https://github.com/jxpeng98/astro-theme-scholars/generate)
+按钮，或通过命令行创建相同的项目：
+
+```bash
+pnpm create astro@latest my-scholar-site --template jxpeng98/astro-theme-scholars
+cd my-scholar-site
+pnpm dev
+```
+
+打开 [http://localhost:4321](http://localhost:4321) 即可预览网站。
+
+### 开发模板本身
 
 ```bash
 git clone https://github.com/jxpeng98/astro-theme-scholars.git
@@ -54,8 +68,6 @@ cd astro-theme-scholars
 pnpm install
 pnpm dev
 ```
-
-打开 [http://localhost:4321](http://localhost:4321) 即可预览网站。
 
 发布前请替换示例身份、链接和内容。建议按照以下顺序操作：
 
@@ -251,19 +263,27 @@ pnpm build
 
 ## 模板更新
 
-项目使用 `v0.5.0` 这类 SemVer 标签发布版本。通过 GitHub 模板创建的站点可以保留
+项目使用 `v0.6.0` 这类 SemVer 标签发布版本。通过 GitHub 模板创建的站点可以保留
 `.github/workflows/template-update.yml`：它会检查上游新版本并创建更新 PR，同时
 保留 `.template-sync.json` 中列出的个人内容路径。
 
-模板维护者可以使用以下命令检查发布：
+若要让该工作流创建更新 PR，请在 **Settings → Actions → General → Workflow
+permissions** 中启用 **Allow GitHub Actions to create and approve pull
+requests**。个人账户中新建的仓库默认禁用此权限，详情参见 GitHub 的
+[工作流权限文档](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#preventing-github-actions-from-creating-or-approving-pull-requests)。
+
+模板维护者可以使用以下命令检查并发布版本：
 
 ```bash
-node scripts/check-release.mjs --tag v0.5.0
 pnpm verify
+node scripts/check-release.mjs --tag v0.6.0
+git push origin main
+git tag -a v0.6.0 -m "v0.6.0"
+git push origin v0.6.0
 ```
 
 发布时请确保 `package.json`、`.template-version` 和 `CHANGELOG.md` 最新条目中的
-版本号一致。
+版本号一致。推送标签后，发布工作流会自动创建 GitHub Release。
 
 ## 参与贡献
 

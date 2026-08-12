@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.6.0 - 2026-08-12
+
+### Features
+
+- Added strict build-time validation for About, Projects, and Teaching YAML
+  data.
+- Added continuous integration for tests, Astro checks, production builds,
+  and generated-site assertions.
+
+### Improvements
+
+- Replaced placeholder identities and links with coherent demo content.
+- Simplified filters, theme controls, and publication abstracts with native,
+  accessible browser semantics.
+- Removed duplicate section navigation from filtered pages.
+- Reduced the icon dependency footprint to the three collections used by the
+  theme and changed internal-page prefetching to user intent.
+- Classified uncategorized BibTeX entries as Other and limited homepage
+  selections to published work.
+- Restricted GitHub Release automation to the upstream template repository.
+
 ## 0.5.0 - 2026-06-25
 
 ### Features

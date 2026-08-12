@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   release:
+    if: github.repository == 'jxpeng98/astro-theme-scholars'
     name: Verify and publish release
     runs-on: ubuntu-latest
 

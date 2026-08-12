@@ -22,7 +22,7 @@ YAML, and Markdown files.
 - **Responsive and theme-aware** — polished desktop and mobile layouts with
   light and dark modes.
 - **Useful research navigation** — filter publications, projects, and teaching
-  records, then jump directly to a section.
+  records without duplicating page navigation.
 - **Flexible home page** — enable or hide the hero, selected publications, and
   latest posts without editing page templates.
 - **SEO-ready output** — canonical URLs, Open Graph metadata, JSON-LD, sitemap,
@@ -53,7 +53,21 @@ YAML, and Markdown files.
 - [Node.js](https://nodejs.org/) 22.13 or newer
 - [pnpm](https://pnpm.io/) 11 or newer
 
-### Install and run
+### Create your site
+
+Use the repository's
+[**Use this template**](https://github.com/jxpeng98/astro-theme-scholars/generate)
+button, or create the same project from the command line:
+
+```bash
+pnpm create astro@latest my-scholar-site --template jxpeng98/astro-theme-scholars
+cd my-scholar-site
+pnpm dev
+```
+
+Open [http://localhost:4321](http://localhost:4321) to view the site.
+
+### Develop the template itself
 
 ```bash
 git clone https://github.com/jxpeng98/astro-theme-scholars.git
@@ -61,8 +75,6 @@ cd astro-theme-scholars
 pnpm install
 pnpm dev
 ```
-
-Open [http://localhost:4321](http://localhost:4321) to view the site.
 
 Before publishing, replace the sample identity, links, and content. A useful
 order is:
@@ -265,20 +277,30 @@ directory.
 
 ## Template updates
 
-Releases use SemVer tags such as `v0.5.0`. Sites created from the GitHub
+Releases use SemVer tags such as `v0.6.0`. Sites created from the GitHub
 template can keep `.github/workflows/template-update.yml`; it checks for newer
 upstream releases and opens an update pull request while preserving the
 personal paths listed in `.template-sync.json`.
 
-Template maintainers can validate a release with:
+To let that workflow open pull requests, enable **Allow GitHub Actions to
+create and approve pull requests** under **Settings → Actions → General →
+Workflow permissions**. This permission is disabled by default for new
+personal repositories; see GitHub's
+[workflow permissions documentation](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#preventing-github-actions-from-creating-or-approving-pull-requests).
+
+Template maintainers can validate and publish a release with:
 
 ```bash
-node scripts/check-release.mjs --tag v0.5.0
 pnpm verify
+node scripts/check-release.mjs --tag v0.6.0
+git push origin main
+git tag -a v0.6.0 -m "v0.6.0"
+git push origin v0.6.0
 ```
 
 Keep `package.json`, `.template-version`, and the latest `CHANGELOG.md` entry on
-the same version.
+the same version. Pushing the tag runs the release workflow and creates the
+GitHub Release automatically.
 
 ## Contributing
 
