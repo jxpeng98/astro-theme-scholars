@@ -1,5 +1,13 @@
 #!/usr/bin/env node
-import { mkdir, readdir, readFile, stat, copyFile } from "node:fs/promises";
+import {
+	copyFile,
+	mkdir,
+	readdir,
+	readFile,
+	rm,
+	stat,
+	writeFile,
+} from "node:fs/promises";
 import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -63,12 +71,73 @@ async function listFiles(root, current = root) {
 	return files;
 }
 
+async function migrateLegacySiteConfig(sourceDir, targetDir) {
+	const rootConfig = join(targetDir, "site.config.ts");
+	const legacyConfig = join(targetDir, "src/side.config.ts");
+
+	try {
+		await stat(rootConfig);
+		return false;
+	} catch (error) {
+		if (error.code !== "ENOENT") throw error;
+	}
+
+	let legacySource;
+	try {
+		legacySource = await readFile(legacyConfig, "utf8");
+	} catch (error) {
+		if (error.code === "ENOENT") return false;
+		throw error;
+	}
+
+	const importPattern =
+		/import\s+type\s+\{\s*SiteConfig\s*\}\s+from\s+["']\.\/types\/config["'];?/;
+	const declarationPattern =
+		/export\s+const\s+siteConfig\s*:\s*SiteConfig\s*=\s*\{/;
+	const closingPattern = /\n};(\s*\n\s*export default siteConfig;?\s*)$/;
+
+	if (
+		!importPattern.test(legacySource) ||
+		!declarationPattern.test(legacySource) ||
+		!closingPattern.test(legacySource)
+	) {
+		throw new Error(
+			"Legacy src/side.config.ts uses an unsupported shape; migrate it to site.config.ts manually before syncing.",
+		);
+	}
+
+	const migratedSource = legacySource
+		.replace(importPattern, 'import { defineSiteConfig } from "./src/config/site";')
+		.replace(
+			declarationPattern,
+			"export const siteConfig = defineSiteConfig({",
+		)
+		.replace(closingPattern, "\n});$1");
+
+	await writeFile(rootConfig, migratedSource);
+	await copyFile(
+		join(sourceDir, "src/side.config.ts"),
+		join(targetDir, "src/side.config.ts"),
+	);
+	await Promise.all(
+		["public/robots.txt", "src/content/config.ts"].map((path) =>
+			rm(join(targetDir, path), { force: true }),
+		),
+	);
+
+	return true;
+}
+
 export async function syncTemplateRelease({
 	sourceDir,
 	targetDir,
 	protectedPaths,
 	excludedPaths,
 }) {
+	const migratedLegacyConfig = await migrateLegacySiteConfig(
+		sourceDir,
+		targetDir,
+	);
 	const sourceFiles = await listFiles(sourceDir);
 	let copied = 0;
 	let skipped = 0;
@@ -93,7 +162,7 @@ export async function syncTemplateRelease({
 		copied += 1;
 	}
 
-	return { copied, skipped };
+	return { copied, skipped, migratedLegacyConfig };
 }
 
 function readArg(name) {
@@ -121,6 +190,6 @@ if (fileURLToPath(import.meta.url) === process.argv[1]) {
 	});
 
 	console.log(
-		`Template sync copied ${result.copied} file(s), skipped ${result.skipped} file(s).`,
+		`Template sync copied ${result.copied} file(s), skipped ${result.skipped} file(s)${result.migratedLegacyConfig ? ", and migrated the legacy site configuration" : ""}.`,
 	);
 }

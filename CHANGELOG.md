@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.6.1 - 2026-08-12
+
+### Fixes
+
+- Added a verified upgrade path for sites created before `v0.6.0`, including
+  automatic migration of the legacy site configuration and cleanup of obsolete
+  template files.
+- Made generated-site assertions independent of demo identity and content so
+  personalized downstream sites can run the full verification pipeline.
+- Kept the compatibility configuration entry template-owned during future
+  updates.
+
 ## 0.6.0 - 2026-08-12
 
 ### Features

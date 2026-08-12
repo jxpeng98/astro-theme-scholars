@@ -277,25 +277,91 @@ directory.
 
 ## Template updates
 
-Releases use SemVer tags such as `v0.6.0`. Sites created from the GitHub
-template can keep `.github/workflows/template-update.yml`; it checks for newer
-upstream releases and opens an update pull request while preserving the
-personal paths listed in `.template-sync.json`.
+Template releases use SemVer tags such as `v0.6.1`. Updates are delivered as
+reviewable pull requests because repositories created from a GitHub template
+have independent histories.
 
-To let that workflow open pull requests, enable **Allow GitHub Actions to
-create and approve pull requests** under **Settings → Actions → General →
-Workflow permissions**. This permission is disabled by default for new
-personal repositories; see GitHub's
-[workflow permissions documentation](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#preventing-github-actions-from-creating-or-approving-pull-requests).
+Check `.template-version` first. If the file is missing or reports a version
+older than `0.6.0`, use the one-time migration below even if the repository
+already contains an update workflow.
+
+### Sites on v0.6.0 or newer
+
+These sites contain all three update files:
+
+- `.github/workflows/template-update.yml`
+- `.template-sync.json`
+- `.template-version`
+
+To update one of these sites:
+
+1. Open **Settings → Actions → General → Workflow permissions** and enable
+   **Allow GitHub Actions to create and approve pull requests**. This setting
+   is disabled by default for new personal repositories; see GitHub's
+   [workflow permissions documentation](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#preventing-github-actions-from-creating-or-approving-pull-requests).
+2. Open **Actions → Template Update → Run workflow**. The same workflow also
+   checks for releases every Monday.
+3. Review the generated `chore/template-update-X.Y.Z` pull request, wait for CI,
+   and merge it when the changes are correct.
+
+Do not change `.template-version` to the target version before running the
+workflow; that would mark the site as already updated.
+
+The paths listed under `protected` in `.template-sync.json` are left untouched.
+By default this includes site configuration, YAML and BibTeX data, posts,
+profile images, the favicon, and environment files. Other template-owned files
+are replaced by the released versions. Review the complete pull request before
+merging, especially if the site contains custom template code.
+
+### Sites older than v0.6.0
+
+Start from a clean working tree and run this one-time migration from the old
+site's repository root in a Bash-compatible shell. The current sync script
+moves the legacy personal configuration to `site.config.ts`, installs the new
+compatibility entry, and removes obsolete template-owned content and robots
+files without changing personal content:
+
+```bash
+git switch -c chore/template-update-v0.6.1
+
+template_dir="$(mktemp -d)"
+template_dir="$(cd "$template_dir" && pwd -P)"
+git clone --depth 1 --branch v0.6.1 \
+  https://github.com/jxpeng98/astro-theme-scholars.git \
+  "$template_dir"
+
+node "$template_dir/scripts/sync-template-release.mjs" \
+  --source "$template_dir" \
+  --target . \
+  --config "$template_dir/.template-sync.json"
+
+pnpm install --frozen-lockfile
+pnpm verify
+git status --short
+git diff
+```
+
+Review and commit the migration on this branch, then open a pull request. The
+migration installs the automatic update files, so future releases can use the
+workflow above. If the script reports an unsupported legacy configuration,
+migrate that customized file manually instead of forcing the sync. Restore any
+additional user-owned files that are not covered by the default protected paths
+before committing.
+
+Avoid merging the template repository directly with
+`--allow-unrelated-histories`; GitHub documents that
+[repositories generated from templates have unrelated histories](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-template-repository#about-template-repositories).
+
+### Publishing template releases
 
 Template maintainers can validate and publish a release with:
 
 ```bash
 pnpm verify
-node scripts/check-release.mjs --tag v0.6.0
+node scripts/check-release.mjs --tag v0.6.1
 git push origin main
-git tag -a v0.6.0 -m "v0.6.0"
-git push origin v0.6.0
+git tag -a v0.6.1 -m "v0.6.1"
+git push origin v0.6.1
 ```
 
 Keep `package.json`, `.template-version`, and the latest `CHANGELOG.md` entry on

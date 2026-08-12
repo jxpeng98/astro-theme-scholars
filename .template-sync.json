@@ -2,7 +2,6 @@
 	"upstream": "jxpeng98/astro-theme-scholars",
 	"protected": [
 		"site.config.ts",
-		"src/side.config.ts",
 		"src/data/**",
 		"src/content/posts/**",
 		"public/profile.*",

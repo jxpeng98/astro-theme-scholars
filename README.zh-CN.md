@@ -263,23 +263,80 @@ pnpm build
 
 ## 模板更新
 
-项目使用 `v0.6.0` 这类 SemVer 标签发布版本。通过 GitHub 模板创建的站点可以保留
-`.github/workflows/template-update.yml`：它会检查上游新版本并创建更新 PR，同时
-保留 `.template-sync.json` 中列出的个人内容路径。
+项目使用 `v0.6.1` 这类 SemVer 标签发布版本。由于通过 GitHub 模板创建的仓库拥有
+独立的 Git 历史，模板更新会通过便于审查的 PR 交付。
 
-若要让该工作流创建更新 PR，请在 **Settings → Actions → General → Workflow
-permissions** 中启用 **Allow GitHub Actions to create and approve pull
-requests**。个人账户中新建的仓库默认禁用此权限，详情参见 GitHub 的
-[工作流权限文档](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#preventing-github-actions-from-creating-or-approving-pull-requests)。
+请先检查 `.template-version`。如果该文件不存在或版本低于 `0.6.0`，即使仓库已经
+包含更新工作流，也请使用下面的一次性迁移方式。
+
+### v0.6.0 或更新版本的站点
+
+这类站点包含以下三个更新文件：
+
+- `.github/workflows/template-update.yml`
+- `.template-sync.json`
+- `.template-version`
+
+更新这类站点时：
+
+1. 打开 **Settings → Actions → General → Workflow permissions**，启用
+   **Allow GitHub Actions to create and approve pull requests**。个人账户中新建的
+   仓库默认禁用此权限，详情参见 GitHub 的
+   [工作流权限文档](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#preventing-github-actions-from-creating-or-approving-pull-requests)。
+2. 打开 **Actions → Template Update → Run workflow**。同一工作流也会在每周一
+   自动检查新版本。
+3. 审查自动生成的 `chore/template-update-X.Y.Z` PR，等待 CI 通过，确认无误后合并。
+
+运行工作流前，不要提前将 `.template-version` 改成目标版本，否则工作流会认为站点
+已经完成更新。
+
+`.template-sync.json` 中 `protected` 列出的路径不会被覆盖。默认保护站点配置、YAML
+和 BibTeX 数据、文章、头像、favicon 与环境变量文件；其他由模板维护的文件会替换为
+发布版本。合并前应检查完整 PR，尤其是修改过模板代码的站点。
+
+### 早于 v0.6.0 的站点
+
+先确保工作区干净，然后在旧站点仓库根目录的 Bash 兼容终端中执行一次迁移。当前同步
+脚本会将旧版个人配置迁移到 `site.config.ts`，安装新的兼容入口，并清理废弃的内容与
+robots 模板文件，同时保留个人内容：
+
+```bash
+git switch -c chore/template-update-v0.6.1
+
+template_dir="$(mktemp -d)"
+template_dir="$(cd "$template_dir" && pwd -P)"
+git clone --depth 1 --branch v0.6.1 \
+  https://github.com/jxpeng98/astro-theme-scholars.git \
+  "$template_dir"
+
+node "$template_dir/scripts/sync-template-release.mjs" \
+  --source "$template_dir" \
+  --target . \
+  --config "$template_dir/.template-sync.json"
+
+pnpm install --frozen-lockfile
+pnpm verify
+git status --short
+git diff
+```
+
+检查并提交迁移结果，然后创建 PR。此次迁移会安装自动更新文件，后续版本即可使用上面
+的工作流。如果脚本提示旧配置结构不受支持，请手动迁移定制配置，不要强制覆盖。提交
+前，请恢复默认保护范围之外的其他个人文件。
+
+不要使用 `--allow-unrelated-histories` 直接合并模板仓库；GitHub 文档明确说明
+[通过模板生成的仓库具有不相关的 Git 历史](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-template-repository#about-template-repositories)。
+
+### 发布模板版本
 
 模板维护者可以使用以下命令检查并发布版本：
 
 ```bash
 pnpm verify
-node scripts/check-release.mjs --tag v0.6.0
+node scripts/check-release.mjs --tag v0.6.1
 git push origin main
-git tag -a v0.6.0 -m "v0.6.0"
-git push origin v0.6.0
+git tag -a v0.6.1 -m "v0.6.1"
+git push origin v0.6.1
 ```
 
 发布时请确保 `package.json`、`.template-version` 和 `CHANGELOG.md` 最新条目中的

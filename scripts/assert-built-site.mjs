@@ -1,19 +1,9 @@
-import { access, readdir, readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 
 const root = new URL("../dist/", import.meta.url);
 
 async function readDist(path) {
 	return readFile(new URL(path, root), "utf8");
-}
-
-async function existsInDist(path) {
-	try {
-		await access(new URL(path, root));
-		return true;
-	} catch (error) {
-		if (error.code === "ENOENT") return false;
-		throw error;
-	}
 }
 
 async function readDistCss() {
@@ -54,7 +44,50 @@ function footer(html) {
 	return html.match(/<footer[\s\S]*?<\/footer>/)?.[0] ?? "";
 }
 
-function assertFilterGroup(html, pageName, filters) {
+function readAttribute(html, pattern) {
+	return html.match(pattern)?.[1] ?? "";
+}
+
+function canonicalUrl(html) {
+	return readAttribute(html, /<link rel="canonical" href="([^"]+)"/);
+}
+
+function assertPageMetadata(html, pageName) {
+	const canonical = canonicalUrl(html);
+	const ogUrl = readAttribute(
+		html,
+		/<meta property="og:url" content="([^"]+)"/,
+	);
+	const ogImage = readAttribute(
+		html,
+		/<meta property="og:image" content="([^"]+)"/,
+	);
+
+	assert(
+		titles(html).length === 1 && titles(html)[0].trim(),
+		`${pageName} page should emit one non-empty title`,
+	);
+	assert(
+		/^https?:\/\//.test(canonical) && ogUrl === canonical,
+		`${pageName} page should emit matching absolute canonical and Open Graph URLs`,
+	);
+	assert(
+		/^https?:\/\//.test(ogImage) &&
+			Boolean(readAttribute(html, /<meta property="og:image:alt" content="([^"]+)"/)) &&
+			Boolean(readAttribute(html, /<meta name="author" content="([^"]+)"/)) &&
+			Boolean(
+				readAttribute(
+					html,
+					/<meta name="twitter:card" content="(summary(?:_large_image)?)"/,
+				),
+			),
+		`${pageName} page should emit complete social and author metadata`,
+	);
+
+	return canonical;
+}
+
+function assertFilterGroup(html, pageName) {
 	assert(
 		html.includes('role="group"') &&
 			html.includes('aria-label="Filter sections"') &&
@@ -73,11 +106,15 @@ function assertFilterGroup(html, pageName, filters) {
 			html.includes("data-filter-label"),
 		`${pageName} page should render semantic filter button markers`,
 	);
+}
 
-	for (const filter of filters) {
+function assertOptionalFilterGroup(html, pageName) {
+	if (html.includes('role="group"')) {
+		assertFilterGroup(html, pageName);
+	} else {
 		assert(
-			html.includes(`data-filter="${filter}"`),
-			`${pageName} page should render the ${filter} filter button`,
+			!html.includes('role="toolbar"') && !html.includes('data-filter="all"'),
+			`${pageName} page should omit filter controls when fewer than two groups have items`,
 		);
 	}
 }
@@ -88,31 +125,7 @@ assert(
 	siteTitleLink && !siteTitleLink.includes("aria-label"),
 	"site title link should use its visible text as its accessible name",
 );
-assert(
-	titles(index)[0] === "Scholar Pages Demo | Academic Portfolio",
-	"home page title should use the concise configured site title",
-);
-assert(
-	index.includes('link rel="canonical" href="https://astro-theme-scholars.pages.dev/"'),
-	"home page canonical should use the configured production URL",
-);
-assert(
-	index.includes('property="og:image" content="https://astro-theme-scholars.pages.dev/profile.svg"'),
-	"home page OG image should be absolute",
-);
-assert(
-	index.includes(
-		'meta property="og:url" content="https://astro-theme-scholars.pages.dev/"',
-	) &&
-		index.includes('meta property="og:image:alt" content="Generic profile illustration"') &&
-		index.includes('meta name="twitter:card" content="summary"') &&
-		index.includes('meta name="author" content="Scholar Pages Demo"'),
-	"home page should render complete Open Graph, Twitter, and author metadata",
-);
-assert(
-	countMatches(index, 'meta name="keywords"') === 1,
-	"home page should emit one keywords meta tag",
-);
+const indexCanonical = assertPageMetadata(index, "home");
 assert(
 	index.includes('"@type":"ProfilePage"') &&
 		index.includes('"@type":"Person"') &&
@@ -123,146 +136,78 @@ assert(
 	index.includes('meta name="astro-view-transitions-enabled" content="true"'),
 	"pages should enable Astro client-side navigation",
 );
+if (index.includes('data-astro-image="constrained"')) {
+	assert(
+		index.includes('fetchpriority="high"') && index.includes('loading="eager"'),
+		"rendered home profile images should use priority loading hints",
+	);
+}
 assert(
-	index.includes('data-astro-image="constrained"') &&
-		index.includes('fetchpriority="high"') &&
-		index.includes('loading="eager"'),
-	"home profile image should use Astro responsive image priority hints",
-);
-assert(
-	index.includes('id="selected-publications"') &&
-		index.includes('id="latest-posts"') &&
-		index.includes("01 / Research") &&
-		index.includes("02 / Notes"),
-	"default configuration should render all enabled home page blocks in order",
-);
-assert(
-	index.includes("ScholarHub: A Configurable Academic Homepage Generator") &&
-		!index.includes("Tracing Learners Across Platforms Through Lightweight Signals"),
-	"home page should select only entries marked as publications",
-);
-assert(
-	index.includes("<details") &&
-		index.includes("<summary") &&
-		!index.includes("data-abstract-toggle"),
-	"home page abstracts should use native disclosure elements",
+	!index.includes("data-abstract-toggle") &&
+		(!index.includes("<details") || index.includes("<summary")),
+	"home page abstracts should use native disclosure elements when rendered",
 );
 
 const research = await readDist("researches/index.html");
-assert(titles(research).length === 1, "research page should emit one <title>");
-assert(
-	titles(research)[0] === "Publications | Scholar Pages Demo | Academic Portfolio",
-	"research page title should include page title",
-);
-assertFilterGroup(research, "research", [
-	"publication",
-	"working-paper",
-	"work-in-progress",
-]);
+const researchCanonical = assertPageMetadata(research, "research");
+assertOptionalFilterGroup(research, "research");
 assert(
 	!research.includes('aria-label="Page sections"') &&
-		research.includes('id="publication"') &&
-		research.includes("<details") &&
-		!research.includes("data-abstract-toggle"),
-	"research filters should not duplicate section navigation and abstracts should work natively",
+		!research.includes("data-abstract-toggle") &&
+		(!research.includes("<details") || research.includes("<summary")),
+	"research filters should not duplicate section navigation and abstracts should work natively when rendered",
 );
 
-const post = await readDist("posts/astro-overview/index.html");
-assert(titles(post).length === 1, "post page should emit one <title>");
-assert(
-	titles(post)[0] === "Launching the Scholars Site | Scholar Pages Demo | Academic Portfolio",
-	"post page title should use post title",
-);
-assert(
-	post.includes(
-		'meta name="description" content="Lessons learned while bootstrapping a personal academic website with Astro.',
-	),
-	"post page should use post description metadata",
-);
-assert(
-	post.includes(
-		'link rel="canonical" href="https://astro-theme-scholars.pages.dev/posts/astro-overview/"',
-	) &&
-		post.includes('meta property="og:type" content="article"') &&
-		post.includes(
-			'meta property="article:published_time" content="2024-07-12T00:00:00.000Z"',
-		) &&
-		post.includes('"@type":"BlogPosting"') &&
-		post.includes('"@type":"BreadcrumbList"'),
-	"post page should render canonical article metadata and structured data",
-);
-
-try {
-	await access(new URL("posts/draft-only/index.html", root));
-	throw new Error("draft post route should not be generated");
-} catch (error) {
-	if (error.code !== "ENOENT") throw error;
-}
-
-const about = await readDist("about/index.html");
-assert(about.includes("Current Role"), "about page should render profile data");
-assert(
-	footer(index) === footer(about) &&
-		footer(index).includes('class="flex justify-end text-right"') &&
-		footer(index).includes(
-			`&copy; ${new Date().getFullYear()} Scholar Pages Demo. All rights reserved.`,
-		),
-	"all pages should render the same right-aligned author and copyright footer",
-);
-assert(
-	about.includes("Research Areas"),
-	"about page should render research areas profile data",
-);
-assert(
-	about.includes('aria-label="Page sections"') &&
-		about.includes('href="#profile"') &&
-		about.includes('id="profile"'),
-	"about page should render section jump links with matching anchors",
-);
-
-const aboutCanonical = 'link rel="canonical" href="https://astro-theme-scholars.pages.dev/about/"';
-const researchCanonical = 'link rel="canonical" href="https://astro-theme-scholars.pages.dev/researches/"';
-
-assert(about.includes(aboutCanonical), "about page canonical should use siteConfig.siteUrl");
-assert(research.includes(researchCanonical), "research page canonical should use siteConfig.siteUrl");
-
-const projects = await readDist("projects/index.html");
-const projectStatusFilters = ["active", "past", "unspecified"];
-const visibleProjectStatusFilters = projectStatusFilters.filter((filter) =>
-	projects.includes(`data-filter-section="${filter}"`),
-);
-if (visibleProjectStatusFilters.length > 1) {
-	assertFilterGroup(projects, "projects", visibleProjectStatusFilters);
-} else {
+const postEntries = await readdir(new URL("posts/", root), {
+	withFileTypes: true,
+});
+const firstPost = postEntries.find((entry) => entry.isDirectory());
+if (firstPost) {
+	const post = await readDist(`posts/${firstPost.name}/index.html`);
+	assertPageMetadata(post, "post");
 	assert(
-		!projects.includes('role="toolbar"') && !projects.includes('data-filter="all"'),
-		"projects page should hide filter controls when only one status group has items",
+		post.includes('meta property="og:type" content="article"') &&
+			post.includes('"@type":"BlogPosting"') &&
+			post.includes('"@type":"BreadcrumbList"'),
+		"post pages should render article metadata and structured data",
 	);
 }
 
-const teaching = await readDist("teaching/index.html");
-assertFilterGroup(teaching, "teaching", ["current", "past"]);
+const about = await readDist("about/index.html");
+const aboutCanonical = assertPageMetadata(about, "about");
 assert(
-	!teaching.includes('aria-label="Page sections"') && teaching.includes('id="current"'),
+	footer(index) === footer(about) &&
+		footer(index).includes('class="flex justify-end text-right"') &&
+		footer(index).includes(`&copy; ${new Date().getFullYear()}`),
+	"all pages should render the same right-aligned copyright footer",
+);
+
+const projects = await readDist("projects/index.html");
+assertPageMetadata(projects, "projects");
+assertOptionalFilterGroup(projects, "projects");
+
+const teaching = await readDist("teaching/index.html");
+assertPageMetadata(teaching, "teaching");
+assertOptionalFilterGroup(teaching, "teaching");
+assert(
+	!teaching.includes('aria-label="Page sections"'),
 	"teaching filters should not duplicate section navigation",
 );
 
 const sitemap = await readDist("sitemap-0.xml");
 assert(
-	sitemap.includes("https://astro-theme-scholars.pages.dev/about/"),
+	sitemap.includes(indexCanonical) &&
+		sitemap.includes(aboutCanonical) &&
+		sitemap.includes(researchCanonical),
 	"sitemap should use the configured production URL",
 );
 const robots = await readDist("robots.txt");
 assert(
 	robots.includes("User-agent: *") &&
 		robots.includes("Allow: /") &&
-		robots.includes(
-			"Sitemap: https://astro-theme-scholars.pages.dev/sitemap-index.xml",
-		),
+		robots.includes(`Sitemap: ${new URL("sitemap-index.xml", indexCanonical)}`),
 	"robots.txt should be generated from the configured production URL",
 );
-
-assert(await existsInDist("profile.svg"), "default profile image should exist in dist");
 
 const css = await readDistCss();
 assert(
