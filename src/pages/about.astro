@@ -2,52 +2,12 @@
 import Layout from "../layouts/Layout.astro";
 import PageJumpNav from "../components/PageJumpNav.astro";
 import aboutRaw from "../data/about.yml?raw";
+import { aboutDataSchema } from "../lib/about";
 import { createUniqueSectionId } from "../lib/section-id";
 import siteConfig from "../side.config";
 import { parse } from "yaml";
 
-interface CustomItem {
-  title?: string;
-  subtitle?: string;
-  date?: string;
-  description?: string;
-  link?: string;
-  icon?: string;
-  badges?: string[];
-  highlights?: string[];
-  links?: Array<{ label?: string; href?: string; icon?: string }>;
-}
-
-interface CustomSection {
-  title?: string;
-  icon?: string;
-  items?: (string | CustomItem)[];
-}
-
-interface AboutData {
-  hero?: {
-    title?: string;
-    description?: string;
-  };
-  profile?: Array<{ label?: string; value?: string }>;
-  experience?: Array<{
-    role?: string;
-    organization?: string;
-    period?: string;
-    bullets?: string[];
-  }>;
-  service?: Array<
-    string | { role?: string; organization?: string; period?: string }
-  >;
-  education?: Array<{
-    degree?: string;
-    institution?: string;
-    year?: string | number;
-  }>;
-  sections?: CustomSection[];
-}
-
-const aboutData = (parse(aboutRaw) as AboutData) || {};
+const aboutData = aboutDataSchema.parse(parse(aboutRaw) ?? {});
 const {
   hero = {},
   profile = [],

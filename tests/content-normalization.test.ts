@@ -1,6 +1,10 @@
 import { describe, expect, test } from "vitest";
-import { normalizeProject } from "../src/lib/projects";
-import { normalizeTeachingModule } from "../src/lib/teaching";
+import { aboutDataSchema } from "../src/lib/about";
+import { normalizeProject, projectsSchema } from "../src/lib/projects";
+import {
+	normalizeTeachingModule,
+	teachingDataSchema,
+} from "../src/lib/teaching";
 
 describe("content normalization", () => {
 	test("turns a project url into a default link", () => {
@@ -66,5 +70,23 @@ describe("content normalization", () => {
 		expect(module.links).toEqual([
 			{ label: "Archive", href: "https://archive.example.edu" },
 		]);
+	});
+
+	test("rejects malformed YAML records before rendering", () => {
+		expect(
+			aboutDataSchema.safeParse({
+				profile: [{ label: "Role", value: 42 }],
+			}).success,
+		).toBe(false);
+		expect(
+			projectsSchema.safeParse([
+				{ title: "Broken project", description: "Missing technology list" },
+			]).success,
+		).toBe(false);
+		expect(
+			teachingDataSchema.safeParse({
+				current: [{ modules: [{ tags: "not-an-array" }] }],
+			}).success,
+		).toBe(false);
 	});
 });

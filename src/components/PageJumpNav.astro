@@ -6,45 +6,23 @@ interface Item {
 
 interface Props {
   items: Item[];
-  compact?: boolean;
 }
 
-const { items, compact = false } = Astro.props;
+const { items } = Astro.props;
 ---
 
 {items.length > 1 && (
   <nav
-    class:list={[
-      "page-jump-nav flex items-center gap-1 overflow-x-auto text-sm sm:w-fit",
-      compact
-        ? "page-jump-nav-compact shrink-0"
-        : "sticky top-18 z-20 -mx-2 border-y border-paper-300/90 bg-paper-50/96 px-2 py-2 dark:border-ink-700 dark:bg-ink-950/96 sm:mx-0",
-    ]}
+    class="page-jump-nav sticky top-18 z-20 -mx-2 flex items-center gap-1 overflow-x-auto border-y border-paper-300/90 bg-paper-50/96 px-2 py-2 text-sm dark:border-ink-700 dark:bg-ink-950/96 sm:mx-0 sm:w-fit"
     aria-label="Page sections"
   >
-    {compact && <span class="mr-1 shrink-0 text-xs font-bold uppercase tracking-[0.14em] text-gray-500 dark:text-gray-400">Jump</span>}
-    {items.map((item, index) => (
+    {items.map((item) => (
       <a
         href={item.href}
-        class:list={[
-          "glass-control inline-flex min-h-11 shrink-0 items-center justify-center rounded-[0.625rem] font-semibold text-gray-600 no-underline transition-colors hover:text-accent-800 focus-visible:ring-2 focus-visible:ring-accent-500 dark:text-gray-300 dark:hover:text-accent-200",
-          compact ? "w-11 px-0 font-mono text-xs tabular-nums" : "px-3.5",
-        ]}
-        aria-label={compact ? `Jump to ${item.label}` : undefined}
-        title={compact ? item.label : undefined}
+        class="glass-control inline-flex min-h-11 shrink-0 items-center justify-center rounded-[0.625rem] px-3.5 font-semibold text-gray-600 no-underline transition-colors hover:text-accent-800 focus-visible:ring-2 focus-visible:ring-accent-500 dark:text-gray-300 dark:hover:text-accent-200"
       >
-        {compact ? String(index + 1).padStart(2, "0") : item.label}
+        {item.label}
       </a>
     ))}
   </nav>
 )}
-
-<style>
-  .page-jump-nav {
-    scrollbar-width: none;
-  }
-
-  .page-jump-nav::-webkit-scrollbar {
-    display: none;
-  }
-</style>

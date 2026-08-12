@@ -1,13 +1,12 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import FilterBar from "../components/FilterBar.astro";
-import PageJumpNav from "../components/PageJumpNav.astro";
 import teachingRaw from "../data/teaching.yml?raw";
 import siteConfig from "../side.config";
 import { parse } from "yaml";
-import { normalizeTeachingSection, type TeachingData } from "../lib/teaching";
+import { normalizeTeachingSection, teachingDataSchema } from "../lib/teaching";
 
-const teachingData = (parse(teachingRaw) as TeachingData) || {};
+const teachingData = teachingDataSchema.parse(parse(teachingRaw) ?? {});
 const current = (teachingData.current || []).map(normalizeTeachingSection);
 const past = (teachingData.past || []).map(normalizeTeachingSection);
 
@@ -31,20 +30,13 @@ const totalPast = past.reduce((acc, s) => acc + (s.modules?.length || 0), 0);
       <h1 class="page-title">{pageTitle}</h1>
       <p class="page-description">{pageDescription}</p>
 
-      <div class="flex flex-col gap-2 pt-2 lg:flex-row lg:items-center lg:justify-between">
+      <div class="pt-2">
         <FilterBar
           total={totalCurrent + totalPast}
           allIcon="i-mdi:school"
           items={[
             { filter: "current", label: "current", count: totalCurrent, icon: "i-mdi:calendar-check" },
             { filter: "past", label: "past", count: totalPast, icon: "i-mdi:history" },
-          ]}
-        />
-        <PageJumpNav
-          compact
-          items={[
-            ...(current.length > 0 ? [{ href: "#current", label: "Current" }] : []),
-            ...(past.length > 0 ? [{ href: "#past", label: "Past" }] : []),
           ]}
         />
       </div>

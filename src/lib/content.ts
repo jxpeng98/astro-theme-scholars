@@ -1,13 +1,24 @@
-export interface ContentLink {
-	label: string;
-	href: string;
-	icon?: string;
-}
+import { z } from "astro/zod";
 
-export interface ContentMetadata {
-	label: string;
-	value: string;
-}
+export const contentTextSchema = z.string().trim().min(1);
+
+export const contentLinkSchema = z
+	.object({
+		label: contentTextSchema,
+		href: contentTextSchema,
+		icon: contentTextSchema.optional(),
+	})
+	.strict();
+
+export const contentMetadataSchema = z
+	.object({
+		label: contentTextSchema,
+		value: contentTextSchema,
+	})
+	.strict();
+
+export type ContentLink = z.infer<typeof contentLinkSchema>;
+export type ContentMetadata = z.infer<typeof contentMetadataSchema>;
 
 function hasText(value: unknown): value is string {
 	return typeof value === "string" && value.trim().length > 0;

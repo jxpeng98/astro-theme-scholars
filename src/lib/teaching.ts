@@ -1,29 +1,41 @@
 import {
+	contentLinkSchema,
+	contentTextSchema,
 	normalizeLinks,
 	normalizeStringArray,
 	type ContentLink,
 } from "./content";
+import { z } from "astro/zod";
 
-export interface TeachingModule {
-	title?: string;
-	code?: string;
-	summary?: string;
-	tags?: string[];
-	badges?: string[];
-	highlights?: string[];
-	link?: ContentLink;
-	links?: ContentLink[];
-}
+export const teachingModuleSchema = z
+	.object({
+		title: contentTextSchema.optional(),
+		code: contentTextSchema.optional(),
+		summary: contentTextSchema.optional(),
+		tags: z.array(contentTextSchema).optional(),
+		badges: z.array(contentTextSchema).optional(),
+		highlights: z.array(contentTextSchema).optional(),
+		link: contentLinkSchema.optional(),
+		links: z.array(contentLinkSchema).optional(),
+	})
+	.strict();
 
-export interface TeachingSection {
-	term?: string;
-	modules?: TeachingModule[];
-}
+export const teachingSectionSchema = z
+	.object({
+		term: contentTextSchema.optional(),
+		modules: z.array(teachingModuleSchema).optional(),
+	})
+	.strict();
 
-export interface TeachingData {
-	current?: TeachingSection[];
-	past?: TeachingSection[];
-}
+export const teachingDataSchema = z
+	.object({
+		current: z.array(teachingSectionSchema).optional(),
+		past: z.array(teachingSectionSchema).optional(),
+	})
+	.strict();
+
+export type TeachingModule = z.infer<typeof teachingModuleSchema>;
+export type TeachingSection = z.infer<typeof teachingSectionSchema>;
 
 export interface NormalizedTeachingModule extends TeachingModule {
 	tags: string[];

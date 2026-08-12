@@ -1,27 +1,38 @@
 import {
+	contentLinkSchema,
+	contentMetadataSchema,
+	contentTextSchema,
 	normalizeLinks,
 	normalizeMetadata,
 	normalizeStringArray,
 	type ContentLink,
 	type ContentMetadata,
 } from "./content";
+import { z } from "astro/zod";
 
-export type ProjectStatus = "active" | "past" | "unspecified";
+const projectStatusSchema = z.enum(["active", "past", "unspecified"]);
 
-export interface ProjectEntry {
-	title: string;
-	subtitle?: string;
-	period?: string;
-	description: string;
-	tech: string[];
-	url?: string;
-	links?: ContentLink[];
-	badges?: string[];
-	highlights?: string[];
-	metadata?: ContentMetadata[];
-	featured?: boolean;
-	status?: ProjectStatus;
-}
+export const projectEntrySchema = z
+	.object({
+		title: contentTextSchema,
+		subtitle: contentTextSchema.optional(),
+		period: contentTextSchema.optional(),
+		description: contentTextSchema,
+		tech: z.array(contentTextSchema),
+		url: contentTextSchema.optional(),
+		links: z.array(contentLinkSchema).optional(),
+		badges: z.array(contentTextSchema).optional(),
+		highlights: z.array(contentTextSchema).optional(),
+		metadata: z.array(contentMetadataSchema).optional(),
+		featured: z.boolean().optional(),
+		status: projectStatusSchema.optional(),
+	})
+	.strict();
+
+export const projectsSchema = z.array(projectEntrySchema);
+
+export type ProjectStatus = z.infer<typeof projectStatusSchema>;
+export type ProjectEntry = z.infer<typeof projectEntrySchema>;
 
 export interface NormalizedProjectEntry extends ProjectEntry {
 	tech: string[];
