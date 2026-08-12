@@ -54,10 +54,12 @@ function footer(html) {
 	return html.match(/<footer[\s\S]*?<\/footer>/)?.[0] ?? "";
 }
 
-function assertFilterToolbar(html, pageName, filters) {
+function assertFilterGroup(html, pageName, filters) {
 	assert(
-		html.includes('role="toolbar"') && html.includes('aria-label="Filter sections"'),
-		`${pageName} page should render filter controls as an accessible toolbar`,
+		html.includes('role="group"') &&
+			html.includes('aria-label="Filter sections"') &&
+			!html.includes('role="toolbar"'),
+		`${pageName} page should render filter controls as a labeled button group`,
 	);
 	assert(
 		countMatches(html, 'data-filter="all"') === 1 &&
@@ -81,8 +83,13 @@ function assertFilterToolbar(html, pageName, filters) {
 }
 
 const index = await readDist("index.html");
+const siteTitleLink = index.match(/<a[^>]*data-site-title[^>]*>/)?.[0] ?? "";
 assert(
-	titles(index)[0] === "Your Name | Academic Portfolio",
+	siteTitleLink && !siteTitleLink.includes("aria-label"),
+	"site title link should use its visible text as its accessible name",
+);
+assert(
+	titles(index)[0] === "Scholar Pages Demo | Academic Portfolio",
 	"home page title should use the concise configured site title",
 );
 assert(
@@ -97,9 +104,9 @@ assert(
 	index.includes(
 		'meta property="og:url" content="https://astro-theme-scholars.pages.dev/"',
 	) &&
-		index.includes('meta property="og:image:alt" content="Portrait of Your Name"') &&
+		index.includes('meta property="og:image:alt" content="Generic profile illustration"') &&
 		index.includes('meta name="twitter:card" content="summary"') &&
-		index.includes('meta name="author" content="Your Name"'),
+		index.includes('meta name="author" content="Scholar Pages Demo"'),
 	"home page should render complete Open Graph, Twitter, and author metadata",
 );
 assert(
@@ -129,31 +136,41 @@ assert(
 		index.includes("02 / Notes"),
 	"default configuration should render all enabled home page blocks in order",
 );
+assert(
+	index.includes("ScholarHub: A Configurable Academic Homepage Generator") &&
+		!index.includes("Tracing Learners Across Platforms Through Lightweight Signals"),
+	"home page should select only entries marked as publications",
+);
+assert(
+	index.includes("<details") &&
+		index.includes("<summary") &&
+		!index.includes("data-abstract-toggle"),
+	"home page abstracts should use native disclosure elements",
+);
 
 const research = await readDist("researches/index.html");
 assert(titles(research).length === 1, "research page should emit one <title>");
 assert(
-	titles(research)[0] === "Publications | Your Name | Academic Portfolio",
+	titles(research)[0] === "Publications | Scholar Pages Demo | Academic Portfolio",
 	"research page title should include page title",
 );
-assertFilterToolbar(research, "research", [
+assertFilterGroup(research, "research", [
 	"publication",
 	"working-paper",
 	"work-in-progress",
 ]);
 assert(
-	research.includes('aria-label="Page sections"') &&
-		research.includes('href="#publication"') &&
+	!research.includes('aria-label="Page sections"') &&
 		research.includes('id="publication"') &&
-		research.includes('href="#working-paper"') &&
-		research.includes('id="working-paper"'),
-	"research page should render section jump links with matching anchors",
+		research.includes("<details") &&
+		!research.includes("data-abstract-toggle"),
+	"research filters should not duplicate section navigation and abstracts should work natively",
 );
 
 const post = await readDist("posts/astro-overview/index.html");
 assert(titles(post).length === 1, "post page should emit one <title>");
 assert(
-	titles(post)[0] === "Launching the Scholars Site | Your Name | Academic Portfolio",
+	titles(post)[0] === "Launching the Scholars Site | Scholar Pages Demo | Academic Portfolio",
 	"post page title should use post title",
 );
 assert(
@@ -188,7 +205,7 @@ assert(
 	footer(index) === footer(about) &&
 		footer(index).includes('class="flex justify-end text-right"') &&
 		footer(index).includes(
-			`&copy; ${new Date().getFullYear()} Your Name. All rights reserved.`,
+			`&copy; ${new Date().getFullYear()} Scholar Pages Demo. All rights reserved.`,
 		),
 	"all pages should render the same right-aligned author and copyright footer",
 );
@@ -215,7 +232,7 @@ const visibleProjectStatusFilters = projectStatusFilters.filter((filter) =>
 	projects.includes(`data-filter-section="${filter}"`),
 );
 if (visibleProjectStatusFilters.length > 1) {
-	assertFilterToolbar(projects, "projects", visibleProjectStatusFilters);
+	assertFilterGroup(projects, "projects", visibleProjectStatusFilters);
 } else {
 	assert(
 		!projects.includes('role="toolbar"') && !projects.includes('data-filter="all"'),
@@ -224,12 +241,10 @@ if (visibleProjectStatusFilters.length > 1) {
 }
 
 const teaching = await readDist("teaching/index.html");
-assertFilterToolbar(teaching, "teaching", ["current", "past"]);
+assertFilterGroup(teaching, "teaching", ["current", "past"]);
 assert(
-	teaching.includes('aria-label="Page sections"') &&
-		teaching.includes('href="#current"') &&
-		teaching.includes('id="current"'),
-	"teaching page should render section jump links with matching anchors",
+	!teaching.includes('aria-label="Page sections"') && teaching.includes('id="current"'),
+	"teaching filters should not duplicate section navigation",
 );
 
 const sitemap = await readDist("sitemap-0.xml");
