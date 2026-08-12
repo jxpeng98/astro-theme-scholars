@@ -9,20 +9,21 @@ import { defineSiteConfig } from "./src/config/site";
 
 export const siteConfig = defineSiteConfig({
 	// Required: the four values most sites should personalize first.
-	author: "Your Name",
+	author: "Scholar Pages Demo",
 	siteUrl: "https://astro-theme-scholars.pages.dev",
 	hero: {
 		headline:
 			"Scholarship at the intersection of learning analytics and web infrastructure.",
 		subheadline:
-			"I am a researcher focused on building equitable tooling for open scholarship. My group studies how learning signals travel across platforms, and we ship practical infrastructure for sharing data, publications, and code.",
+			"This sample profile demonstrates how Scholar Pages presents research, teaching, projects, and notes in one maintainable academic site.",
 		profileImage: "/profile.svg",
-		statusBadge: "Open to collaboration",
+		profileAlt: "Generic profile illustration",
+		statusBadge: "Demo content",
 	},
 
 	// Common profile and discovery settings.
 	description:
-		"Scholarship at the intersection of learning analytics and web infrastructure, building equitable tooling for open scholarship.",
+		"Live demonstration of Scholar Pages, an Astro theme for academic portfolios and research profiles.",
 	keywords: [
 		"learning analytics",
 		"open scholarship",
@@ -34,15 +35,13 @@ export const siteConfig = defineSiteConfig({
 	// language: "en",
 	// locale: "en_US",
 	// ogImage: "/social-card.png", // Prefer a 1200 × 630 raster image.
-	// ogImageAlt: "Your Name — academic portfolio",
+	// ogImageAlt: "Scholar name — academic portfolio",
 	// ogImageWidth: 1200,
 	// ogImageHeight: 630,
 	affiliations: [
 		{
-			role: "Assistant Professor",
-			department: "School of Information",
-			institution: "University Name",
-			url: "https://example.edu/info",
+			role: "Sample academic profile",
+			institution: "Example University",
 		},
 	],
 	researchInterests: [
@@ -53,29 +52,19 @@ export const siteConfig = defineSiteConfig({
 	],
 	socialLinks: [
 		{
-			label: "Google Scholar",
-			href: "https://scholar.google.com/citations?user=YOUR_ID",
-			icon: "i-academicons:google-scholar",
-		},
-		{
-			label: "ORCID",
-			href: "https://orcid.org/0000-0000-0000-0000",
-			icon: "i-academicons:orcid",
-		},
-		{
-			label: "GitHub",
-			href: "https://github.com/your-handle",
+			label: "Repository",
+			href: "https://github.com/jxpeng98/astro-theme-scholars",
 			icon: "i-mdi:github",
 		},
 		{
-			label: "Email",
-			href: "mailto:you@example.edu",
-			icon: "i-mdi:email-outline",
+			label: "Documentation",
+			href: "https://github.com/jxpeng98/astro-theme-scholars#readme",
+			icon: "i-mdi:bookshelf",
 		},
 		{
-			label: "Twitter",
-			href: "https://twitter.com/your-handle",
-			icon: "i-mdi:twitter",
+			label: "Releases",
+			href: "https://github.com/jxpeng98/astro-theme-scholars/releases",
+			icon: "i-mdi:tag-outline",
 		},
 	],
 

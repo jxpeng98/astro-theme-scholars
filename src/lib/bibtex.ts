@@ -102,7 +102,7 @@ export function parseBibtex(raw: string): BibEntry[] {
 			category = 'Publication';
 		} else if (publicField === 'wp') {
 			category = 'Working Paper';
-		} else if (publicField === 'wip' || !publicField) {
+		} else if (publicField === 'wip') {
 			category = 'Work in Progress';
 		}
 

@@ -20,9 +20,9 @@
     - Content Collections
   links:
     - label: Repository
-      href: https://github.com/jxpeng98/
+      href: https://github.com/jxpeng98/astro-theme-scholars
     - label: Documentation
-      href: https://github.com/jxpeng98/
+      href: https://github.com/jxpeng98/astro-theme-scholars#readme
 
 - title: Multilingual Citation Miner
   status: past

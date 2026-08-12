@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { parseBibtex } from "../src/lib/bibtex";
+import { getFeaturedPapers } from "../src/lib/papers";
 
 describe("parseBibtex", () => {
 	test("parses nested braces in titles and abstracts", () => {
@@ -44,5 +45,25 @@ describe("parseBibtex", () => {
     `);
 
 		expect(entries.map((entry) => entry.id)).toEqual(["new", "old"]);
+	});
+
+	test("treats an omitted public field as other", () => {
+		const [entry] = parseBibtex(`
+      @misc{uncategorized, title = {Uncategorized}}
+    `);
+
+		expect(entry.category).toBe("Other");
+	});
+
+	test("selects only publications for the home page", () => {
+		const entries = parseBibtex(`
+      @misc{working, title = {Working}, year = {2026}, public = {wp}}
+      @misc{published, title = {Published}, year = {2025}, public = {yes}}
+      @misc{other, title = {Other}, year = {2024}}
+    `);
+
+		expect(getFeaturedPapers(3, entries).map((entry) => entry.id)).toEqual([
+			"published",
+		]);
 	});
 });

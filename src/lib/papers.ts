@@ -7,6 +7,9 @@ export function getAllPapers(): BibEntry[] {
 	return papersCache;
 }
 
-export function getFeaturedPapers(limit = 3): BibEntry[] {
-	return papersCache.slice(0, limit);
+export function getFeaturedPapers(
+	limit = 3,
+	papers: BibEntry[] = papersCache,
+): BibEntry[] {
+	return papers.filter((paper) => paper.category === 'Publication').slice(0, limit);
 }
