@@ -4,14 +4,24 @@ import DetailShell from "../../components/DetailShell.astro";
 import Layout from "../../layouts/Layout.astro";
 
 export async function getStaticPaths() {
-  const courses = await getCollection("teaching", ({ data }) => !data.draft);
+  const courses = (await getCollection("teaching", ({ data }) => !data.draft)).sort(
+    (a, b) => a.data.order - b.data.order,
+  );
   return courses.map((course) => ({
     params: { slug: course.id },
-    props: { course },
+    props: {
+      course,
+      otherOfferings: courses
+        .filter((offering) => offering.id !== course.id && offering.data.code === course.data.code)
+        .map((offering) => ({ term: offering.data.term, href: `/teaching/${offering.id}` })),
+    },
   }));
 }
 
-const { course } = Astro.props as { course: CollectionEntry<"teaching"> };
+const { course, otherOfferings } = Astro.props as {
+  course: CollectionEntry<"teaching">;
+  otherOfferings: Array<{ term: string; href: string }>;
+};
 const { Content } = await render(course);
 const { data } = course;
 const status = data.status === "current" ? "Current" : "Past";
@@ -42,6 +52,16 @@ const status = data.status === "current" ? "Current" : "Past";
     highlights={data.highlights}
     resources={data.links}
   >
+    {otherOfferings.length > 0 && (
+      <section aria-labelledby="other-offerings">
+        <h2 id="other-offerings">Other offerings</h2>
+        <ul>
+          {otherOfferings.map((offering) => (
+            <li><a href={offering.href}>{offering.term}</a></li>
+          ))}
+        </ul>
+      </section>
+    )}
     <Content />
   </DetailShell>
 </Layout>

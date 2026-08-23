@@ -194,6 +194,11 @@ assert(
 		!main(projects).includes("https://github.com/jxpeng98/astro-theme-scholars"),
 	"project index cards should link to internal details without embedding external resources",
 );
+assert(
+	main(projects).includes("data-project-index") &&
+		main(projects).includes("Highlight:"),
+	"project index should render comparable work rows with evidence",
+);
 
 const projectDetail = await readDist("projects/scholars-portal/index.html");
 const projectDetailCanonical = assertPageMetadata(projectDetail, "project detail");
@@ -214,6 +219,19 @@ assert(
 		!main(teaching).includes("https://www.nist.gov/itl/ai-risk-management-framework"),
 	"teaching index rows should use internal details without duplicating external resources",
 );
+assert(
+	main(teaching).includes("data-teaching-ledger") &&
+		main(teaching).includes("Previously taught"),
+	"teaching index should group past offerings while showing course continuity",
+);
+const teachingLedgerCodes = [
+	...main(teaching).matchAll(/data-course-code="([^"]+)"/g),
+].map((match) => match[1]);
+assert(
+	teachingLedgerCodes.length > 0 &&
+		teachingLedgerCodes.length === new Set(teachingLedgerCodes).size,
+	"teaching ledger should render one row per unique course code",
+);
 
 const teachingDetail = await readDist(
 	"teaching/human-centered-ai-systems/index.html",
@@ -228,6 +246,24 @@ assert(
 		teachingDetail.includes('target="_blank"') &&
 		teachingDetail.includes('rel="noopener noreferrer"'),
 	"teaching detail pages should render safe external course resources",
+);
+
+const teachingContinuityDetail = await readDist(
+	"teaching/learning-analytics-studio-spring-2025/index.html",
+);
+const otherOfferings =
+	teachingContinuityDetail.match(
+		/<section aria-labelledby="other-offerings">[\s\S]*?<\/section>/,
+	)?.[0] ?? "";
+assert(
+	otherOfferings.includes("Other offerings") &&
+		otherOfferings.includes(
+			'href="/teaching/learning-analytics-studio-spring-2024"',
+		) &&
+		!otherOfferings.includes(
+			'href="/teaching/learning-analytics-studio-spring-2025"',
+		),
+	"teaching detail pages should link related internal offerings",
 );
 
 const sitemap = await readDist("sitemap-0.xml");

@@ -75,7 +75,10 @@ const pageDescription = siteConfig.pageTitles.projects.description ||
               <article class="overflow-hidden rounded-2xl border border-paper-300/90 bg-white/68 dark:border-ink-700 dark:bg-ink-900/68">
                 <a
                   href={`/projects/${featured.id}`}
-                  class="group grid min-h-full text-inherit no-underline lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.45fr)]"
+                  class:list={[
+                    "group grid min-h-full text-inherit no-underline",
+                    featured.data.cover && "lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.45fr)]",
+                  ]}
                 >
                   <div class="flex flex-col justify-between gap-7 p-5 sm:p-7 lg:p-8">
                     <div class="space-y-4">
@@ -124,36 +127,52 @@ const pageDescription = siteConfig.pageTitles.projects.description ||
             )}
 
             {remaining.length > 0 && (
-              <div class="grid gap-4 md:grid-cols-12">
-                {remaining.map((project, index) => (
-                  <article class={remaining.length === 1 ? "md:col-span-12" : index % 2 === 0 ? "md:col-span-7" : "md:col-span-5"}>
-                    <a
-                      href={`/projects/${project.id}`}
-                      class="group flex h-full min-h-64 flex-col rounded-2xl border border-paper-300/90 bg-white/56 p-5 text-inherit no-underline transition-[background-color,border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-accent-300 hover:bg-white/88 motion-reduce:transform-none dark:border-ink-700 dark:bg-ink-900/58 dark:hover:border-accent-700 dark:hover:bg-ink-900 sm:p-6"
-                    >
-                      <div class="flex items-center justify-between gap-3">
-                        <span class="entry-meta font-bold tabular-nums">{project.data.period}</span>
-                        <span class="i-mdi:arrow-top-right text-lg text-accent-600 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transform-none dark:text-accent-300" aria-hidden="true"></span>
-                      </div>
-                      <div class="mt-8 space-y-3">
-                        <h3
-                          class="entry-title text-[1.5rem] transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-200"
-                          transition:name={`project-${project.id}-title`}
-                        >
-                          {project.data.title}
-                        </h3>
-                        <p class="entry-summary">{project.data.summary}</p>
-                      </div>
-                      {project.data.tech.length > 0 && (
-                        <div class="mt-auto flex flex-wrap gap-x-3 gap-y-1 pt-7">
-                          {project.data.tech.slice(0, 4).map((tag) => (
-                            <span class="font-sans text-xs font-bold text-ink-500 dark:text-paper-400">{tag}</span>
-                          ))}
+              <div data-project-index class="divide-y divide-paper-300/90 border-y border-paper-300/90 dark:divide-ink-700 dark:border-ink-700">
+                {remaining.map((project) => {
+                  const role = project.data.metadata.find((item) => item.label.toLowerCase() === "role")?.value;
+
+                  return (
+                    <article>
+                      <a
+                        href={`/projects/${project.id}`}
+                        class="group grid gap-4 py-5 text-inherit no-underline transition-colors duration-200 hover:text-accent-800 dark:hover:text-accent-200 sm:py-6 lg:grid-cols-[7.5rem_minmax(0,1fr)_12rem_auto] lg:items-start lg:gap-6"
+                      >
+                        <div class="flex items-center justify-between lg:block">
+                          <p class="entry-meta font-bold tabular-nums">{project.data.period}</p>
+                          <span class="i-mdi:arrow-right text-lg text-accent-600 transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none dark:text-accent-300 lg:hidden" aria-hidden="true"></span>
                         </div>
-                      )}
-                    </a>
-                  </article>
-                ))}
+
+                        <div class="space-y-2">
+                          <h3
+                            class="entry-title text-[1.375rem] transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-200"
+                            transition:name={`project-${project.id}-title`}
+                          >
+                            {project.data.title}
+                          </h3>
+                          <p class="entry-summary max-w-[42rem]">{project.data.summary}</p>
+                          {project.data.highlights[0] && (
+                            <p class="font-sans text-sm leading-6 text-ink-600 dark:text-paper-300">
+                              <span class="font-bold text-ink-800 dark:text-paper-100">Highlight:</span> {project.data.highlights[0]}
+                            </p>
+                          )}
+                        </div>
+
+                        {(role || project.data.tech.length > 0) && (
+                          <div class="space-y-2 lg:pt-0.5">
+                            {role && <p class="font-sans text-sm font-bold leading-5 text-ink-700 dark:text-paper-200">{role}</p>}
+                            {project.data.tech.length > 0 && (
+                              <p class="font-sans text-xs leading-5 text-ink-500 dark:text-paper-400">
+                                {project.data.tech.slice(0, 3).join(", ")}
+                              </p>
+                            )}
+                          </div>
+                        )}
+
+                        <span class="i-mdi:arrow-right mt-0.5 hidden text-lg text-accent-600 transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none dark:text-accent-300 lg:col-start-4 lg:block" aria-hidden="true"></span>
+                      </a>
+                    </article>
+                  );
+                })}
               </div>
             )}
           </section>
