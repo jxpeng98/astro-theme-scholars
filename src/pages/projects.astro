@@ -1,213 +1,164 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import { getCollection } from "astro:content";
 import FilterBar from "../components/FilterBar.astro";
-import { projects } from "../components/projects";
+import Layout from "../layouts/Layout.astro";
 import siteConfig from "../side.config";
-import { getProjectStatus } from "../lib/projects";
 
+const projects = (await getCollection("projects", ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const statuses = ["active", "past", "unspecified"] as const;
+const labels = {
+  active: {
+    title: "Active projects",
+    description: "Ongoing research, infrastructure, and collaborative initiatives.",
+  },
+  past: {
+    title: "Past projects",
+    description: "Completed work and earlier lines of inquiry.",
+  },
+  unspecified: {
+    title: "Other projects",
+    description: "Selected experiments, tools, and community contributions.",
+  },
+};
+const groups = statuses.map((status) => ({
+  status,
+  ...labels[status],
+  projects: projects.filter((project) => project.data.status === status),
+}));
 const pageTitle = siteConfig.pageTitles.projects.title || "Projects";
 const pageDescription = siteConfig.pageTitles.projects.description ||
   "Selected lab and community projects with a focus on reproducible research infrastructure, learning analytics, and open collaboration.";
-
-const activeProjects = projects.filter((project) => getProjectStatus(project) === "active");
-const pastProjects = projects.filter((project) => getProjectStatus(project) === "past");
-const unspecifiedProjects = projects.filter((project) => getProjectStatus(project) === "unspecified");
-const filterItems = [
-  {
-    filter: "active",
-    label: "active",
-    count: activeProjects.length,
-    icon: "i-mdi:rocket-launch",
-  },
-  {
-    filter: "past",
-    label: "past",
-    count: pastProjects.length,
-    icon: "i-mdi:archive",
-  },
-  {
-    filter: "unspecified",
-    label: "other",
-    count: unspecifiedProjects.length,
-    icon: "i-mdi:folder-open",
-  },
-];
-
-const projectGroups = [
-  {
-    filter: "active",
-    title: "Active projects",
-    description: "Ongoing research, infrastructure, and collaborative initiatives.",
-    projects: activeProjects,
-    isActive: true,
-  },
-  {
-    filter: "past",
-    title: "Past projects",
-    description: "Completed work and earlier lines of inquiry.",
-    projects: pastProjects,
-    isActive: false,
-  },
-  {
-    filter: "unspecified",
-    title: "Other projects",
-    description: "Selected experiments, tools, and community contributions.",
-    projects: unspecifiedProjects,
-    isActive: false,
-  },
-];
 ---
 
-<Layout
-  title={pageTitle}
-  description={pageDescription}
-  schemaType="CollectionPage"
->
+<Layout title={pageTitle} description={pageDescription} schemaType="CollectionPage">
   <div class="page-stack">
     <header class="page-header">
       <h1 class="page-title">{pageTitle}</h1>
       <p class="page-description">{pageDescription}</p>
 
-	  <FilterBar
-		allIcon="i-mdi:code-braces"
-		total={projects.length}
-		items={filterItems}
-	  />
+      <FilterBar
+        allIcon="i-mdi:code-braces"
+        total={projects.length}
+        items={groups.map((group) => ({
+          filter: group.status,
+          label: group.status === "unspecified" ? "other" : group.status,
+          count: group.projects.length,
+          icon: group.status === "active" ? "i-mdi:rocket-launch" : group.status === "past" ? "i-mdi:archive" : "i-mdi:folder-open",
+        }))}
+      />
     </header>
 
-    <div class="space-y-7 sm:space-y-8" id="projects-container">
-      {projectGroups.filter((group) => group.projects.length > 0).map((group) => (
-        <section
-          class="content-section project-section space-y-4"
-          data-filter-section={group.filter}
-          aria-labelledby={`projects-${group.filter}`}
-        >
-          <div class="flex flex-col gap-3 border-b border-gray-200 pb-4 dark:border-gray-700 md:flex-row md:items-end md:justify-between">
-            <div class="space-y-1.5">
-              <h2 id={`projects-${group.filter}`} class="section-heading">
-                {group.title}
-              </h2>
-              <p class="body-copy max-w-2xl text-gray-600 dark:text-gray-300">
-                {group.description}
+    <div id="projects-container" class="space-y-10 sm:space-y-12">
+      {groups.filter((group) => group.projects.length > 0).map((group) => {
+        const featured = group.projects.find((project) => project.data.featured);
+        const remaining = group.projects.filter((project) => project.id !== featured?.id);
+
+        return (
+          <section
+            class="content-section project-section space-y-5"
+            data-filter-section={group.status}
+            aria-labelledby={`projects-${group.status}`}
+          >
+            <header class="flex flex-col gap-2 border-b border-paper-300/90 pb-4 dark:border-ink-700 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
+              <div class="space-y-1.5">
+                <h2 id={`projects-${group.status}`} class="section-heading">{group.title}</h2>
+                <p class="body-copy max-w-2xl text-ink-600 dark:text-paper-300">{group.description}</p>
+              </div>
+              <p class="entry-meta shrink-0 font-bold">
+                {group.projects.length} {group.projects.length === 1 ? "project" : "projects"}
               </p>
-            </div>
-            <span class="meta-chip shrink-0 self-start md:self-auto">
-              {group.projects.length} {group.projects.length === 1 ? "project" : "projects"}
-            </span>
-          </div>
+            </header>
 
-          <div class="grid gap-4 md:grid-cols-2">
-            {group.projects.map((project) => {
-              const hasDetails =
-                project.badges.length > 0 ||
-                project.highlights.length > 0 ||
-                project.metadata.length > 0 ||
-                project.tech.length > 0;
-
-              return (
-                <article class="surface-card group relative flex h-full flex-col gap-3">
-                  <div class="flex flex-col items-start gap-3 sm:flex-row sm:justify-between sm:gap-4">
-                    <div class="min-w-0 space-y-1.5">
-                      {project.period && (
-                        <p class="flex items-center gap-1.5 text-xs font-medium tabular-nums text-gray-500 dark:text-gray-400">
-                          <span class="i-mdi:calendar-range text-sm text-accent-600 dark:text-accent-300" aria-hidden="true"></span>
-                          {project.period}
-                        </p>
-                      )}
-					  <h3 class="entry-title transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-200">
-                        {project.title}
-                      </h3>
-                      {project.subtitle && (
-						<p class="entry-supporting font-semibold text-accent-700 dark:text-accent-200">
-                          {project.subtitle}
-                        </p>
-                      )}
+            {featured && (
+              <article class="overflow-hidden rounded-2xl border border-paper-300/90 bg-white/68 dark:border-ink-700 dark:bg-ink-900/68">
+                <a
+                  href={`/projects/${featured.id}`}
+                  class="group grid min-h-full text-inherit no-underline lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.45fr)]"
+                >
+                  <div class="flex flex-col justify-between gap-7 p-5 sm:p-7 lg:p-8">
+                    <div class="space-y-4">
+                      <div class="flex flex-wrap gap-2">
+                        <span class="meta-chip">{featured.data.status === "active" ? "Active" : "Selected"}</span>
+                        <span class="meta-chip">{featured.data.period}</span>
+                      </div>
+                      <div class="space-y-2">
+                        <h3
+                          class="font-heading text-[1.75rem] font-semibold leading-[1.08] tracking-[-0.02em] text-ink-950 transition-colors group-hover:text-accent-700 dark:text-paper-50 dark:group-hover:text-accent-200 sm:text-[2rem]"
+                          transition:name={`project-${featured.id}-title`}
+                        >
+                          {featured.data.title}
+                        </h3>
+                        {featured.data.subtitle && (
+                          <p class="entry-supporting font-bold text-accent-700 dark:text-accent-200">{featured.data.subtitle}</p>
+                        )}
+                      </div>
+                      <p class="entry-summary max-w-[34rem]">{featured.data.summary}</p>
                     </div>
 
-                    {group.isActive && (
-                      <span class="meta-chip shrink-0 text-accent-700 dark:text-accent-200">
-                        Active
-                      </span>
-                    )}
+                    <span class="action-link w-fit px-0 group-hover:text-accent-900 group-hover:underline dark:group-hover:text-accent-100">
+                      Read project
+                      <span class="i-mdi:arrow-right transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none" aria-hidden="true"></span>
+                    </span>
                   </div>
 
-				  <p class="entry-summary line-clamp-4 md:line-clamp-none">
-                    {project.description}
-                  </p>
-
-				  {hasDetails && (
-					<details class="group">
-					  <summary class="action-link min-h-11 cursor-pointer list-none px-0 md:hidden">
-						<span class="i-ph-caret-down transition-transform group-open:rotate-180" aria-hidden="true"></span>
-						Project details
-					  </summary>
-					  <div class="hidden space-y-4 pt-2 group-open:block md:block md:pt-0">
-						{project.badges.length > 0 && (
-						  <div class="flex flex-wrap items-center gap-2" aria-label="Project attributes">
-							{project.badges.map((badge) => (
-							  <span class="meta-chip">{badge}</span>
-							))}
-						  </div>
-						)}
-
-						{project.highlights.length > 0 && (
-						  <ul class="m-0 space-y-2 border-l border-accent-300 pl-4 dark:border-accent-700">
-							{project.highlights.slice(0, 3).map((highlight) => (
-							  <li class="body-copy text-gray-600 dark:text-gray-300">{highlight}</li>
-							))}
-						  </ul>
-						)}
-
-						{project.metadata.length > 0 && (
-						  <dl class="grid gap-2 text-xs md:grid-cols-2">
-							{project.metadata.slice(0, 4).map((item) => (
-							  <div class="border-l border-gray-200 pl-3 dark:border-gray-700">
-								<dt class="font-semibold text-gray-500 dark:text-gray-400">{item.label}</dt>
-								<dd class="mt-0.5 text-gray-700 dark:text-gray-200">{item.value}</dd>
-							  </div>
-							))}
-						  </dl>
-						)}
-
-						{project.tech.length > 0 && (
-						  <div class="flex flex-wrap items-center gap-2">
-							{project.tech.slice(0, 4).map((tag) => (
-							  <span class="meta-chip text-accent-700 dark:text-accent-200">{tag}</span>
-							))}
-							{project.tech.length > 4 && (
-							  <span class="text-xs font-medium text-gray-500 dark:text-gray-400">
-								+{project.tech.length - 4} more
-							  </span>
-							)}
-						  </div>
-						)}
-					  </div>
-					</details>
-				  )}
-
-				  {project.links.length > 0 && (
-                    <div class="mt-auto flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-gray-200 pt-3 dark:border-gray-700">
-					  {project.links.map((link) => (
-                        <a
-                          href={link.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          class="action-link"
-                        >
-                          {link.icon && <span class={link.icon} aria-hidden="true"></span>}
-                          <span>{link.label}</span>
-                          <span class="i-mdi:open-in-new text-sm" aria-hidden="true"></span>
-						  <span class="sr-only"> opens in a new tab</span>
-                        </a>
-                      ))}
+                  {featured.data.cover && featured.data.coverAlt && (
+                    <div
+                      class="min-h-56 overflow-hidden border-t border-paper-300/90 bg-paper-200 dark:border-ink-700 dark:bg-ink-800 lg:border-l lg:border-t-0"
+                      transition:name={`project-${featured.id}-cover`}
+                    >
+                      <img
+                        src={featured.data.cover.src}
+                        alt={featured.data.coverAlt}
+                        width={featured.data.cover.width}
+                        height={featured.data.cover.height}
+                        loading="eager"
+                        decoding="async"
+                        class="h-full min-h-56 w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.015] motion-reduce:transform-none"
+                      />
                     </div>
                   )}
-				</article>
-              );
-            })}
-          </div>
-        </section>
-      ))}
+                </a>
+              </article>
+            )}
+
+            {remaining.length > 0 && (
+              <div class="grid gap-4 md:grid-cols-12">
+                {remaining.map((project, index) => (
+                  <article class={remaining.length === 1 ? "md:col-span-12" : index % 2 === 0 ? "md:col-span-7" : "md:col-span-5"}>
+                    <a
+                      href={`/projects/${project.id}`}
+                      class="group flex h-full min-h-64 flex-col rounded-2xl border border-paper-300/90 bg-white/56 p-5 text-inherit no-underline transition-[background-color,border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-accent-300 hover:bg-white/88 motion-reduce:transform-none dark:border-ink-700 dark:bg-ink-900/58 dark:hover:border-accent-700 dark:hover:bg-ink-900 sm:p-6"
+                    >
+                      <div class="flex items-center justify-between gap-3">
+                        <span class="entry-meta font-bold tabular-nums">{project.data.period}</span>
+                        <span class="i-mdi:arrow-top-right text-lg text-accent-600 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transform-none dark:text-accent-300" aria-hidden="true"></span>
+                      </div>
+                      <div class="mt-8 space-y-3">
+                        <h3
+                          class="entry-title text-[1.5rem] transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-200"
+                          transition:name={`project-${project.id}-title`}
+                        >
+                          {project.data.title}
+                        </h3>
+                        <p class="entry-summary">{project.data.summary}</p>
+                      </div>
+                      {project.data.tech.length > 0 && (
+                        <div class="mt-auto flex flex-wrap gap-x-3 gap-y-1 pt-7">
+                          {project.data.tech.slice(0, 4).map((tag) => (
+                            <span class="font-sans text-xs font-bold text-ink-500 dark:text-paper-400">{tag}</span>
+                          ))}
+                        </div>
+                      )}
+                    </a>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+        );
+      })}
     </div>
   </div>
 </Layout>
@@ -215,7 +166,5 @@ const projectGroups = [
 <script>
   import { setupFilterControls } from "../scripts/ui";
 
-  document.addEventListener("astro:page-load", () => {
-    setupFilterControls();
-  });
+  document.addEventListener("astro:page-load", () => setupFilterControls());
 </script>

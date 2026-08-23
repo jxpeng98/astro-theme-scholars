@@ -44,6 +44,10 @@ function footer(html) {
 	return html.match(/<footer[\s\S]*?<\/footer>/)?.[0] ?? "";
 }
 
+function main(html) {
+	return html.match(/<main[\s\S]*?<\/main>/)?.[0] ?? "";
+}
+
 function readAttribute(html, pattern) {
 	return html.match(pattern)?.[1] ?? "";
 }
@@ -185,20 +189,54 @@ assert(
 const projects = await readDist("projects/index.html");
 assertPageMetadata(projects, "projects");
 assertOptionalFilterGroup(projects, "projects");
+assert(
+	main(projects).includes('href="/projects/scholars-portal"') &&
+		!main(projects).includes("https://github.com/jxpeng98/astro-theme-scholars"),
+	"project index cards should link to internal details without embedding external resources",
+);
+
+const projectDetail = await readDist("projects/scholars-portal/index.html");
+const projectDetailCanonical = assertPageMetadata(projectDetail, "project detail");
+assert(
+	projectDetail.includes('href="/projects"') &&
+		projectDetail.includes("https://github.com/jxpeng98/astro-theme-scholars") &&
+		projectDetail.includes('target="_blank"') &&
+		projectDetail.includes('rel="noopener noreferrer"'),
+	"project detail pages should separate internal navigation from safe external resources",
+);
 
 const teaching = await readDist("teaching/index.html");
 assertPageMetadata(teaching, "teaching");
 assertOptionalFilterGroup(teaching, "teaching");
 assert(
-	!teaching.includes('aria-label="Page sections"'),
-	"teaching filters should not duplicate section navigation",
+	!teaching.includes('aria-label="Page sections"') &&
+		main(teaching).includes('href="/teaching/human-centered-ai-systems"') &&
+		!main(teaching).includes("https://www.nist.gov/itl/ai-risk-management-framework"),
+	"teaching index rows should use internal details without duplicating external resources",
+);
+
+const teachingDetail = await readDist(
+	"teaching/human-centered-ai-systems/index.html",
+);
+const teachingDetailCanonical = assertPageMetadata(
+	teachingDetail,
+	"teaching detail",
+);
+assert(
+	teachingDetail.includes('href="/teaching"') &&
+		teachingDetail.includes("https://www.nist.gov/itl/ai-risk-management-framework") &&
+		teachingDetail.includes('target="_blank"') &&
+		teachingDetail.includes('rel="noopener noreferrer"'),
+	"teaching detail pages should render safe external course resources",
 );
 
 const sitemap = await readDist("sitemap-0.xml");
 assert(
 	sitemap.includes(indexCanonical) &&
 		sitemap.includes(aboutCanonical) &&
-		sitemap.includes(researchCanonical),
+		sitemap.includes(researchCanonical) &&
+		sitemap.includes(projectDetailCanonical) &&
+		sitemap.includes(teachingDetailCanonical),
 	"sitemap should use the configured production URL",
 );
 const robots = await readDist("robots.txt");

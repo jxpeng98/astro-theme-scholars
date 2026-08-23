@@ -1,0 +1,47 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import DetailShell from "../../components/DetailShell.astro";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const courses = await getCollection("teaching", ({ data }) => !data.draft);
+  return courses.map((course) => ({
+    params: { slug: course.id },
+    props: { course },
+  }));
+}
+
+const { course } = Astro.props as { course: CollectionEntry<"teaching"> };
+const { Content } = await render(course);
+const { data } = course;
+const status = data.status === "current" ? "Current" : "Past";
+---
+
+<Layout
+  title={data.title}
+  description={data.summary}
+  image={data.cover?.src}
+  imageAlt={data.coverAlt}
+  imageWidth={data.cover?.width}
+  imageHeight={data.cover?.height}
+>
+  <DetailShell
+    backHref="/teaching"
+    backLabel="All teaching"
+    title={data.title}
+    summary={data.summary}
+    transitionKey={`teaching-${course.id}`}
+    cover={data.cover}
+    coverAlt={data.coverAlt}
+    facts={[
+      { label: "Course", value: data.code },
+      { label: "Term", value: data.term },
+      { label: "Status", value: status },
+    ]}
+    tags={[...data.badges, ...data.tags]}
+    highlights={data.highlights}
+    resources={data.links}
+  >
+    <Content />
+  </DetailShell>
+</Layout>
