@@ -114,7 +114,7 @@ function assertOptionalFilterGroup(html, pageName) {
 	} else {
 		assert(
 			!html.includes('role="toolbar"') && !html.includes('data-filter="all"'),
-			`${pageName} page should omit filter controls when fewer than two groups have items`,
+			`${pageName} page should omit filter controls when filtering is unnecessary`,
 		);
 	}
 }
@@ -177,9 +177,9 @@ const about = await readDist("about/index.html");
 const aboutCanonical = assertPageMetadata(about, "about");
 assert(
 	footer(index) === footer(about) &&
-		footer(index).includes('class="flex justify-end text-right"') &&
+		footer(index).includes('aria-label="Profile links"') &&
 		footer(index).includes(`&copy; ${new Date().getFullYear()}`),
-	"all pages should render the same right-aligned copyright footer",
+	"all pages should render the same profile links and copyright footer",
 );
 
 const projects = await readDist("projects/index.html");

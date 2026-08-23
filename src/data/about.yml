@@ -16,14 +16,14 @@ profile:
 experience:
   - role: Assistant Professor
     organization: School of Information
-    period: 2022 — Present
+    period: 2022 - Present
     bullets:
       - Lead the Learning Signals Lab with collaborators across education and computer science.
       - Teach graduate seminars on human-centered AI and reproducible research pipelines.
       - Co-chair the university open scholarship task force, advising on platform governance.
   - role: Research Scientist
     organization: Civic Innovation Lab
-    period: 2019 — 2022
+    period: 2019 - 2022
     bullets:
       - Designed public data dashboards for municipal partners across five cities.
       - Published foundational work on measuring knowledge transfer in informal communities.
@@ -31,9 +31,9 @@ experience:
 service:
   - role: Program Chair Assistant
     organization: ACM Conference on Learning at Scale (L@S) 2024
-    period: 2023 — 2024
-  - Editorial Board — Journal of Learning Analytics
-  - Organizer — Web Science Workshop on Social Learning Signals
+    period: 2023 - 2024
+  - Editorial Board - Journal of Learning Analytics
+  - Organizer - Web Science Workshop on Social Learning Signals
 
 education:
   - degree: Ph.D., Human-Computer Interaction
@@ -60,5 +60,5 @@ sections:
         highlights:
           - Recognized for mixed-methods analysis of social learning communities.
       - title: NSF Graduate Research Fellowship
-        date: 2016 — 2021
+        date: 2016 - 2021
       - Dean's List, Clearwater College (2010-2014)

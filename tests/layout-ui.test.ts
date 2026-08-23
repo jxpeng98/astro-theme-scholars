@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
 	getBackToTopScrollBehavior,
+	updateBackToTopVisibility,
 	updateThemeToggleLabels,
 } from "../src/scripts/layout-ui";
 
@@ -11,6 +12,19 @@ describe("layout UI helpers", () => {
 
 	it("uses smooth scroll when reduced motion is not requested", () => {
 		expect(getBackToTopScrollBehavior(false)).toBe("smooth");
+	});
+
+	it("keeps the hidden back-to-top action out of the tab order", () => {
+		const attributes = new Map<string, string>();
+		const button = {
+			tabIndex: 0,
+			setAttribute: (name: string, value: string) => attributes.set(name, value),
+		} as unknown as HTMLElement;
+
+		updateBackToTopVisibility(button, false);
+
+		expect(button.tabIndex).toBe(-1);
+		expect(attributes.get("data-visible")).toBe("false");
 	});
 
 	it("uses an action label without toggle-button state", () => {

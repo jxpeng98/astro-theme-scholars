@@ -26,20 +26,17 @@ const totalPast = past.reduce((acc, s) => acc + (s.modules?.length || 0), 0);
 >
   <div class="page-stack">
     <header class="page-header">
-      <p class="page-kicker">Teaching portfolio</p>
       <h1 class="page-title">{pageTitle}</h1>
       <p class="page-description">{pageDescription}</p>
 
-      <div class="pt-2">
-        <FilterBar
-          total={totalCurrent + totalPast}
-          allIcon="i-mdi:school"
-          items={[
-            { filter: "current", label: "current", count: totalCurrent, icon: "i-mdi:calendar-check" },
-            { filter: "past", label: "past", count: totalPast, icon: "i-mdi:history" },
-          ]}
-        />
-      </div>
+	  <FilterBar
+		total={totalCurrent + totalPast}
+		allIcon="i-mdi:school"
+		items={[
+		  { filter: "current", label: "current", count: totalCurrent, icon: "i-mdi:calendar-check" },
+		  { filter: "past", label: "past", count: totalPast, icon: "i-mdi:history" },
+		]}
+	  />
     </header>
 
     <div class="space-y-6 sm:space-y-7" id="teaching-container">
@@ -52,11 +49,8 @@ const totalPast = past.reduce((acc, s) => acc + (s.modules?.length || 0), 0);
             data-filter-section="current"
           >
             <header class="flex items-end justify-between gap-4 border-b border-gray-200 pb-3 dark:border-gray-700">
-              <div class="space-y-1">
-                <p class="section-kicker">Now teaching</p>
-                <h2 class="section-heading">Current Courses</h2>
-              </div>
-              <p class="shrink-0 text-xs font-semibold uppercase tracking-[0.14em] text-accent-700 dark:text-accent-300">
+			  <h2 class="section-heading">Current Courses</h2>
+			  <p class="shrink-0 text-sm font-semibold text-accent-700 dark:text-accent-300">
                 {totalCurrent} {totalCurrent === 1 ? "course" : "courses"}
               </p>
             </header>
@@ -65,13 +59,13 @@ const totalPast = past.reduce((acc, s) => acc + (s.modules?.length || 0), 0);
               {current.map((section) => (
                 <div class="space-y-4">
                   <div class="flex items-center gap-3">
-                    <h3 class="section-kicker shrink-0 text-accent-700 dark:text-accent-300">{section.term}</h3>
+					<h3 class="entry-meta shrink-0 font-semibold text-accent-700 dark:text-accent-300">{section.term}</h3>
                     <div class="h-px flex-1 bg-gray-200 dark:bg-gray-700" aria-hidden="true"></div>
                   </div>
 
                   <div class="grid gap-4 md:grid-cols-2">
                     {(section.modules || []).map((module) => (
-                      <article class="surface-card-hover border-t-2 border-t-accent-500">
+					  <article class="surface-card-hover">
                         <div class="space-y-3">
                           <div class="flex flex-wrap items-start justify-between gap-3">
                             <p class="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-accent-700 dark:text-accent-300">
@@ -111,7 +105,7 @@ const totalPast = past.reduce((acc, s) => acc + (s.modules?.length || 0), 0);
                           )}
 
                           {module.highlights.length > 0 && (
-                            <ul class="space-y-2 border-l-2 border-accent-200 pl-4 dark:border-accent-800">
+							<ul class="space-y-2 border-l border-accent-300 pl-4 dark:border-accent-800">
                               {module.highlights.slice(0, 3).map((highlight) => (
                                 <li class="body-copy">{highlight}</li>
                               ))}
@@ -147,11 +141,8 @@ const totalPast = past.reduce((acc, s) => acc + (s.modules?.length || 0), 0);
             data-filter-section="past"
           >
             <header class="flex items-end justify-between gap-4 border-b border-gray-200 pb-3 dark:border-gray-700">
-              <div class="space-y-1">
-                <p class="section-kicker">Teaching archive</p>
-                <h2 class="section-heading">Past Courses</h2>
-              </div>
-              <p class="shrink-0 text-xs font-semibold uppercase tracking-[0.14em] text-gray-500 dark:text-gray-400">
+			  <h2 class="section-heading">Past Courses</h2>
+			  <p class="shrink-0 text-sm font-semibold text-gray-500 dark:text-gray-400">
                 {totalPast} {totalPast === 1 ? "course" : "courses"}
               </p>
             </header>
@@ -160,7 +151,7 @@ const totalPast = past.reduce((acc, s) => acc + (s.modules?.length || 0), 0);
               {past.map((section) => (
                 <div class="space-y-4">
                   <div class="flex items-center gap-3">
-                    <h3 class="section-kicker shrink-0">{section.term}</h3>
+					<h3 class="entry-meta shrink-0 font-semibold text-accent-700 dark:text-accent-300">{section.term}</h3>
                     <div class="h-px flex-1 bg-gray-200 dark:bg-gray-700" aria-hidden="true"></div>
                   </div>
 
@@ -206,7 +197,7 @@ const totalPast = past.reduce((acc, s) => acc + (s.modules?.length || 0), 0);
                           )}
 
                           {module.highlights.length > 0 && (
-                            <ul class="space-y-2 border-l-2 border-gray-200 pl-4 dark:border-gray-700">
+							<ul class="space-y-2 border-l border-gray-200 pl-4 dark:border-gray-700">
                               {module.highlights.slice(0, 3).map((highlight) => (
                                 <li class="body-copy">{highlight}</li>
                               ))}

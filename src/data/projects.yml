@@ -1,7 +1,7 @@
 - title: Scholars Portal
   subtitle: Template infrastructure for academic homepages
   status: active
-  period: 2023 — Present
+  period: 2023 - Present
   description: Source-available portal that aggregates publications, talks, and teaching materials into a single academic profile with analytics.
   badges:
     - Template
@@ -26,7 +26,7 @@
 
 - title: Multilingual Citation Miner
   status: past
-  period: 2022 — 2023
+  period: 2022 - 2023
   description: Natural-language processing pipeline that extracts multilingual citations from PDF proceedings to improve bibliometric coverage for underrepresented venues.
   tech:
     - Python
@@ -35,7 +35,7 @@
 
 - title: Learning Signals Lab
   status: past
-  period: 2021 — 2022
+  period: 2021 - 2022
   description: Interactive dashboards and data collection workflows for a research lab studying social learning signals across online communities.
   tech:
     - Next.js

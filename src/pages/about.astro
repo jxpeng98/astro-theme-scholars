@@ -48,7 +48,6 @@ const aboutNavItems = [
 >
   <div class="page-stack">
     <header class="page-header">
-      <p class="page-kicker">Academic profile</p>
       <h1 class="page-title">{pageTitle}</h1>
       <p class="page-description">{pageDescription}</p>
     </header>
@@ -61,19 +60,18 @@ const aboutNavItems = [
         profile.length > 0 && (
           <section id="profile" class="content-section scroll-mt-20 space-y-4">
             <header class="border-b border-gray-200 pb-3 dark:border-gray-700">
-              <p class="section-kicker">At a glance</p>
               <h2 class="section-heading">Profile</h2>
             </header>
-            <div class="grid gap-3 md:grid-cols-3">
+			<dl class="grid border-y border-gray-200 dark:border-gray-700 md:grid-cols-3 md:divide-x md:divide-gray-200 md:dark:divide-gray-700">
               {profile.map((item) => (
-                <div class="surface-card">
-                  <p class="section-kicker">{item.label}</p>
-                  <p class="entry-title mt-2 text-[1.125rem]">
+				<div class="border-b border-gray-200 py-4 last:border-b-0 dark:border-gray-700 md:border-b-0 md:px-5 md:first:pl-0 md:last:pr-0">
+				  <dt class="entry-meta font-semibold">{item.label}</dt>
+				  <dd class="entry-title mt-2 text-[1.125rem]">
                     {item.value}
-                  </p>
+				  </dd>
                 </div>
               ))}
-            </div>
+			</dl>
           </section>
         )
       }
@@ -83,7 +81,6 @@ const aboutNavItems = [
         education.length > 0 && (
           <section id="education" class="content-section scroll-mt-20 space-y-4">
             <header class="border-b border-gray-200 pb-3 dark:border-gray-700">
-              <p class="section-kicker">Formal training</p>
               <h2 class="section-heading">Education</h2>
             </header>
             <div class="divide-y divide-gray-200 border-y border-gray-200 dark:divide-gray-700 dark:border-gray-700">
@@ -112,7 +109,6 @@ const aboutNavItems = [
         experience.length > 0 && (
           <section id="experience" class="content-section scroll-mt-20 space-y-4">
             <header class="border-b border-gray-200 pb-3 dark:border-gray-700">
-              <p class="section-kicker">Appointments</p>
               <h2 class="section-heading">Experience</h2>
             </header>
             <div class="divide-y divide-gray-200 border-y border-gray-200 dark:divide-gray-700 dark:border-gray-700">
@@ -151,22 +147,20 @@ const aboutNavItems = [
         service.length > 0 && (
           <section id="service" class="content-section scroll-mt-20 space-y-4">
             <header class="border-b border-gray-200 pb-3 dark:border-gray-700">
-              <p class="section-kicker">Community contributions</p>
               <h2 class="section-heading">Academic Service</h2>
             </header>
-            <div class="grid gap-3 md:grid-cols-2">
+			<div class="grid gap-x-8 border-y border-gray-200 dark:border-gray-700 md:grid-cols-2">
               {service.map((item) => {
                 if (typeof item === "string") {
                   return (
-                    <article class="surface-card h-full">
-                      <p class="section-kicker">Service</p>
-                      <p class="body-copy mt-2">{item}</p>
+					<article class="border-b border-gray-200 py-4 dark:border-gray-700">
+					  <p class="body-copy">{item}</p>
                     </article>
                   );
                 }
                 return (
-                  <article class="surface-card h-full space-y-2">
-                    <p class="section-kicker">{item.period}</p>
+				  <article class="space-y-2 border-b border-gray-200 py-4 dark:border-gray-700">
+					<p class="entry-meta font-semibold text-accent-700 dark:text-accent-300">{item.period}</p>
                     <div class="space-y-1">
                       <h3 class="font-heading text-lg font-semibold text-gray-950 dark:text-gray-50">
                         {item.role}
@@ -188,7 +182,6 @@ const aboutNavItems = [
         customSections.map((section) => (
           <section id={section.id} class="content-section scroll-mt-20 space-y-4">
             <header class="border-b border-gray-200 pb-3 dark:border-gray-700">
-              <p class="section-kicker">Additional record</p>
               <h2 class="section-heading flex items-center gap-2">
                 {section.icon && (
                   <span class={`${section.icon} text-accent-600 dark:text-accent-300`} aria-hidden="true"></span>
@@ -240,7 +233,7 @@ const aboutNavItems = [
                           </div>
                       )}
                       {item.highlights && item.highlights.length > 0 && (
-                          <ul class="space-y-2 border-l-2 border-accent-200 pl-4 dark:border-accent-800">
+						  <ul class="space-y-2 border-l border-accent-200 pl-4 dark:border-accent-800">
                             {item.highlights.map((highlight) => (
                               <li class="body-copy">
                                 {highlight}

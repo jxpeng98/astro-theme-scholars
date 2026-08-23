@@ -1,5 +1,5 @@
 /**
- * Scholar Pages — primary configuration
+ * Scholar Pages - primary configuration
  *
  * Start here for identity, profile, links, and page introductions.
  * Publications, CV records, projects, courses, and posts live in src/data
@@ -35,7 +35,7 @@ export const siteConfig = defineSiteConfig({
 	// language: "en",
 	// locale: "en_US",
 	// ogImage: "/social-card.png", // Prefer a 1200 × 630 raster image.
-	// ogImageAlt: "Scholar name — academic portfolio",
+	// ogImageAlt: "Scholar name - academic portfolio",
 	// ogImageWidth: 1200,
 	// ogImageHeight: 630,
 	affiliations: [

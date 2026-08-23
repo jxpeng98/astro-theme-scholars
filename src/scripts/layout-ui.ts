@@ -10,6 +10,14 @@ export function getBackToTopScrollBehavior(
 	return prefersReducedMotion ? "auto" : "smooth";
 }
 
+export function updateBackToTopVisibility(
+	button: HTMLElement,
+	isVisible: boolean,
+) {
+	button.setAttribute("data-visible", String(isVisible));
+	button.tabIndex = isVisible ? 0 : -1;
+}
+
 function getStoredTheme(): ThemeMode | null {
 	try {
 		const value = localStorage.getItem(STORAGE_KEY);
@@ -171,7 +179,7 @@ function setupBackToTop(signal: AbortSignal) {
 			if (nextVisible === isVisible) return;
 
 			isVisible = nextVisible;
-			backToTopBtn.setAttribute("data-visible", String(nextVisible));
+			updateBackToTopVisibility(backToTopBtn, nextVisible);
 		});
 	};
 

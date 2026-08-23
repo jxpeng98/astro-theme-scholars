@@ -54,22 +54,19 @@ const pageDescription = siteConfig.pageTitles.researches.description ||
 >
   <div class="page-stack">
     <header class="page-header">
-      <p class="page-kicker">Research record</p>
       <h1 class="page-title">{pageTitle}</h1>
       <p class="page-description">{pageDescription}</p>
 
-      <div class="pt-2">
-        <FilterBar
-          total={totalPapers}
-          allIcon="i-mdi:file-document-multiple"
-          items={orderedCategories.map((category) => ({
-            filter: slugifySectionId(category),
-            label: category.toLowerCase(),
-            count: grouped.get(category)?.length || 0,
-            icon: categoryIcons[category] || "i-mdi:file-document",
-          }))}
-        />
-      </div>
+	  <FilterBar
+		total={totalPapers}
+		allIcon="i-mdi:file-document-multiple"
+		items={orderedCategories.map((category) => ({
+		  filter: slugifySectionId(category),
+		  label: category.toLowerCase(),
+		  count: grouped.get(category)?.length || 0,
+		  icon: categoryIcons[category] || "i-mdi:file-document",
+		}))}
+	  />
     </header>
 
     <div class="space-y-6 sm:space-y-7" id="papers-container">
@@ -88,11 +85,8 @@ const pageDescription = siteConfig.pageTitles.researches.description ||
               data-filter-section={categorySlug}
             >
               <header class="flex items-end justify-between gap-4 border-b border-gray-200 pb-3 dark:border-gray-700">
-                <div class="space-y-1">
-                  <p class="section-kicker">Research series</p>
-                  <h2 class="section-heading">{category}</h2>
-                </div>
-                <p class="shrink-0 text-xs font-semibold uppercase tracking-[0.14em] text-gray-500 dark:text-gray-400">
+				<h2 class="section-heading">{category}</h2>
+				<p class="shrink-0 text-sm font-semibold text-gray-500 dark:text-gray-400">
                   {categoryPapers.length} {categoryPapers.length === 1 ? "entry" : "entries"}
                 </p>
               </header>
@@ -173,7 +167,7 @@ const pageDescription = siteConfig.pageTitles.researches.description ||
                                 ></span>
                                 Abstract
                               </summary>
-                              <div class="body-copy mt-3 border-l-2 border-accent-300 py-1 pl-4 dark:border-accent-700">
+							  <div class="body-copy mt-3 border-l border-accent-300 py-1 pl-4 dark:border-accent-700">
                                 <p>{paper.abstract}</p>
                               </div>
                             </details>

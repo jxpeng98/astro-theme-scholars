@@ -1,5 +1,5 @@
 ---
-title: Grant Update — Learning Signals Lab
+title: Grant Update - Learning Signals Lab
 description: What we accomplished in the first six months of the Learning Signals grant.
 publishedAt: 2024-02-06
 tags:
