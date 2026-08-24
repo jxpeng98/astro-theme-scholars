@@ -3,7 +3,7 @@ title: Learning Analytics Studio
 code: INFO 623
 summary: Project-based studio guiding students through data collection, analysis, and storytelling for educational contexts.
 term: Spring 2025
-status: current
+status: recent
 order: 2
 tags:
   - project-based

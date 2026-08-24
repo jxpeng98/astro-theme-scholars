@@ -91,9 +91,9 @@ export default defineConfig({
 	],
 	shortcuts: {
 		// Page structure
-		'page-stack': 'space-y-8 pb-2 sm:space-y-10 sm:pb-4',
+		'page-stack': 'space-y-7 pb-2 sm:space-y-10 sm:pb-4',
 		'page-header':
-			'relative space-y-3 border-b border-paper-300/90 pb-6 pt-2 dark:border-ink-700',
+			'relative space-y-3 border-b border-paper-300/90 pb-5 pt-2 dark:border-ink-700 sm:pb-6',
 		'page-title':
 			'font-heading text-[2.25rem] font-semibold leading-[1.02] tracking-[-0.025em] text-ink-950 dark:text-paper-50 sm:text-[2.75rem]',
 		'page-description':

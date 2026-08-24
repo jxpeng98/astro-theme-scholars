@@ -86,7 +86,7 @@ function setupSystemThemeListener(root: ParentNode, signal: AbortSignal) {
 	);
 }
 
-function setupMobileMenu(signal: AbortSignal) {
+export function setupMobileMenu(signal: AbortSignal) {
 	const menuBtn = document.getElementById("mobile-menu-toggle");
 	const menu = document.getElementById("mobile-menu");
 	const iconMenu = document.getElementById("icon-menu");
@@ -119,6 +119,18 @@ function setupMobileMenu(signal: AbortSignal) {
 		iconClose.classList.remove("hidden");
 		updateMenuButtonLabel(true);
 	};
+
+	const desktopQuery = window.matchMedia("(min-width: 1024px)");
+	const closeMenuAtDesktopBreakpoint = (
+		event: MediaQueryList | MediaQueryListEvent,
+	) => {
+		if (event.matches) closeMenu();
+	};
+
+	desktopQuery.addEventListener("change", closeMenuAtDesktopBreakpoint, {
+		signal,
+	});
+	closeMenuAtDesktopBreakpoint(desktopQuery);
 
 	menuBtn.addEventListener(
 		"click",

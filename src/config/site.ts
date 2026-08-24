@@ -58,7 +58,7 @@ const defaultPageTitles: SiteConfig["pageTitles"] = {
 	},
 	teaching: {
 		title: "Teaching",
-		description: "Current and past courses, materials, and teaching highlights.",
+		description: "Recent and past courses, materials, and teaching highlights.",
 	},
 	posts: {
 		title: "Blog",
@@ -118,6 +118,8 @@ export function defineSiteConfig(input: SiteConfigInput): SiteConfig {
 		navLinks: input.navLinks ?? defaultNavLinks.map((link) => ({ ...link })),
 		footer: {
 			copyright: input.footer?.copyright ?? "All rights reserved.",
+			showProfileLinks: input.footer?.showProfileLinks ?? false,
+			showAuthor: input.footer?.showAuthor ?? true,
 		},
 		hero: {
 			headline: input.hero.headline,

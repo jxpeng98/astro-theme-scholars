@@ -67,8 +67,9 @@ const modifiedTime = modifiedAt?.toISOString() || publishedTime;
 const currentYear = new Date().getFullYear();
 const siteTitle = siteConfig.author || siteConfig.title;
 const navLinks = siteConfig.navLinks;
-const footerLinks = siteConfig.socialLinks;
-const footerCopyright = `${currentYear} ${siteConfig.author}. ${siteConfig.footer.copyright}`;
+const footerLinks = siteConfig.footer.showProfileLinks ? siteConfig.socialLinks : [];
+const footerOwner = siteConfig.footer.showAuthor ? `${siteConfig.author}. ` : "";
+const footerCopyright = `${currentYear} ${footerOwner}${siteConfig.footer.copyright}`;
 
 const siteRootUrl = buildCanonicalUrl("/", siteConfig.siteUrl);
 const parentNavLink = [...navLinks]
@@ -125,7 +126,10 @@ function isActiveNav(href: string): boolean {
 <html lang={siteConfig.language}>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <meta name="generator" content={Astro.generator} />
     <link
       rel="sitemap"
@@ -297,6 +301,23 @@ function isActiveNav(href: string): boolean {
         font-synthesis: none;
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;
+      }
+
+      :where(.page-title, .section-heading) {
+        text-wrap: balance;
+      }
+
+      .site-header {
+        padding-top: env(safe-area-inset-top);
+      }
+
+      .site-footer {
+        padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+      }
+
+      .mobile-safe-action {
+        right: max(1rem, env(safe-area-inset-right));
+        bottom: max(1rem, env(safe-area-inset-bottom));
       }
 
       html.dark body {
@@ -629,7 +650,7 @@ function isActiveNav(href: string): boolean {
 
     <div class="mx-auto flex min-h-[100dvh] max-w-6xl flex-col px-4 sm:px-6 md:px-8">
       <header
-        class="liquid-glass-bar sticky top-0 z-40 -mx-4 mb-5 border-b px-4 sm:-mx-6 sm:px-6 md:-mx-8 md:px-8"
+        class="site-header liquid-glass-bar sticky top-0 z-40 -mx-4 mb-5 border-b px-4 sm:-mx-6 sm:px-6 md:-mx-8 md:px-8"
       >
         <div class="relative flex min-h-16 items-center justify-between gap-4 py-1.5">
           <a
@@ -705,10 +726,10 @@ function isActiveNav(href: string): boolean {
           <div
             id="mobile-menu"
             hidden
-            class="glass-popover invisible absolute right-0 top-full z-40 mt-2 w-64 max-w-[calc(100vw-2rem)] origin-top-right scale-95 rounded-xl p-2 opacity-0 transition-[opacity,transform,visibility] duration-200"
+            class="glass-popover invisible absolute inset-x-0 top-full z-40 mt-2 max-h-[calc(100dvh-5rem)] w-auto max-w-none origin-top scale-95 overflow-y-auto overscroll-contain rounded-xl p-2 opacity-0 transition-[opacity,transform,visibility] duration-200 sm:left-auto sm:w-64 sm:max-w-[calc(100vw-2rem)] sm:origin-top-right lg:hidden"
           >
             <nav aria-label="Mobile navigation">
-              <ul class="m-0 flex list-none flex-col gap-2 p-0">
+              <ul class="m-0 flex list-none flex-col gap-1 p-0">
                 {
                   navLinks.map((link) => (
                     <li>
@@ -754,7 +775,7 @@ function isActiveNav(href: string): boolean {
       </main>
 
       <footer
-        class="mt-8 border-t border-paper-300 py-6 text-sm text-ink-600 dark:border-ink-700 dark:text-paper-400 sm:mt-10"
+        class="site-footer mt-8 border-t border-paper-300 pt-6 text-sm text-ink-600 dark:border-ink-700 dark:text-paper-400 sm:mt-10"
       >
 	        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 	          {footerLinks.length > 0 && (
@@ -763,12 +784,12 @@ function isActiveNav(href: string): boolean {
 	                {footerLinks.map((link) => {
 	                  const opensNewTab = /^https?:/i.test(link.href);
 	                  return (
-	                    <li>
+	                    <li class="flex">
 	                      <a
 	                        href={link.href}
 	                        target={opensNewTab ? "_blank" : undefined}
 	                        rel={opensNewTab ? "noopener noreferrer" : undefined}
-	                        class="link-muted font-semibold"
+	                        class="link-muted inline-flex min-h-11 items-center py-2 font-semibold"
 	                      >
 	                        {link.label}
 	                        {opensNewTab && <span class="sr-only"> opens in a new tab</span>}
@@ -779,7 +800,7 @@ function isActiveNav(href: string): boolean {
 	              </ul>
 	            </nav>
 	          )}
-          <p class="m-0">
+          <p class="m-0 ml-auto text-right">
             &copy; {footerCopyright}
           </p>
         </div>
@@ -787,7 +808,7 @@ function isActiveNav(href: string): boolean {
     </div>
 
     <!-- Mobile floating back-to-top action -->
-    <div class="fixed bottom-4 right-4 z-50 md:hidden">
+    <div class="mobile-safe-action fixed z-50 md:hidden">
       <button
         type="button"
         id="back-to-top"

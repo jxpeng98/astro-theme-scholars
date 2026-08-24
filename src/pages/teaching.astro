@@ -8,11 +8,11 @@ import siteConfig from "../side.config";
 const courses = (await getCollection("teaching", ({ data }) => !data.draft)).sort(
   (a, b) => a.data.order - b.data.order,
 );
-const current = courses.filter((course) => course.data.status === "current");
+const recent = courses.filter((course) => course.data.status !== "past");
 const past = courses.filter((course) => course.data.status === "past");
-const currentTerms = [...new Set(current.map((course) => course.data.term))].map((term) => ({
+const recentTerms = [...new Set(recent.map((course) => course.data.term))].map((term) => ({
   term,
-  courses: current.filter((course) => course.data.term === term),
+  courses: recent.filter((course) => course.data.term === term),
 }));
 const teachingLedger = groupTeachingLedger(past);
 const pageTitle = siteConfig.pageTitles.teaching.title || "Teaching";
@@ -30,29 +30,28 @@ const pageDescription = siteConfig.pageTitles.teaching.description ||
         total={courses.length}
         allIcon="i-mdi:school"
         items={[
-          { filter: "current", label: "current", count: current.length, icon: "i-mdi:calendar-check" },
+          { filter: "recent", label: "recent", count: recent.length, icon: "i-mdi:calendar-clock" },
           { filter: "past", label: "past", count: past.length, icon: "i-mdi:history" },
         ]}
       />
     </header>
 
     <div id="teaching-container" class="space-y-11 sm:space-y-14">
-      {current.length > 0 && (
-        <section class="content-section teaching-section space-y-5" data-filter-section="current" aria-labelledby="current-courses">
-          <header class="flex flex-col gap-2 border-b border-paper-300/90 pb-4 dark:border-ink-700 sm:flex-row sm:items-end sm:justify-between sm:gap-5">
-            <div class="space-y-1.5">
-              <h2 id="current-courses" class="section-heading">Current courses</h2>
-              <p class="body-copy max-w-2xl text-ink-600 dark:text-paper-300">Active teaching organized as term-based studios.</p>
+      {recent.length > 0 && (
+        <section class="content-section teaching-section space-y-4" data-filter-section="recent" aria-labelledby="recent-courses">
+          <header class="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 gap-y-1.5 border-b border-paper-300/90 pb-3 dark:border-ink-700 sm:flex sm:items-end sm:justify-between sm:gap-5">
+            <div class="contents sm:block sm:space-y-1.5">
+              <h2 id="recent-courses" class="section-heading col-start-1 row-start-1">Recent courses</h2>
+              <p class="body-copy col-span-2 row-start-2 max-w-2xl text-ink-600 dark:text-paper-300">Recent courses grouped by term.</p>
             </div>
-            <p class="entry-meta shrink-0 font-bold">{current.length} {current.length === 1 ? "course" : "courses"}</p>
+            <p class="entry-meta col-start-2 row-start-1 shrink-0 font-bold">{recent.length} {recent.length === 1 ? "course" : "courses"}</p>
           </header>
 
-          <div class="space-y-5">
-            {currentTerms.map((group) => (
+          <div class="space-y-4">
+            {recentTerms.map((group) => (
               <section class="overflow-hidden rounded-2xl border border-paper-300/90 bg-white/60 dark:border-ink-700 dark:bg-ink-900/62" aria-labelledby={`term-${group.term.replace(/\s+/g, "-").toLowerCase()}`}>
-                <header class="flex flex-col gap-1 border-b border-paper-300/90 bg-paper-100/72 px-5 py-4 dark:border-ink-700 dark:bg-ink-800/60 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                <header class="border-b border-paper-300/90 bg-paper-100/72 px-4 py-3 dark:border-ink-700 dark:bg-ink-800/60 sm:px-6">
                   <h3 id={`term-${group.term.replace(/\s+/g, "-").toLowerCase()}`} class="entry-title text-[1.125rem]">{group.term}</h3>
-                  <p class="entry-meta">{group.courses.length} {group.courses.length === 1 ? "course" : "courses"}</p>
                 </header>
                 <div class="divide-y divide-paper-300/90 dark:divide-ink-700">
                   {group.courses.map((course) => {
@@ -64,13 +63,13 @@ const pageDescription = siteConfig.pageTitles.teaching.description ||
                       <article>
                         <a
                           href={`/teaching/${course.id}`}
-                          class="group grid gap-4 px-5 py-5 text-inherit no-underline transition-colors duration-200 hover:bg-accent-50/58 dark:hover:bg-accent-900/16 sm:grid-cols-[6.5rem_minmax(0,1fr)_auto] sm:items-start sm:px-6 sm:py-6"
+                          class="group grid gap-3 px-4 py-4 text-inherit no-underline transition-colors duration-200 hover:bg-accent-50/58 dark:hover:bg-accent-900/16 sm:grid-cols-[6.5rem_minmax(0,1fr)_auto] sm:items-start sm:px-6 sm:py-5"
                         >
                           <div class="flex items-center justify-between sm:block">
                             <p class="font-mono text-xs font-bold tracking-[0.08em] text-accent-700 dark:text-accent-300">{course.data.code}</p>
                             <span class="i-mdi:arrow-right text-lg text-accent-600 sm:hidden dark:text-accent-300" aria-hidden="true"></span>
                           </div>
-                          <div class="space-y-2">
+                          <div class="space-y-1.5">
                             <h4
                               class="entry-title text-[1.375rem] transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-200"
                               transition:name={`teaching-${course.id}-title`}
@@ -79,19 +78,19 @@ const pageDescription = siteConfig.pageTitles.teaching.description ||
                             </h4>
                             <p class="entry-summary max-w-[42rem]">{course.data.summary}</p>
                             {course.data.tags.length > 0 && (
-                              <div class="flex flex-wrap gap-x-3 gap-y-1 pt-1">
+                              <div class="flex flex-wrap gap-x-3 gap-y-1 pt-0.5">
                                 {course.data.tags.map((tag) => (
                                   <span class="font-sans text-xs font-bold text-ink-500 dark:text-paper-400">{tag}</span>
                                 ))}
                               </div>
                             )}
                             {previousTerms.length > 0 && (
-                              <p class="pt-1 font-sans text-xs leading-5 text-ink-500 dark:text-paper-400">
+                              <p class="pt-0.5 font-sans text-xs leading-5 text-ink-500 dark:text-paper-400">
                                 Previously taught <span class="font-bold text-ink-700 dark:text-paper-200">{previousTerms.join(", ")}</span>
                               </p>
                             )}
                           </div>
-                          <span class="i-mdi:arrow-top-right mt-1 hidden text-lg text-accent-600 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transform-none dark:text-accent-300 sm:block" aria-hidden="true"></span>
+                          <span class="i-mdi:arrow-right mt-1 hidden text-lg text-accent-600 transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none dark:text-accent-300 sm:block" aria-hidden="true"></span>
                         </a>
                       </article>
                     );
@@ -104,44 +103,44 @@ const pageDescription = siteConfig.pageTitles.teaching.description ||
       )}
 
       {past.length > 0 && (
-        <section class="content-section teaching-section space-y-5" data-filter-section="past" aria-labelledby="past-courses">
-          <header class="flex flex-col gap-2 border-b border-paper-300/90 pb-4 dark:border-ink-700 sm:flex-row sm:items-end sm:justify-between sm:gap-5">
-            <div class="space-y-1.5">
-              <h2 id="past-courses" class="section-heading">Teaching ledger</h2>
-              <p class="body-copy max-w-2xl text-ink-600 dark:text-paper-300">Past offerings grouped by course, with each term kept visible.</p>
-            </div>
-            <p class="entry-meta shrink-0 font-bold">
-              {teachingLedger.length} {teachingLedger.length === 1 ? "course" : "courses"}, {past.length} {past.length === 1 ? "offering" : "offerings"}
+		<section class="content-section teaching-section space-y-4" data-filter-section="past" aria-labelledby="past-courses">
+		  <header class="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 gap-y-1.5 border-b border-paper-300/90 pb-3 dark:border-ink-700 sm:flex sm:items-end sm:justify-between sm:gap-5">
+			<div class="contents sm:block sm:space-y-1.5">
+			  <h2 id="past-courses" class="section-heading col-start-1 row-start-1">Teaching history</h2>
+			  <p class="body-copy col-span-2 row-start-2 max-w-2xl text-ink-600 dark:text-paper-300">Earlier courses grouped by course and term.</p>
+			</div>
+            <p class="entry-meta col-start-2 row-start-1 shrink-0 font-bold">
+              <span class="sm:hidden">{teachingLedger.length} {teachingLedger.length === 1 ? "course" : "courses"}</span>
+              <span class="hidden sm:inline">{teachingLedger.length} {teachingLedger.length === 1 ? "course" : "courses"}, {past.length} {past.length === 1 ? "offering" : "offerings"}</span>
             </p>
           </header>
 
-          <div data-teaching-ledger class="divide-y divide-paper-300/90 border-y border-paper-300/90 dark:divide-ink-700 dark:border-ink-700">
-            {teachingLedger.map(({ course, terms }) => (
-              <article data-course-code={course.data.code}>
-                <a
-                  href={`/teaching/${course.id}`}
-                  class="group grid gap-4 py-5 text-inherit no-underline transition-colors duration-200 hover:text-accent-800 dark:hover:text-accent-200 sm:py-6 lg:grid-cols-[7.5rem_minmax(0,1fr)_12rem_auto] lg:items-start lg:gap-6"
-                >
-                  <div class="flex items-center justify-between lg:block">
-                    <p class="font-mono text-xs font-bold tracking-[0.08em] text-ink-500 dark:text-paper-400">{course.data.code}</p>
-                    <span class="i-mdi:arrow-right text-lg text-accent-600 transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none dark:text-accent-300 lg:hidden" aria-hidden="true"></span>
-                  </div>
-                  <div class="space-y-2">
-                    <h3
-                      class="entry-title text-[1.25rem] transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-200"
-                      transition:name={`teaching-${course.id}-title`}
-                    >
-                      {course.data.title}
-                    </h3>
-                    <p class="entry-summary max-w-[42rem]">{course.data.summary}</p>
-                  </div>
-                  <div class="space-y-1 lg:pt-0.5">
-                    <p class="font-sans text-xs font-bold text-ink-500 dark:text-paper-400">Offered</p>
-                    <p class="font-sans text-sm leading-5 text-ink-700 dark:text-paper-200">{terms.join(", ")}</p>
-                  </div>
-                  <span class="i-mdi:arrow-right mt-0.5 hidden text-lg text-accent-600 transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none dark:text-accent-300 lg:block" aria-hidden="true"></span>
-                </a>
-              </article>
+		  <div data-teaching-ledger class="overflow-hidden rounded-2xl border border-paper-300/90 bg-white/60 divide-y divide-paper-300/90 dark:border-ink-700 dark:bg-ink-900/62 dark:divide-ink-700">
+			{teachingLedger.map(({ course, terms }) => (
+			  <article data-course-code={course.data.code}>
+				<a
+				  href={`/teaching/${course.id}`}
+				  class="group grid gap-3 px-4 py-4 text-inherit no-underline transition-colors duration-200 hover:bg-accent-50/58 dark:hover:bg-accent-900/16 sm:grid-cols-[6.5rem_minmax(0,1fr)_auto] sm:items-start sm:px-6 sm:py-5"
+				>
+				  <div class="flex items-center justify-between sm:block">
+					<p class="font-mono text-xs font-bold tracking-[0.08em] text-accent-700 dark:text-accent-300">{course.data.code}</p>
+					<span class="i-mdi:arrow-right text-lg text-accent-600 sm:hidden dark:text-accent-300" aria-hidden="true"></span>
+				  </div>
+				  <div class="space-y-1.5">
+					<h3
+					  class="entry-title text-[1.375rem] transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-200"
+					  transition:name={`teaching-${course.id}-title`}
+					>
+					  {course.data.title}
+					</h3>
+					<p class="entry-summary max-w-[42rem]">{course.data.summary}</p>
+					<p class="pt-0.5 font-sans text-xs leading-5 text-ink-500 dark:text-paper-400">
+					  Offered <span class="font-bold text-ink-700 dark:text-paper-200">{terms.join(", ")}</span>
+					</p>
+				  </div>
+				  <span class="i-mdi:arrow-right mt-1 hidden text-lg text-accent-600 transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none dark:text-accent-300 sm:block" aria-hidden="true"></span>
+				</a>
+			  </article>
             ))}
           </div>
         </section>

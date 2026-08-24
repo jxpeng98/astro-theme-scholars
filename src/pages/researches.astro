@@ -91,13 +91,13 @@ const pageDescription = siteConfig.pageTitles.researches.description ||
                 </p>
               </header>
 
-              <ol class="m-0 list-none divide-y divide-gray-200 border-y border-gray-200 p-0 dark:divide-gray-700 dark:border-gray-700">
+              <ol class="m-0 list-none overflow-hidden rounded-2xl border border-paper-300/90 bg-white/60 p-0 divide-y divide-paper-300/90 dark:border-ink-700 dark:bg-ink-900/62 dark:divide-ink-700">
                 {categoryPapers.map((paper, index) => {
                   const hasAbstract = Boolean(paper.abstract);
 
                   return (
                     <li>
-                      <article class="group grid gap-3 py-5 md:grid-cols-[3rem_minmax(0,1fr)] md:gap-5">
+					  <article class="group grid grid-cols-[min-content_minmax(0,1fr)] gap-2 px-4 py-4 transition-colors duration-200 hover:bg-accent-50/58 dark:hover:bg-accent-900/16 sm:px-6 sm:py-5 md:grid-cols-[3rem_minmax(0,1fr)] md:gap-5">
 						<p class="entry-index">
                           {String(index + 1).padStart(2, "0")}
                         </p>

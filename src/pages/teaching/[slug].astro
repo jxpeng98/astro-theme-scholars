@@ -24,7 +24,11 @@ const { course, otherOfferings } = Astro.props as {
 };
 const { Content } = await render(course);
 const { data } = course;
-const status = data.status === "current" ? "Current" : "Past";
+const status = {
+  current: "Current",
+  recent: "Recent",
+  past: "Past",
+}[data.status];
 ---
 
 <Layout

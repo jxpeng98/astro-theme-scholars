@@ -181,9 +181,8 @@ const about = await readDist("about/index.html");
 const aboutCanonical = assertPageMetadata(about, "about");
 assert(
 	footer(index) === footer(about) &&
-		footer(index).includes('aria-label="Profile links"') &&
 		footer(index).includes(`&copy; ${new Date().getFullYear()}`),
-	"all pages should render the same profile links and copyright footer",
+	"all pages should render the same configured copyright footer",
 );
 
 const projects = await readDist("projects/index.html");

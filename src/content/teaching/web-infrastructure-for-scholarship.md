@@ -3,7 +3,7 @@ title: Web Infrastructure for Scholarship
 code: INFO 511
 summary: Core course on building reproducible academic web tooling with Astro, serverless functions, and content collections.
 term: Fall 2024
-status: current
+status: recent
 order: 3
 tags:
   - core

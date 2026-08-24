@@ -78,8 +78,8 @@ const {
     </figure>
   )}
 
-  <div class="grid gap-9 lg:grid-cols-[minmax(0,1fr)_17rem] lg:items-start lg:gap-14">
-    <div class="min-w-0 space-y-8">
+  <div class="grid gap-8 sm:gap-9 lg:grid-cols-[minmax(0,1fr)_17rem] lg:items-start lg:gap-14">
+    <div class="order-2 min-w-0 space-y-8 lg:order-1">
       {highlights.length > 0 && (
         <section class="border-y border-paper-300/90 py-5 dark:border-ink-700" aria-labelledby="detail-highlights">
           <h2 id="detail-highlights" class="entry-title mb-3 text-[1.125rem]">Highlights</h2>
@@ -107,9 +107,9 @@ const {
       </div>
     </div>
 
-    <aside class="space-y-6 lg:sticky lg:top-24" aria-label="Details and resources">
+    <aside class="order-1 space-y-6 lg:order-2 lg:sticky lg:top-24" aria-label="Details and resources">
       {facts.length > 0 && (
-        <section class="rounded-2xl bg-paper-100/90 p-5 dark:bg-ink-900/70" aria-labelledby="detail-facts">
+        <section class="rounded-2xl bg-paper-100/90 p-4 dark:bg-ink-900/70 sm:p-5" aria-labelledby="detail-facts">
           <h2 id="detail-facts" class="entry-title mb-4 text-[1.125rem]">Details</h2>
           <dl class="space-y-4">
             {facts.map((fact) => (

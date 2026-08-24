@@ -3,7 +3,7 @@ title: Human-Centered AI Systems
 code: INFO 742
 summary: Graduate seminar covering participatory design, model interpretability, and policy considerations in AI deployments.
 term: Spring 2025
-status: current
+status: recent
 order: 1
 badges:
   - Graduate

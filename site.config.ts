@@ -68,6 +68,12 @@ export const siteConfig = defineSiteConfig({
 		},
 	],
 
+	// Footer display: links are hidden by default for a quieter academic layout.
+	footer: {
+		showProfileLinks: false, // Set true to show the social links above in the footer.
+		showAuthor: true, // Set false to show the copyright line without the author name.
+	},
+
 	// Optional: omit any entry to use the concise academic default copy.
 	pageTitles: {
 		about: {

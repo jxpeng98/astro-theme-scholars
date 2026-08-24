@@ -72,7 +72,7 @@ const teaching = defineCollection({
 				code: text,
 				summary: text,
 				term: text,
-				status: z.enum(['current', 'past']),
+				status: z.enum(['current', 'recent', 'past']),
 				order: z.number().int().nonnegative(),
 				draft: z.boolean().default(false),
 				cover: image().optional(),
