@@ -313,6 +313,46 @@ profile images, the favicon, and environment files. Other template-owned files
 are replaced by the released versions. Review the complete pull request before
 merging, especially if the site contains custom template code.
 
+#### Push rejected while updating workflow files
+
+The repository `GITHUB_TOKEN` is a GitHub App installation token. GitHub
+requires a separate `Workflows` repository permission when a push creates or
+changes files under `.github/workflows`, so enabling pull-request creation alone
+does not prevent this error:
+
+```text
+refusing to allow a GitHub App to create or update workflow
+`.github/workflows/ci.yml` without `workflows` permission
+```
+
+Choose one of these approaches, then rerun **Template Update**:
+
+1. **Keep the default token and update workflows manually.** Add both
+   `.template-sync.json` and `.github/workflows/**` to the `protected` list in
+   `.template-sync.json`, commit that change to the default branch, and rerun
+   the updater. The update PR will exclude workflow files; compare them with the
+   target template release and apply the required workflow changes separately.
+2. **Allow the updater to sync workflow files.** Create a fine-grained personal
+   access token limited to this repository with `Contents: Read and write`,
+   `Pull requests: Read and write`, and `Workflows: Write`. Save it as the
+   repository Actions secret `TEMPLATE_UPDATE_TOKEN`; never put the token value
+   in the workflow file. The current updater uses this secret automatically and
+   falls back to `GITHUB_TOKEN` when it is absent. On sites created before this
+   support was added, change both the checkout `token` and `GH_TOKEN` in
+   `.github/workflows/template-update.yml` to:
+
+   ```yaml
+   ${{ secrets.TEMPLATE_UPDATE_TOKEN || github.token }}
+   ```
+
+Use an expiring, repository-scoped token and revoke it when it is no longer
+needed. Organization repositories may require an administrator to approve the
+token. See GitHub's documentation for
+[personal access token permissions](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens),
+[Actions secrets](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets),
+and the GitHub App
+[`Workflows` permission](https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/choosing-permissions-for-a-github-app#choosing-permissions-for-git-access).
+
 ### Sites older than v0.6.0
 
 Start from a clean working tree and run this one-time migration from the old

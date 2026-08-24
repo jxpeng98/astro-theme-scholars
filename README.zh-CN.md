@@ -294,6 +294,42 @@ pnpm build
 和 BibTeX 数据、文章、头像、favicon 与环境变量文件；其他由模板维护的文件会替换为
 发布版本。合并前应检查完整 PR，尤其是修改过模板代码的站点。
 
+#### 更新工作流文件时推送被拒绝
+
+仓库内置的 `GITHUB_TOKEN` 是 GitHub App installation token。推送新增或修改
+`.github/workflows` 下的文件时，GitHub 还要求单独的仓库 `Workflows` 权限；仅启用
+创建 PR 的权限无法避免以下错误：
+
+```text
+refusing to allow a GitHub App to create or update workflow
+`.github/workflows/ci.yml` without `workflows` permission
+```
+
+请选择以下一种处理方式，然后重新运行 **Template Update**：
+
+1. **继续使用默认令牌，手动更新工作流。** 在 `.template-sync.json` 的
+   `protected` 列表中同时加入 `.template-sync.json` 和
+   `.github/workflows/**`，将修改提交到默认分支后重新运行更新。生成的更新 PR
+   不会包含工作流文件；请将其与目标模板版本比较，并单独应用所需的工作流改动。
+2. **允许更新器同步工作流文件。** 创建仅限当前仓库的 fine-grained personal
+   access token，并授予 `Contents: Read and write`、
+   `Pull requests: Read and write` 和 `Workflows: Write` 权限。将其保存为仓库的
+   Actions secret `TEMPLATE_UPDATE_TOKEN`，不要把令牌值直接写入工作流。当前更新器
+   会自动使用该 secret；未配置时则回退到 `GITHUB_TOKEN`。对于增加这项支持之前
+   创建的站点，请将 `.github/workflows/template-update.yml` 中 checkout 的 `token`
+   和 `GH_TOKEN` 都改为：
+
+   ```yaml
+   ${{ secrets.TEMPLATE_UPDATE_TOKEN || github.token }}
+   ```
+
+请设置有效期、只授权目标仓库，并在不再需要时撤销令牌。组织仓库可能还需要管理员
+批准令牌。详情参见 GitHub 的
+[personal access token 权限文档](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)、
+[Actions secrets 文档](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets)，
+以及 GitHub App 的
+[`Workflows` 权限说明](https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/choosing-permissions-for-a-github-app#choosing-permissions-for-git-access)。
+
 ### 早于 v0.6.0 的站点
 
 先确保工作区干净，然后在旧站点仓库根目录的 Bash 兼容终端中执行一次迁移。当前同步
