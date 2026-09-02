@@ -1,237 +1,150 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import { getCollection } from "astro:content";
 import FilterBar from "../components/FilterBar.astro";
-import teachingRaw from "../data/teaching.yml?raw";
+import Layout from "../layouts/Layout.astro";
+import { groupTeachingLedger, isSameCourse } from "../lib/teaching";
 import siteConfig from "../side.config";
-import { parse } from "yaml";
-import { normalizeTeachingSection, teachingDataSchema } from "../lib/teaching";
 
-const teachingData = teachingDataSchema.parse(parse(teachingRaw) ?? {});
-const current = (teachingData.current || []).map(normalizeTeachingSection);
-const past = (teachingData.past || []).map(normalizeTeachingSection);
-
+const courses = (await getCollection("teaching", ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const recent = courses.filter((course) => course.data.status !== "past");
+const past = courses.filter((course) => course.data.status === "past");
+const recentTerms = [...new Set(recent.map((course) => course.data.term))].map((term) => ({
+  term,
+  courses: recent.filter((course) => course.data.term === term),
+}));
+const teachingLedger = groupTeachingLedger(past);
 const pageTitle = siteConfig.pageTitles.teaching.title || "Teaching";
 const pageDescription = siteConfig.pageTitles.teaching.description ||
   "Courses designed to bridge technical skills with critical inquiry.";
-
-// Count total courses
-const totalCurrent = current.reduce((acc, s) => acc + (s.modules?.length || 0), 0);
-const totalPast = past.reduce((acc, s) => acc + (s.modules?.length || 0), 0);
 ---
 
-<Layout
-  title={pageTitle}
-  description={pageDescription}
-  schemaType="CollectionPage"
->
+<Layout title={pageTitle} description={pageDescription} schemaType="CollectionPage">
   <div class="page-stack">
     <header class="page-header">
-      <p class="page-kicker">Teaching portfolio</p>
       <h1 class="page-title">{pageTitle}</h1>
       <p class="page-description">{pageDescription}</p>
 
-      <div class="pt-2">
-        <FilterBar
-          total={totalCurrent + totalPast}
-          allIcon="i-mdi:school"
-          items={[
-            { filter: "current", label: "current", count: totalCurrent, icon: "i-mdi:calendar-check" },
-            { filter: "past", label: "past", count: totalPast, icon: "i-mdi:history" },
-          ]}
-        />
-      </div>
+      <FilterBar
+        total={courses.length}
+        allIcon="i-mdi:school"
+        items={[
+          { filter: "recent", label: "recent", count: recent.length, icon: "i-mdi:calendar-clock" },
+          { filter: "past", label: "past", count: past.length, icon: "i-mdi:history" },
+        ]}
+      />
     </header>
 
-    <div class="space-y-6 sm:space-y-7" id="teaching-container">
-      <!-- Current Modules -->
-      {
-        current.length > 0 && (
-          <section
-            id="current"
-            class="content-section teaching-section scroll-mt-20 space-y-5"
-            data-filter-section="current"
-          >
-            <header class="flex items-end justify-between gap-4 border-b border-gray-200 pb-3 dark:border-gray-700">
-              <div class="space-y-1">
-                <p class="section-kicker">Now teaching</p>
-                <h2 class="section-heading">Current Courses</h2>
-              </div>
-              <p class="shrink-0 text-xs font-semibold uppercase tracking-[0.14em] text-accent-700 dark:text-accent-300">
-                {totalCurrent} {totalCurrent === 1 ? "course" : "courses"}
-              </p>
-            </header>
+    <div id="teaching-container" class="space-y-11 sm:space-y-14">
+      {recent.length > 0 && (
+        <section class="content-section teaching-section space-y-4" data-filter-section="recent" aria-labelledby="recent-courses">
+          <header class="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 gap-y-1.5 border-b border-paper-300/90 pb-3 dark:border-ink-700 sm:flex sm:items-end sm:justify-between sm:gap-5">
+            <div class="contents sm:block sm:space-y-1.5">
+              <h2 id="recent-courses" class="section-heading col-start-1 row-start-1">Recent courses</h2>
+              <p class="body-copy col-span-2 row-start-2 max-w-2xl text-ink-600 dark:text-paper-300">Recent courses grouped by term.</p>
+            </div>
+            <p class="entry-meta col-start-2 row-start-1 shrink-0 font-bold">{recent.length} {recent.length === 1 ? "course" : "courses"}</p>
+          </header>
 
-            <div class="space-y-6">
-              {current.map((section) => (
-                <div class="space-y-4">
-                  <div class="flex items-center gap-3">
-                    <h3 class="section-kicker shrink-0 text-accent-700 dark:text-accent-300">{section.term}</h3>
-                    <div class="h-px flex-1 bg-gray-200 dark:bg-gray-700" aria-hidden="true"></div>
-                  </div>
+          <div class="space-y-4">
+            {recentTerms.map((group) => (
+              <section class="overflow-hidden rounded-2xl border border-paper-300/90 bg-white/60 dark:border-ink-700 dark:bg-ink-900/62" aria-labelledby={`term-${group.term.replace(/\s+/g, "-").toLowerCase()}`}>
+                <header class="border-b border-paper-300/90 bg-paper-100/72 px-4 py-3 dark:border-ink-700 dark:bg-ink-800/60 sm:px-6">
+                  <h3 id={`term-${group.term.replace(/\s+/g, "-").toLowerCase()}`} class="entry-title text-[1.125rem]">{group.term}</h3>
+                </header>
+                <div class="divide-y divide-paper-300/90 dark:divide-ink-700">
+                  {group.courses.map((course) => {
+                    const previousTerms = past
+                      .filter((offering) => isSameCourse(offering, course))
+                      .map((offering) => offering.data.term);
 
-                  <div class="grid gap-4 md:grid-cols-2">
-                    {(section.modules || []).map((module) => (
-                      <article class="surface-card-hover border-t-2 border-t-accent-500">
-                        <div class="space-y-3">
-                          <div class="flex flex-wrap items-start justify-between gap-3">
-                            <p class="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-accent-700 dark:text-accent-300">
-                              {module.code}
-                            </p>
-                            {module.links.length > 0 && (
-                              <div class="flex flex-wrap justify-end gap-1">
-                                {module.links.map((link) => (
-                                  <a
-                                    href={link.href}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    class="action-link min-h-11"
-                                  >
-                                    <span class={link.icon ?? "i-mdi:open-in-new"} aria-hidden="true"></span>
-                                    {link.label}
-                                  </a>
+                    return (
+                      <article>
+                        <a
+                          href={`/teaching/${course.id}`}
+                          class="group grid gap-3 px-4 py-4 text-inherit no-underline transition-colors duration-200 hover:bg-accent-50/58 dark:hover:bg-accent-900/16 sm:grid-cols-[6.5rem_minmax(0,1fr)_auto] sm:items-start sm:px-6 sm:py-5"
+                        >
+                          <div class="flex items-center justify-between sm:block">
+                            <p class="font-mono text-xs font-bold tracking-[0.08em] text-accent-700 dark:text-accent-300">{course.data.code}</p>
+                            <span class="i-mdi:arrow-right text-lg text-accent-600 sm:hidden dark:text-accent-300" aria-hidden="true"></span>
+                          </div>
+                          <div class="space-y-1.5">
+                            <h4
+                              class="entry-title text-[1.375rem] transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-200"
+                              transition:name={`teaching-${course.id}-title`}
+                            >
+                              {course.data.title}
+                            </h4>
+                            <p class="entry-summary max-w-[42rem]">{course.data.summary}</p>
+                            {course.data.tags.length > 0 && (
+                              <div class="flex flex-wrap gap-x-3 gap-y-1 pt-0.5">
+                                {course.data.tags.map((tag) => (
+                                  <span class="font-sans text-xs font-bold text-ink-500 dark:text-paper-400">{tag}</span>
                                 ))}
                               </div>
                             )}
-                          </div>
-
-						  <h4 class="entry-title">
-                            {module.title}
-                          </h4>
-
-						  <p class="entry-summary">
-                            {module.summary}
-                          </p>
-
-                          {module.badges.length > 0 && (
-                            <div class="flex flex-wrap gap-2">
-                              {module.badges.map((badge) => (
-                                <span class="meta-chip">{badge}</span>
-                              ))}
-                            </div>
-                          )}
-
-                          {module.highlights.length > 0 && (
-                            <ul class="space-y-2 border-l-2 border-accent-200 pl-4 dark:border-accent-800">
-                              {module.highlights.slice(0, 3).map((highlight) => (
-                                <li class="body-copy">{highlight}</li>
-                              ))}
-                            </ul>
-                          )}
-
-                          {module.tags.length > 0 && (
-                            <div class="flex flex-wrap gap-x-3 gap-y-1 border-t border-gray-200 pt-3 dark:border-gray-700">
-                              {module.tags.map((tag) => (
-                                <span class="text-xs font-medium text-gray-600 dark:text-gray-300">
-                                  #{tag}
-                                </span>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </article>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        )
-      }
-
-      <!-- Past Modules -->
-      {
-        past.length > 0 && (
-          <section
-            id="past"
-            class="content-section teaching-section scroll-mt-20 space-y-5"
-            data-filter-section="past"
-          >
-            <header class="flex items-end justify-between gap-4 border-b border-gray-200 pb-3 dark:border-gray-700">
-              <div class="space-y-1">
-                <p class="section-kicker">Teaching archive</p>
-                <h2 class="section-heading">Past Courses</h2>
-              </div>
-              <p class="shrink-0 text-xs font-semibold uppercase tracking-[0.14em] text-gray-500 dark:text-gray-400">
-                {totalPast} {totalPast === 1 ? "course" : "courses"}
-              </p>
-            </header>
-
-            <div class="space-y-6">
-              {past.map((section) => (
-                <div class="space-y-4">
-                  <div class="flex items-center gap-3">
-                    <h3 class="section-kicker shrink-0">{section.term}</h3>
-                    <div class="h-px flex-1 bg-gray-200 dark:bg-gray-700" aria-hidden="true"></div>
-                  </div>
-
-                  <div class="grid gap-4 md:grid-cols-2">
-                    {(section.modules || []).map((module) => (
-                      <article class="surface-card-hover">
-                        <div class="space-y-3">
-                          <div class="flex flex-wrap items-start justify-between gap-3">
-                            <p class="font-mono text-xs font-semibold uppercase tracking-[0.12em] text-gray-600 dark:text-gray-300">
-                              {module.code}
-                            </p>
-                            {module.links.length > 0 && (
-                              <div class="flex flex-wrap justify-end gap-1">
-                                {module.links.map((link) => (
-                                  <a
-                                    href={link.href}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    class="action-link min-h-11"
-                                  >
-                                    <span class={link.icon ?? "i-mdi:archive"} aria-hidden="true"></span>
-                                    {link.label}
-                                  </a>
-                                ))}
-                              </div>
+                            {previousTerms.length > 0 && (
+                              <p class="pt-0.5 font-sans text-xs leading-5 text-ink-500 dark:text-paper-400">
+                                Previously taught <span class="font-bold text-ink-700 dark:text-paper-200">{previousTerms.join(", ")}</span>
+                              </p>
                             )}
                           </div>
-
-						  <h4 class="entry-title">
-                            {module.title}
-                          </h4>
-
-						  <p class="entry-summary">
-                            {module.summary}
-                          </p>
-
-                          {module.badges.length > 0 && (
-                            <div class="flex flex-wrap gap-2">
-                              {module.badges.map((badge) => (
-                                <span class="meta-chip">{badge}</span>
-                              ))}
-                            </div>
-                          )}
-
-                          {module.highlights.length > 0 && (
-                            <ul class="space-y-2 border-l-2 border-gray-200 pl-4 dark:border-gray-700">
-                              {module.highlights.slice(0, 3).map((highlight) => (
-                                <li class="body-copy">{highlight}</li>
-                              ))}
-                            </ul>
-                          )}
-
-                          {module.tags.length > 0 && (
-                            <div class="flex flex-wrap gap-x-3 gap-y-1 border-t border-gray-200 pt-3 dark:border-gray-700">
-                              {module.tags.map((tag) => (
-                                <span class="text-xs font-medium text-gray-600 dark:text-gray-300">
-                                  #{tag}
-                                </span>
-                              ))}
-                            </div>
-                          )}
-                        </div>
+                          <span class="i-mdi:arrow-right mt-1 hidden text-lg text-accent-600 transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none dark:text-accent-300 sm:block" aria-hidden="true"></span>
+                        </a>
                       </article>
-                    ))}
-                  </div>
+                    );
+                  })}
                 </div>
-              ))}
-            </div>
-          </section>
-        )
-      }
+              </section>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {past.length > 0 && (
+		<section class="content-section teaching-section space-y-4" data-filter-section="past" aria-labelledby="past-courses">
+		  <header class="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 gap-y-1.5 border-b border-paper-300/90 pb-3 dark:border-ink-700 sm:flex sm:items-end sm:justify-between sm:gap-5">
+			<div class="contents sm:block sm:space-y-1.5">
+			  <h2 id="past-courses" class="section-heading col-start-1 row-start-1">Teaching history</h2>
+			  <p class="body-copy col-span-2 row-start-2 max-w-2xl text-ink-600 dark:text-paper-300">Earlier courses grouped by course and term.</p>
+			</div>
+            <p class="entry-meta col-start-2 row-start-1 shrink-0 font-bold">
+              <span class="sm:hidden">{teachingLedger.length} {teachingLedger.length === 1 ? "course" : "courses"}</span>
+              <span class="hidden sm:inline">{teachingLedger.length} {teachingLedger.length === 1 ? "course" : "courses"}, {past.length} {past.length === 1 ? "offering" : "offerings"}</span>
+            </p>
+          </header>
+
+		  <div data-teaching-ledger class="overflow-hidden rounded-2xl border border-paper-300/90 bg-white/60 divide-y divide-paper-300/90 dark:border-ink-700 dark:bg-ink-900/62 dark:divide-ink-700">
+			{teachingLedger.map(({ course, terms }) => (
+			  <article>
+				<a
+				  href={`/teaching/${course.id}`}
+				  class="group grid gap-3 px-4 py-4 text-inherit no-underline transition-colors duration-200 hover:bg-accent-50/58 dark:hover:bg-accent-900/16 sm:grid-cols-[6.5rem_minmax(0,1fr)_auto] sm:items-start sm:px-6 sm:py-5"
+				>
+				  <div class="flex items-center justify-between sm:block">
+					<p class="font-mono text-xs font-bold tracking-[0.08em] text-accent-700 dark:text-accent-300">{course.data.code}</p>
+					<span class="i-mdi:arrow-right text-lg text-accent-600 sm:hidden dark:text-accent-300" aria-hidden="true"></span>
+				  </div>
+				  <div class="space-y-1.5">
+					<h3
+					  class="entry-title text-[1.375rem] transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-200"
+					  transition:name={`teaching-${course.id}-title`}
+					>
+					  {course.data.title}
+					</h3>
+					<p class="entry-summary max-w-[42rem]">{course.data.summary}</p>
+					<p class="pt-0.5 font-sans text-xs leading-5 text-ink-500 dark:text-paper-400">
+					  Offered <span class="font-bold text-ink-700 dark:text-paper-200">{terms.join(", ")}</span>
+					</p>
+				  </div>
+				  <span class="i-mdi:arrow-right mt-1 hidden text-lg text-accent-600 transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none dark:text-accent-300 sm:block" aria-hidden="true"></span>
+				</a>
+			  </article>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   </div>
 </Layout>
@@ -239,7 +152,5 @@ const totalPast = past.reduce((acc, s) => acc + (s.modules?.length || 0), 0);
 <script>
   import { setupFilterControls } from "../scripts/ui";
 
-  document.addEventListener("astro:page-load", () => {
-    setupFilterControls();
-  });
+  document.addEventListener("astro:page-load", () => setupFilterControls());
 </script>

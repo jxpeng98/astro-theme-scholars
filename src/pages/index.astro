@@ -21,7 +21,6 @@ const recentPosts = showPosts
   : [];
 
 const selectedPapers = showPublications ? getFeaturedPapers(3) : [];
-const postsSectionNumber = showPublications ? "02" : "01";
 
 const rawProfileImage = siteConfig.hero.profileImage.trim();
 const profileImageUrl = /^https?:/i.test(rawProfileImage)
@@ -55,17 +54,17 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
   description={siteConfig.hero.subheadline}
   schemaType="ProfilePage"
 >
-  <div class="page-stack">
+  <div class="space-y-10 pb-2 sm:space-y-14 sm:pb-4">
     {showHero && (
-      <section class="relative border-y border-paper-300/90 py-8 dark:border-ink-700 sm:py-10 lg:py-12">
-      <div class="relative grid gap-5 lg:grid-cols-[minmax(0,1fr)_12rem] lg:items-start lg:gap-x-12">
+      <section class="relative border-b border-paper-300/90 pb-9 pt-3 dark:border-ink-700 sm:pb-12 sm:pt-6">
+      <div class="relative grid gap-6 lg:grid-cols-[minmax(0,1fr)_13rem] lg:items-start lg:gap-x-14">
         <div class="min-w-0 lg:col-start-1 lg:row-start-1">
-          <h1 class="max-w-4xl font-heading text-[clamp(2.5rem,5vw,4.25rem)] font-semibold leading-[0.98] tracking-[-0.035em] text-gray-900 dark:text-gray-50">
-            {headline}
+          <h1 class="max-w-4xl font-heading text-[clamp(2.5rem,6vw,4.5rem)] font-semibold leading-[1] tracking-[-0.035em] text-gray-900 dark:text-gray-50">
+            {about.name}
           </h1>
 
           {affiliations.length > 0 && (
-            <div class="mt-5 border-l-2 border-accent-500 pl-4">
+            <div class="mt-4">
               <div class="space-y-1">
                 {affiliations.map((aff) => (
                   <p class="text-base leading-7 text-gray-600 dark:text-gray-300">
@@ -91,7 +90,7 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
         </div>
 
         <aside class="flex w-full items-center gap-4 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:block" aria-label="Profile">
-          <div class="relative w-24 shrink-0 overflow-hidden rounded-lg border border-paper-300 bg-white/64 p-1.5 dark:border-ink-700 dark:bg-ink-900/68 lg:w-full">
+          <div class="relative w-20 shrink-0 overflow-hidden rounded-lg border border-paper-300 bg-white/64 p-1 dark:border-ink-700 dark:bg-ink-900/68 sm:w-24 lg:w-full lg:p-1.5">
             <Image
               src={about.avatar}
               alt={profileAlt}
@@ -104,53 +103,63 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
             />
           </div>
           {statusBadge && (
-            <p class="flex items-center gap-2 text-left text-xs font-semibold uppercase tracking-[0.1em] text-emerald-700 dark:text-emerald-300 lg:mt-4">
-              <span class="h-2 w-2 rounded-full bg-emerald-500 ring-4 ring-emerald-100 dark:ring-emerald-900/40" aria-hidden="true"></span>
+            <p class="text-left text-sm font-semibold text-accent-700 dark:text-accent-300 lg:mt-4">
               {statusBadge}
             </p>
           )}
         </aside>
 
         <div class="min-w-0 lg:col-start-1 lg:row-start-2">
-          <p class="mt-5 max-w-[43rem] text-[1.0625rem] leading-7 text-gray-700 dark:text-gray-200">
-            {about.bio}
+          <p class="max-w-[38rem] font-heading text-[1.5rem] font-medium leading-[1.25] tracking-[-0.015em] text-gray-900 dark:text-gray-100 sm:text-[1.75rem]">
+            {headline}
           </p>
 
-          {researchInterests.length > 0 && (
-            <div class="mt-5 flex flex-wrap gap-x-4 gap-y-2" aria-label="Research interests">
-              {researchInterests.map((interest, index) => (
-                <span class="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.08em] text-gray-600 dark:text-gray-300">
-                  <span class="font-mono text-xs text-accent-600 dark:text-accent-300">{String(index + 1).padStart(2, "0")}</span>
-                  {interest}
-                </span>
-              ))}
-            </div>
-          )}
-
-          <div class="mt-6 flex flex-wrap gap-2">
-            {about.socialLinks.map((link) => (
-              <a
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="glass-control inline-flex min-h-11 items-center justify-center gap-2 px-3.5 py-2 text-sm font-semibold text-gray-700 no-underline transition-colors duration-150 hover:text-accent-800 dark:text-gray-200 dark:hover:text-accent-200"
-                aria-label={link.label}
-              >
-                <span class={`${link.icon} text-base`} aria-hidden="true" />
-                <span>{link.label}</span>
+		  <div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
+            {showPublications && selectedPapers.length > 0 && (
+              <a href="#selected-publications" class="action-link px-0">
+                Selected work
+                <span class="i-ph-arrow-down text-base" aria-hidden="true"></span>
               </a>
-            ))}
+            )}
+            {about.socialLinks.map((link) => {
+              const opensNewTab = /^https?:/i.test(link.href);
+              return (
+                <a
+                  href={link.href}
+                  target={opensNewTab ? "_blank" : undefined}
+                  rel={opensNewTab ? "noopener noreferrer" : undefined}
+                  class="action-link px-0"
+                >
+                  <span class={`${link.icon} text-base`} aria-hidden="true" />
+                  <span>{link.label}</span>
+                  {opensNewTab && <span class="sr-only"> opens in a new tab</span>}
+                </a>
+              );
+            })}
           </div>
+
+		  <p class="mt-5 max-w-[65ch] text-[1.0625rem] leading-7 text-gray-700 dark:text-gray-200">
+			{about.bio}
+		  </p>
+
+          {researchInterests.length > 0 && (
+            <ul class="mt-6 flex list-none flex-wrap gap-x-5 gap-y-2 border-t border-gray-200 pt-4 dark:border-gray-700" aria-label="Research interests">
+              {researchInterests.map((interest) => (
+                <li class="text-sm font-semibold text-gray-600 dark:text-gray-300">
+                  {interest}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
       </section>
     )}
 
-    {showPublications && (
+    {showPublications && selectedPapers.length > 0 && (
       <section class="content-section" aria-labelledby="selected-publications">
       <div class="mb-4 flex flex-col gap-3 border-b border-gray-300 pb-4 dark:border-gray-700 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p class="section-kicker">01 / Research</p>
           <h2 id="selected-publications" class="section-heading">
             {siteConfig.homeBlocks.publications.title}
           </h2>
@@ -158,22 +167,19 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">{siteConfig.homeBlocks.publications.description}</p>
           )}
         </div>
-        <a href="/researches" class="action-link glass-control self-start px-3.5 sm:self-auto">
+        <a href="/researches" class="action-link self-start px-0 sm:self-auto">
           Browse all publications
           <span class="i-ph-arrow-right text-base" aria-hidden="true"></span>
         </a>
       </div>
 
       <div class="divide-y divide-gray-200 border-b border-gray-200 dark:divide-gray-700 dark:border-gray-700">
-        {selectedPapers.map((paper, index) => {
+        {selectedPapers.map((paper) => {
           const hasAbstract = Boolean(paper.abstract);
 
           return (
-            <article class="group grid gap-4 py-5 md:grid-cols-[3.5rem_minmax(0,1fr)]">
-			  <p class="entry-index tracking-wider">
-                {String(index + 1).padStart(2, "0")}
-              </p>
-              <div class="min-w-0">
+            <article class="group py-5">
+			  <div class="min-w-0">
 				<h3 class="entry-title max-w-4xl">
                   {paper.url ? (
                     <a
@@ -202,7 +208,7 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
 
                 {paper.url && (
                   <div class="mt-3 flex flex-wrap items-center gap-2">
-                    <a href={paper.url} target="_blank" rel="noreferrer" class="action-link glass-control px-3.5">
+                    <a href={paper.url} target="_blank" rel="noreferrer" class="action-link px-0">
                       <span class="i-ph-file-pdf text-lg" aria-hidden="true"></span>
                       View paper
                     </a>
@@ -211,11 +217,11 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
 
                 {hasAbstract && (
                   <details class="group mt-3">
-                    <summary class="glass-control inline-flex min-h-11 cursor-pointer list-none items-center gap-2 px-3.5 py-2 text-sm font-semibold text-gray-700 transition-colors hover:text-accent-800 dark:text-gray-200 dark:hover:text-accent-200">
+                    <summary class="action-link min-h-11 cursor-pointer list-none px-0">
                       <span class="i-ph-caret-down text-base transition-transform duration-200 group-open:rotate-180" aria-hidden="true"></span>
                       Abstract
                     </summary>
-                    <div class="body-copy mt-3 rounded-lg border-l-2 border-accent-500 bg-accent-50/70 px-4 py-3 dark:bg-accent-900/20">
+                    <div class="body-copy mt-3 border-l border-accent-400 bg-accent-50/55 px-4 py-3 dark:border-accent-700 dark:bg-accent-900/15">
                       <p>{paper.abstract}</p>
                     </div>
                   </details>
@@ -228,45 +234,41 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
       </section>
     )}
 
-    {showPosts && (
+    {showPosts && recentPosts.length > 0 && (
       <section class="content-section" aria-labelledby="latest-posts">
       <div class="mb-4 flex flex-col gap-3 border-b border-gray-300 pb-4 dark:border-gray-700 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p class="section-kicker">{postsSectionNumber} / Notes</p>
           <h2 id="latest-posts" class="section-heading">{siteConfig.homeBlocks.posts.title}</h2>
           {siteConfig.homeBlocks.posts.description && (
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">{siteConfig.homeBlocks.posts.description}</p>
           )}
         </div>
-        <a href="/posts" class="action-link glass-control self-start px-3.5 sm:self-auto">
+        <a href="/posts" class="action-link self-start px-0 sm:self-auto">
           Visit the archive
           <span class="i-ph-arrow-right text-base" aria-hidden="true"></span>
         </a>
       </div>
 
-      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {recentPosts.map((post, index) => (
-          <a href={`/posts/${post.id}`} class="group block h-full no-underline">
-            <article class="surface-card-hover flex h-full flex-col">
-              <div class="mb-5 flex items-center justify-between gap-3">
-                <span class="font-mono text-xs font-semibold text-accent-600 dark:text-accent-300">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <time datetime={post.data.publishedAt.toISOString()} class="font-mono text-xs text-gray-500 dark:text-gray-400">
+      <div class="divide-y divide-gray-200 border-b border-gray-200 dark:divide-gray-700 dark:border-gray-700">
+        {recentPosts.map((post) => (
+          <a href={`/posts/${post.id}`} class="group block py-5 no-underline">
+            <article class="grid gap-3 sm:grid-cols-[8rem_minmax(0,1fr)_auto] sm:items-start sm:gap-6">
+              <time datetime={post.data.publishedAt.toISOString()} class="font-mono text-xs text-gray-500 dark:text-gray-400">
                   {post.data.publishedAt.toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "short",
                     day: "numeric",
                   })}
-                </time>
+              </time>
+              <div class="min-w-0">
+			    <h3 class="entry-title transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-300">
+                  {post.data.title}
+                </h3>
+                {post.data.description && (
+				  <p class="entry-summary mt-2 line-clamp-2">{post.data.description}</p>
+                )}
               </div>
-			  <h3 class="entry-title transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-300">
-                {post.data.title}
-              </h3>
-              {post.data.description && (
-				<p class="entry-summary mt-2 line-clamp-3">{post.data.description}</p>
-              )}
-              <span class="mt-auto inline-flex min-h-11 items-center gap-2 pt-4 text-sm font-semibold text-accent-700 dark:text-accent-300">
+              <span class="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-accent-700 dark:text-accent-300 sm:self-center">
                 Read note
                 <span class="i-ph-arrow-right transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true"></span>
               </span>

@@ -10,6 +10,14 @@ export function getBackToTopScrollBehavior(
 	return prefersReducedMotion ? "auto" : "smooth";
 }
 
+export function updateBackToTopVisibility(
+	button: HTMLElement,
+	isVisible: boolean,
+) {
+	button.setAttribute("data-visible", String(isVisible));
+	button.tabIndex = isVisible ? 0 : -1;
+}
+
 function getStoredTheme(): ThemeMode | null {
 	try {
 		const value = localStorage.getItem(STORAGE_KEY);
@@ -78,7 +86,7 @@ function setupSystemThemeListener(root: ParentNode, signal: AbortSignal) {
 	);
 }
 
-function setupMobileMenu(signal: AbortSignal) {
+export function setupMobileMenu(signal: AbortSignal) {
 	const menuBtn = document.getElementById("mobile-menu-toggle");
 	const menu = document.getElementById("mobile-menu");
 	const iconMenu = document.getElementById("icon-menu");
@@ -111,6 +119,18 @@ function setupMobileMenu(signal: AbortSignal) {
 		iconClose.classList.remove("hidden");
 		updateMenuButtonLabel(true);
 	};
+
+	const desktopQuery = window.matchMedia("(min-width: 1024px)");
+	const closeMenuAtDesktopBreakpoint = (
+		event: MediaQueryList | MediaQueryListEvent,
+	) => {
+		if (event.matches) closeMenu();
+	};
+
+	desktopQuery.addEventListener("change", closeMenuAtDesktopBreakpoint, {
+		signal,
+	});
+	closeMenuAtDesktopBreakpoint(desktopQuery);
 
 	menuBtn.addEventListener(
 		"click",
@@ -171,7 +191,7 @@ function setupBackToTop(signal: AbortSignal) {
 			if (nextVisible === isVisible) return;
 
 			isVisible = nextVisible;
-			backToTopBtn.setAttribute("data-visible", String(nextVisible));
+			updateBackToTopVisibility(backToTopBtn, nextVisible);
 		});
 	};
 

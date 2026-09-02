@@ -91,11 +91,9 @@ export default defineConfig({
 	],
 	shortcuts: {
 		// Page structure
-		'page-stack': 'space-y-6 pb-2 sm:space-y-7 sm:pb-4',
+		'page-stack': 'space-y-7 pb-2 sm:space-y-10 sm:pb-4',
 		'page-header':
-			'relative space-y-2.5 border-b border-paper-300/90 pb-5 pt-1 dark:border-ink-700 sm:pb-5',
-		'page-kicker':
-			'inline-flex items-center gap-1.5 font-sans text-xs font-bold uppercase tracking-[0.16em] text-accent-700 dark:text-accent-300',
+			'relative space-y-3 border-b border-paper-300/90 pb-5 pt-2 dark:border-ink-700 sm:pb-6',
 		'page-title':
 			'font-heading text-[2.25rem] font-semibold leading-[1.02] tracking-[-0.025em] text-ink-950 dark:text-paper-50 sm:text-[2.75rem]',
 		'page-description':
@@ -104,8 +102,6 @@ export default defineConfig({
 			'font-sans text-base leading-7 text-ink-700 dark:text-paper-300',
 		'section-heading':
 			'font-heading text-2xl font-semibold leading-[1.08] tracking-[-0.015em] text-ink-900 dark:text-paper-100 sm:text-[1.75rem]',
-		'section-kicker':
-			'font-sans text-xs font-bold uppercase tracking-[0.16em] text-accent-700 dark:text-accent-300',
 
 		// Reusable editorial entry hierarchy: title → supporting text → metadata.
 		'entry-title':
@@ -129,7 +125,7 @@ export default defineConfig({
 
 		// Surfaces and metadata
 		'surface-card':
-			'rounded-xl border border-paper-300/90 bg-white/64 p-4 dark:border-ink-700 dark:bg-ink-900/68 sm:p-5',
+			'rounded-lg border border-paper-300/90 bg-white/64 p-4 dark:border-ink-700 dark:bg-ink-900/68 sm:p-5',
 		'surface-card-hover':
 			'surface-card transition-[background-color,border-color] duration-150 hover:border-accent-300 hover:bg-white/88 focus-within:border-accent-400 dark:hover:border-accent-700 dark:hover:bg-ink-900',
 		'meta-chip':

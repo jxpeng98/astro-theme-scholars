@@ -1,242 +1,183 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import { getCollection } from "astro:content";
 import FilterBar from "../components/FilterBar.astro";
-import { projects } from "../components/projects";
+import Layout from "../layouts/Layout.astro";
 import siteConfig from "../side.config";
-import { getProjectStatus } from "../lib/projects";
 
+const projects = (await getCollection("projects", ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const statuses = ["active", "past", "unspecified"] as const;
+const labels = {
+  active: {
+    title: "Active projects",
+    description: "Ongoing research, infrastructure, and collaborative initiatives.",
+  },
+  past: {
+    title: "Past projects",
+    description: "Completed work and earlier lines of inquiry.",
+  },
+  unspecified: {
+    title: "Other projects",
+    description: "Selected experiments, tools, and community contributions.",
+  },
+};
+const groups = statuses.map((status) => ({
+  status,
+  ...labels[status],
+  projects: projects.filter((project) => project.data.status === status),
+}));
 const pageTitle = siteConfig.pageTitles.projects.title || "Projects";
 const pageDescription = siteConfig.pageTitles.projects.description ||
   "Selected lab and community projects with a focus on reproducible research infrastructure, learning analytics, and open collaboration.";
-
-const activeProjects = projects.filter((project) => getProjectStatus(project) === "active");
-const pastProjects = projects.filter((project) => getProjectStatus(project) === "past");
-const unspecifiedProjects = projects.filter((project) => getProjectStatus(project) === "unspecified");
-const filterItems = [
-  {
-    filter: "active",
-    label: "active",
-    count: activeProjects.length,
-    icon: "i-mdi:rocket-launch",
-  },
-  {
-    filter: "past",
-    label: "past",
-    count: pastProjects.length,
-    icon: "i-mdi:archive",
-  },
-  {
-    filter: "unspecified",
-    label: "other",
-    count: unspecifiedProjects.length,
-    icon: "i-mdi:folder-open",
-  },
-];
-
-const projectGroups = [
-  {
-    filter: "active",
-    kicker: "01 / Current work",
-    title: "Active projects",
-    description: "Ongoing research, infrastructure, and collaborative initiatives.",
-    projects: activeProjects,
-    isActive: true,
-  },
-  {
-    filter: "past",
-    kicker: "02 / Archive",
-    title: "Past projects",
-    description: "Completed work and earlier lines of inquiry.",
-    projects: pastProjects,
-    isActive: false,
-  },
-  {
-    filter: "unspecified",
-    kicker: "03 / Additional work",
-    title: "Other projects",
-    description: "Selected experiments, tools, and community contributions.",
-    projects: unspecifiedProjects,
-    isActive: false,
-  },
-];
 ---
 
-<Layout
-  title={pageTitle}
-  description={pageDescription}
-  schemaType="CollectionPage"
->
+<Layout title={pageTitle} description={pageDescription} schemaType="CollectionPage">
   <div class="page-stack">
     <header class="page-header">
-      <p class="page-kicker">
-        <span class="i-mdi:code-braces text-base" aria-hidden="true"></span>
-        Research portfolio
-      </p>
       <h1 class="page-title">{pageTitle}</h1>
       <p class="page-description">{pageDescription}</p>
 
-      <div class="border-t border-gray-200 pt-4 dark:border-gray-700">
-        <FilterBar
-          allIcon="i-mdi:code-braces"
-          total={projects.length}
-          items={filterItems}
-        />
-      </div>
+      <FilterBar
+        allIcon="i-mdi:code-braces"
+        total={projects.length}
+        items={groups.map((group) => ({
+          filter: group.status,
+          label: group.status === "unspecified" ? "other" : group.status,
+          count: group.projects.length,
+          icon: group.status === "active" ? "i-mdi:rocket-launch" : group.status === "past" ? "i-mdi:archive" : "i-mdi:folder-open",
+        }))}
+      />
     </header>
 
-    <div class="space-y-7 sm:space-y-8" id="projects-container">
-      {projectGroups.filter((group) => group.projects.length > 0).map((group) => (
-        <section
-          class="content-section project-section space-y-4"
-          data-filter-section={group.filter}
-          aria-labelledby={`projects-${group.filter}`}
-        >
-          <div class="flex flex-col gap-3 border-b border-gray-200 pb-4 dark:border-gray-700 md:flex-row md:items-end md:justify-between">
-            <div class="space-y-1.5">
-              <p class="section-kicker">{group.kicker}</p>
-              <h2 id={`projects-${group.filter}`} class="section-heading">
-                {group.title}
-              </h2>
-              <p class="body-copy max-w-2xl text-gray-600 dark:text-gray-300">
-                {group.description}
+    <div id="projects-container" class="space-y-10 sm:space-y-12">
+      {groups.filter((group) => group.projects.length > 0).map((group) => {
+        const featured = group.projects.find((project) => project.data.featured);
+        const remaining = group.projects.filter((project) => project.id !== featured?.id);
+
+        return (
+          <section
+            class="content-section project-section space-y-5"
+            data-filter-section={group.status}
+            aria-labelledby={`projects-${group.status}`}
+          >
+            <header class="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 gap-y-1.5 border-b border-paper-300/90 pb-4 dark:border-ink-700 sm:flex sm:items-end sm:justify-between sm:gap-6">
+              <div class="contents sm:block sm:space-y-1.5">
+                <h2 id={`projects-${group.status}`} class="section-heading col-start-1 row-start-1">{group.title}</h2>
+                <p class="body-copy col-span-2 row-start-2 max-w-2xl text-ink-600 dark:text-paper-300">{group.description}</p>
+              </div>
+              <p class="entry-meta col-start-2 row-start-1 shrink-0 font-bold">
+                {group.projects.length} {group.projects.length === 1 ? "project" : "projects"}
               </p>
-            </div>
-            <span class="meta-chip shrink-0 self-start md:self-auto">
-              {group.projects.length} {group.projects.length === 1 ? "project" : "projects"}
-            </span>
-          </div>
+            </header>
 
-          <div class="grid gap-4 md:grid-cols-2">
-            {group.projects.map((project) => {
-              const primaryLink = project.links[0];
-              const hasMultipleLinks = project.links.length > 1;
-              const isSingleLink = project.links.length === 1 && Boolean(primaryLink);
-              const Wrapper = isSingleLink ? "a" : "div";
-
-              return (
-                <Wrapper
-                  {...(isSingleLink && primaryLink
-                    ? {
-                        href: primaryLink.href,
-                        target: "_blank",
-                        rel: "noopener noreferrer",
-                        "aria-label": `${primaryLink.label}: ${project.title}`,
-                      }
-                    : {})}
-                  class={`surface-card surface-card-hover group relative flex h-full flex-col gap-3 no-underline ${isSingleLink ? "cursor-pointer" : ""}`}
+            {featured && (
+              <article class="overflow-hidden rounded-2xl border border-paper-300/90 bg-white/68 dark:border-ink-700 dark:bg-ink-900/68">
+                <a
+                  href={`/projects/${featured.id}`}
+                  class:list={[
+                    "group grid min-h-full text-inherit no-underline",
+                    featured.data.cover && "md:grid-cols-[minmax(0,1fr)_11rem]",
+                  ]}
                 >
-                  <article class="contents">
-                  <div class="flex items-start justify-between gap-4">
-                    <div class="min-w-0 space-y-1.5">
-                      {project.period && (
-                        <p class="flex items-center gap-1.5 text-xs font-medium tabular-nums text-gray-500 dark:text-gray-400">
-                          <span class="i-mdi:calendar-range text-sm text-accent-600 dark:text-accent-300" aria-hidden="true"></span>
-                          {project.period}
-                        </p>
-                      )}
-					  <h3 class="entry-title transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-200">
-                        {project.title}
-                      </h3>
-                      {project.subtitle && (
-						<p class="entry-supporting font-semibold text-accent-700 dark:text-accent-200">
-                          {project.subtitle}
-                        </p>
-                      )}
+                  <div class="flex flex-col justify-between gap-4 p-4 sm:p-6">
+                    <div class="space-y-3">
+                      <div class="flex flex-wrap gap-2">
+                        <span class="meta-chip">{featured.data.status === "active" ? "Active" : "Selected"}</span>
+                        <span class="meta-chip">{featured.data.period}</span>
+                      </div>
+                      <div class="space-y-1.5">
+                        <h3
+                          class="entry-title text-[1.5rem] transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-200 sm:text-[1.625rem]"
+                          transition:name={`project-${featured.id}-title`}
+                        >
+                          {featured.data.title}
+                        </h3>
+                        {featured.data.subtitle && (
+                          <p class="entry-supporting font-bold text-accent-700 dark:text-accent-200">{featured.data.subtitle}</p>
+                        )}
+                      </div>
+                      <p class="entry-summary max-w-[34rem]">{featured.data.summary}</p>
                     </div>
 
-                    {group.isActive && (
-                      <span class="meta-chip shrink-0 gap-1.5 text-emerald-700 dark:text-emerald-300">
-                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500" aria-hidden="true"></span>
-                        Active
-                      </span>
-                    )}
+                    <span class="action-link w-fit px-0 group-hover:text-accent-900 group-hover:underline dark:group-hover:text-accent-100">
+                      View project
+                      <span class="i-mdi:arrow-right transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none" aria-hidden="true"></span>
+                    </span>
                   </div>
 
-				  <p class="entry-summary">
-                    {project.description}
-                  </p>
-
-                  {project.badges.length > 0 && (
-                    <div class="flex flex-wrap items-center gap-2" aria-label="Project attributes">
-                      {project.badges.map((badge) => (
-                        <span class="meta-chip">
-                          <span class="i-mdi:tag-outline text-sm" aria-hidden="true"></span>
-                          {badge}
-                        </span>
-                      ))}
+                  {featured.data.cover && featured.data.coverAlt && (
+                    <div
+                      class="hidden min-h-44 overflow-hidden border-l border-paper-300/90 bg-paper-200 dark:border-ink-700 dark:bg-ink-800 md:block"
+                      transition:name={`project-${featured.id}-cover`}
+                    >
+                      <img
+                        src={featured.data.cover.src}
+                        alt={featured.data.coverAlt}
+                        width={featured.data.cover.width}
+                        height={featured.data.cover.height}
+                        loading="eager"
+                        decoding="async"
+                        class="h-full w-full object-cover object-top"
+                      />
                     </div>
                   )}
+                </a>
+              </article>
+            )}
 
-                  {project.highlights.length > 0 && (
-                    <ul class="m-0 space-y-2 border-l-2 border-accent-200 pl-4 dark:border-accent-700">
-                      {project.highlights.slice(0, 3).map((highlight) => (
-                        <li class="body-copy flex items-start gap-2 text-gray-600 dark:text-gray-300">
-                          <span class="i-mdi:check-circle-outline mt-0.5 shrink-0 text-accent-600 dark:text-accent-300" aria-hidden="true"></span>
-                          <span>{highlight}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+            {remaining.length > 0 && (
+              <div data-project-index class="overflow-hidden rounded-2xl border border-paper-300/90 bg-white/60 divide-y divide-paper-300/90 dark:border-ink-700 dark:bg-ink-900/62 dark:divide-ink-700">
+                {remaining.map((project) => {
+                  const role = project.data.metadata.find((item) => item.label.toLowerCase() === "role")?.value;
 
-                  {project.metadata.length > 0 && (
-                    <dl class="grid gap-2 text-xs md:grid-cols-2">
-                      {project.metadata.slice(0, 4).map((item) => (
-                        <div class="border-l border-gray-200 pl-3 dark:border-gray-700">
-                          <dt class="font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                            {item.label}
-                          </dt>
-                          <dd class="mt-0.5 text-gray-700 dark:text-gray-200">{item.value}</dd>
+                  return (
+                    <article>
+                      <a
+                        href={`/projects/${project.id}`}
+                        class="group grid gap-4 px-4 py-4 text-inherit no-underline transition-colors duration-200 hover:bg-accent-50/58 dark:hover:bg-accent-900/16 sm:px-6 sm:py-5 lg:grid-cols-[7.5rem_minmax(0,1fr)_12rem_auto] lg:items-start lg:gap-6"
+                      >
+                        <div class="flex items-center justify-between lg:block">
+                          <p class="entry-meta font-bold tabular-nums">{project.data.period}</p>
+                          <span class="i-mdi:arrow-right text-lg text-accent-600 transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none dark:text-accent-300 lg:hidden" aria-hidden="true"></span>
                         </div>
-                      ))}
-                    </dl>
-                  )}
 
-                  {project.tech.length > 0 && (
-                    <div class="flex flex-wrap items-center gap-2">
-                      {project.tech.slice(0, 4).map((tag) => (
-                        <span class="meta-chip text-accent-700 dark:text-accent-200">
-                          <span class="i-mdi:code-tags text-sm" aria-hidden="true"></span>
-                          {tag}
-                        </span>
-                      ))}
-                      {project.tech.length > 4 && (
-                        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">
-                          +{project.tech.length - 4} more
-                        </span>
-                      )}
-                    </div>
-                  )}
+                        <div class="space-y-2">
+                          <h3
+                            class="entry-title text-[1.375rem] transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-200"
+                            transition:name={`project-${project.id}-title`}
+                          >
+                            {project.data.title}
+                          </h3>
+                          <p class="entry-summary max-w-[42rem]">{project.data.summary}</p>
+                          {project.data.highlights[0] && (
+                            <p class="hidden font-sans text-sm leading-6 text-ink-600 dark:text-paper-300 sm:block">
+                              <span class="font-bold text-ink-800 dark:text-paper-100">Highlight:</span> {project.data.highlights[0]}
+                            </p>
+                          )}
+                        </div>
 
-                  {(hasMultipleLinks || isSingleLink) && (
-                    <div class="mt-auto flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-gray-200 pt-3 dark:border-gray-700">
-                      {hasMultipleLinks && project.links.map((link) => (
-                        <a
-                          href={link.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          class="action-link"
-                        >
-                          {link.icon && <span class={link.icon} aria-hidden="true"></span>}
-                          <span>{link.label}</span>
-                          <span class="i-mdi:open-in-new text-sm" aria-hidden="true"></span>
-                        </a>
-                      ))}
+                        {(role || project.data.tech.length > 0) && (
+                          <div class="flex flex-wrap items-baseline gap-x-2 gap-y-1 lg:block lg:space-y-2 lg:pt-0.5">
+                            {role && <p class="font-sans text-sm font-bold leading-5 text-ink-700 dark:text-paper-200">{role}</p>}
+                            {project.data.tech.length > 0 && (
+                              <p class="font-sans text-xs leading-5 text-ink-500 dark:text-paper-400">
+                                {project.data.tech.slice(0, 3).join(", ")}
+                              </p>
+                            )}
+                          </div>
+                        )}
 
-                      {isSingleLink && primaryLink && (
-                        <span class="action-link">
-                          <span>{primaryLink.label}</span>
-                          <span class="i-mdi:arrow-right transition-transform group-hover:translate-x-0.5" aria-hidden="true"></span>
-                        </span>
-                      )}
-                    </div>
-                  )}
-                  </article>
-                </Wrapper>
-              );
-            })}
-          </div>
-        </section>
-      ))}
+                        <span class="i-mdi:arrow-right mt-0.5 hidden text-lg text-accent-600 transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none dark:text-accent-300 lg:col-start-4 lg:block" aria-hidden="true"></span>
+                      </a>
+                    </article>
+                  );
+                })}
+              </div>
+            )}
+          </section>
+        );
+      })}
     </div>
   </div>
 </Layout>
@@ -244,7 +185,5 @@ const projectGroups = [
 <script>
   import { setupFilterControls } from "../scripts/ui";
 
-  document.addEventListener("astro:page-load", () => {
-    setupFilterControls();
-  });
+  document.addEventListener("astro:page-load", () => setupFilterControls());
 </script>

@@ -4,8 +4,15 @@ import {
 	isFilterSectionVisible,
 	readFilterFromSearch,
 } from "../src/lib/filter-state";
+import { getFilterStatusMessage } from "../src/scripts/ui";
 
 describe("filter state helpers", () => {
+	it("describes filtered results for assistive technology", () => {
+		expect(getFilterStatusMessage("All", 9)).toBe("9 items shown.");
+		expect(getFilterStatusMessage("Working Paper", 1)).toBe(
+			"1 item shown in Working Paper.",
+		);
+	});
 	it("reads only allowed filters from the search params", () => {
 		expect(readFilterFromSearch("?filter=working-paper", ["working-paper"])).toBe(
 			"working-paper",

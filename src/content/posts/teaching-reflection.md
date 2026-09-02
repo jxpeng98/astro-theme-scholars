@@ -1,5 +1,5 @@
 ---
-title: Teaching Reflection — Human-Centered AI
+title: Teaching Reflection - Human-Centered AI
 description: Notes from iterating the graduate seminar on human-centered AI systems.
 publishedAt: 2023-11-17
 tags:

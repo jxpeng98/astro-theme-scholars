@@ -61,6 +61,10 @@ export interface SiteConfig {
 	// --- Footer ---
 	footer: {
 		copyright: string;
+		/** Show social profile links on the left side of the footer */
+		showProfileLinks: boolean;
+		/** Include the configured author name in the copyright line */
+		showAuthor: boolean;
 	};
 	// --- Hero Section ---
 	hero: {

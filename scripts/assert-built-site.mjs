@@ -44,6 +44,10 @@ function footer(html) {
 	return html.match(/<footer[\s\S]*?<\/footer>/)?.[0] ?? "";
 }
 
+function main(html) {
+	return html.match(/<main[\s\S]*?<\/main>/)?.[0] ?? "";
+}
+
 function readAttribute(html, pattern) {
 	return html.match(pattern)?.[1] ?? "";
 }
@@ -114,7 +118,7 @@ function assertOptionalFilterGroup(html, pageName) {
 	} else {
 		assert(
 			!html.includes('role="toolbar"') && !html.includes('data-filter="all"'),
-			`${pageName} page should omit filter controls when fewer than two groups have items`,
+			`${pageName} page should omit filter controls when filtering is unnecessary`,
 		);
 	}
 }
@@ -177,28 +181,83 @@ const about = await readDist("about/index.html");
 const aboutCanonical = assertPageMetadata(about, "about");
 assert(
 	footer(index) === footer(about) &&
-		footer(index).includes('class="flex justify-end text-right"') &&
 		footer(index).includes(`&copy; ${new Date().getFullYear()}`),
-	"all pages should render the same right-aligned copyright footer",
+	"all pages should render the same configured copyright footer",
 );
 
 const projects = await readDist("projects/index.html");
 assertPageMetadata(projects, "projects");
 assertOptionalFilterGroup(projects, "projects");
+const projectEntries = await readdir(new URL("projects/", root), {
+	withFileTypes: true,
+});
+const firstProject = projectEntries.find((entry) => entry.isDirectory());
+let projectDetailCanonical = "";
+if (firstProject) {
+	assert(
+		main(projects).includes(`href="/projects/${firstProject.name}"`) &&
+			!main(projects).includes('target="_blank"'),
+		"project index cards should link to internal details without embedding external resources",
+	);
+	const projectDetail = await readDist(
+		`projects/${firstProject.name}/index.html`,
+	);
+	projectDetailCanonical = assertPageMetadata(projectDetail, "project detail");
+	assert(
+		main(projectDetail).includes('href="/projects"') &&
+			(!main(projectDetail).includes('target="_blank"') ||
+				main(projectDetail).includes('rel="noopener noreferrer"')),
+		"project detail pages should separate internal navigation from safe external resources",
+	);
+}
 
 const teaching = await readDist("teaching/index.html");
 assertPageMetadata(teaching, "teaching");
 assertOptionalFilterGroup(teaching, "teaching");
+const teachingEntries = await readdir(new URL("teaching/", root), {
+	withFileTypes: true,
+});
+const firstTeaching = teachingEntries.find((entry) => entry.isDirectory());
 assert(
-	!teaching.includes('aria-label="Page sections"'),
-	"teaching filters should not duplicate section navigation",
+	!teaching.includes('aria-label="Page sections"') &&
+		(!firstTeaching ||
+			main(teaching).includes(`href="/teaching/${firstTeaching.name}"`)) &&
+		!main(teaching).includes('target="_blank"'),
+	"teaching index rows should use internal details without duplicating external resources",
 );
+let teachingDetailCanonical = "";
+for (const entry of teachingEntries.filter((item) => item.isDirectory())) {
+	const detail = await readDist(`teaching/${entry.name}/index.html`);
+	if (!teachingDetailCanonical) {
+		teachingDetailCanonical = assertPageMetadata(detail, "teaching detail");
+		assert(
+			main(detail).includes('href="/teaching"') &&
+				(!main(detail).includes('target="_blank"') ||
+					main(detail).includes('rel="noopener noreferrer"')),
+			"teaching detail pages should render safe external course resources",
+		);
+	}
+
+	const otherOfferings =
+		detail.match(
+			/<section aria-labelledby="other-offerings">[\s\S]*?<\/section>/,
+		)?.[0] ?? "";
+	if (otherOfferings) {
+		assert(
+			otherOfferings.includes("Other offerings") &&
+				otherOfferings.includes('href="/teaching/') &&
+				!otherOfferings.includes(`href="/teaching/${entry.name}"`),
+			"teaching detail pages should link related internal offerings",
+		);
+		break;
+	}
+}
 
 const sitemap = await readDist("sitemap-0.xml");
 assert(
-	sitemap.includes(indexCanonical) &&
-		sitemap.includes(aboutCanonical) &&
-		sitemap.includes(researchCanonical),
+	[indexCanonical, aboutCanonical, researchCanonical, projectDetailCanonical, teachingDetailCanonical]
+		.filter(Boolean)
+		.every((url) => sitemap.includes(url)),
 	"sitemap should use the configured production URL",
 );
 const robots = await readDist("robots.txt");

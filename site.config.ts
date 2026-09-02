@@ -1,5 +1,5 @@
 /**
- * Scholar Pages — primary configuration
+ * Scholar Pages - primary configuration
  *
  * Start here for identity, profile, links, and page introductions.
  * Publications, CV records, projects, courses, and posts live in src/data
@@ -35,7 +35,7 @@ export const siteConfig = defineSiteConfig({
 	// language: "en",
 	// locale: "en_US",
 	// ogImage: "/social-card.png", // Prefer a 1200 × 630 raster image.
-	// ogImageAlt: "Scholar name — academic portfolio",
+	// ogImageAlt: "Scholar name - academic portfolio",
 	// ogImageWidth: 1200,
 	// ogImageHeight: 630,
 	affiliations: [
@@ -67,6 +67,12 @@ export const siteConfig = defineSiteConfig({
 			icon: "i-mdi:tag-outline",
 		},
 	],
+
+	// Footer display: links are hidden by default for a quieter academic layout.
+	footer: {
+		showProfileLinks: false, // Set true to show the social links above in the footer.
+		showAuthor: true, // Set false to show the copyright line without the author name.
+	},
 
 	// Optional: omit any entry to use the concise academic default copy.
 	pageTitles: {

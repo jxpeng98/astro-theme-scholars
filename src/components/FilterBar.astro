@@ -14,13 +14,13 @@ interface Props {
 
 const { items, allIcon, total } = Astro.props;
 const visibleItems = items.filter((item) => item.count > 0);
-const shouldRender = visibleItems.length > 1;
+const shouldRender = visibleItems.length > 1 && total > 8;
 ---
 
 {
   shouldRender && (
     <div
-      class="filter-bar flex flex-wrap items-center gap-2"
+	      class="filter-bar -mx-1 mt-2 flex items-center gap-1 overflow-x-auto px-1 pb-1"
       role="group"
       aria-label="Filter sections"
     >
@@ -50,6 +50,7 @@ const shouldRender = visibleItems.length > 1;
           </button>
         ))
       }
+	  <p class="sr-only" data-filter-status aria-live="polite"></p>
     </div>
   )
 }

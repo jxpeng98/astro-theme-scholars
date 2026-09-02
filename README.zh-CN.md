@@ -5,17 +5,17 @@
 一款面向学术主页、研究档案与个人学者网站的精致 Astro 主题。
 
 Scholar Pages 在保持网站轻量、快速的同时，也让内容维护足够简单：个人资料集中在一个
-TypeScript 配置文件中，论文、项目、教学经历与文章则分别使用熟悉的 BibTeX、YAML
-和 Markdown 管理。
+TypeScript 配置文件中，论文使用 BibTeX，个人经历使用 YAML，项目、教学与文章使用
+Markdown 管理。
 
-![Scholar Pages 桌面端首页](./docs/screenshots/home-desktop.jpg)
+![Scholar Pages 桌面端首页](./docs/screenshots/academic-home-desktop.png)
 
 ## 核心亮点
 
 - **为学术展示而设计**：以统一、克制的编辑式布局呈现论文、任职经历、教学、
   项目、学术服务、奖项和研究随笔。
-- **内容优先的维护方式**：使用 BibTeX 管理论文，使用 YAML 管理结构化经历，
-  使用 Markdown 或 MDX 撰写文章。
+- **内容优先的维护方式**：使用 BibTeX 管理论文，使用 YAML 管理结构化个人经历，
+  使用 Markdown 或 MDX 编写项目、教学与文章详情。
 - **响应式与主题适配**：桌面端和移动端均经过细致适配，并内置浅色、深色模式。
 - **高效浏览研究内容**：论文、项目与教学页面支持分类筛选，且不会重复页面导航。
 - **灵活组合首页**：无需修改页面模板，即可启用或隐藏头图、精选论文和最新文章。
@@ -27,13 +27,13 @@ TypeScript 配置文件中，论文、项目、教学经历与文章则分别使
 
 ### 论文与分类筛选
 
-![Scholar Pages 论文页面](./docs/screenshots/research-desktop.jpg)
+![Scholar Pages 论文页面](./docs/screenshots/publications-unified-desktop.jpg)
 
 ### 移动端深色模式
 
 <p align="center">
   <img
-    src="./docs/screenshots/home-mobile-dark.jpg"
+    src="./docs/screenshots/academic-home-mobile-dark.png"
     alt="Scholar Pages 移动端深色首页"
     width="320"
   />
@@ -74,7 +74,7 @@ pnpm dev
 1. 在 `site.config.ts` 中更新 `author`、`siteUrl` 和 `hero`。
 2. 使用自己的头像替换 `public/profile.svg`，或修改 `hero.profileImage`。
 3. 将论文添加到 `src/data/publications.bib`。
-4. 修改 `src/data/` 中的 YAML 数据。
+4. 修改 `src/data/about.yml`，并替换 `src/content/` 中的项目与教学条目。
 5. 替换或删除 `src/content/posts/` 中的示例文章。
 
 准备部署时，请先运行 `pnpm verify`。
@@ -86,8 +86,8 @@ pnpm dev
 | 姓名、个人资料、单位、链接、SEO 和页面简介 | `site.config.ts` |
 | 已发表论文与工作论文 | `src/data/publications.bib` |
 | 简介、工作经历、教育经历、学术服务和奖项 | `src/data/about.yml` |
-| 研究与软件项目 | `src/data/projects.yml` |
-| 当前和过往教学经历 | `src/data/teaching.yml` |
+| 研究与软件项目 | `src/content/projects/*.md` |
+| 当前和过往教学经历 | `src/content/teaching/*.md` |
 | 博客与研究随笔 | `src/content/posts/*.{md,mdx}` |
 | 头像和其他静态资源 | `public/` |
 | 颜色、字体、图标与复用样式令牌 | `uno.config.ts` |
@@ -175,17 +175,17 @@ export default siteConfig;
 
 标记为 `public = {yes}` 的论文可以进入首页的精选论文区块。
 
-### 关于、项目与教学
+### 关于
 
-`src/data/` 中的内容使用 YAML 管理，便于阅读、调整顺序和版本控制。仓库内的示例
-已经展示了可用字段：
+`src/data/about.yml` 使用一个结构化 YAML 文件管理个人信息、工作经历、教育经历、
+学术服务，以及奖项、演讲等自定义区块。
 
-- `about.yml` 支持个人信息、工作经历、教育经历、学术服务，以及奖项、演讲等
-  自定义区块。
-- `projects.yml` 支持状态、时间、简介、徽章、亮点、元数据、技术栈和多个链接。
-- `teaching.yml` 区分当前与过往学期，并支持课程编号、简介、标签、亮点和链接。
+### 项目与教学
 
-大多数字段都是可选项；未填写的内容不会生成空白元素。
+每个项目或课程都是一个带有 YAML frontmatter 的 Markdown 内容条目，并在构建时接受
+字段验证。将文件分别放入 `src/content/projects/` 或 `src/content/teaching/`；文件名
+会成为站内详情页 URL。外部资源填写在 frontmatter 的 `links` 字段中。字段、图片、
+站内链接与迁移示例请参见完整的[内容编写指南](./docs/content-authoring.md)。
 
 ### 文章
 
@@ -214,7 +214,9 @@ draft: false
 | `/about` | 个人信息、经历、教育、学术服务与自定义区块 |
 | `/researches` | 按研究状态分组并支持筛选的论文列表 |
 | `/teaching` | 按学期组织的当前与过往教学记录 |
+| `/teaching/[slug]` | 单门课程详情与外部资源 |
 | `/projects` | 包含元数据与链接的当前和过往项目 |
+| `/projects/[slug]` | 单个项目详情与外部资源 |
 | `/posts` | 按年份组织的文章列表 |
 | `/posts/[slug]` | 单篇 Markdown 或 MDX 文章 |
 
@@ -228,8 +230,8 @@ draft: false
 ├── src/
 │   ├── components/           # 页面与筛选公共组件
 │   ├── config/               # 配置默认值
-│   ├── content/posts/        # Markdown 和 MDX 文章
-│   ├── data/                 # BibTeX 与 YAML 内容
+│   ├── content/              # 项目、教学和文章内容条目
+│   ├── data/                 # BibTeX 论文与 YAML 个人经历
 │   ├── layouts/              # 页面公共布局
 │   ├── lib/                  # 内容处理与 SEO 工具
 │   └── pages/                # Astro 路由
@@ -263,11 +265,16 @@ pnpm build
 
 ## 模板更新
 
-项目使用 `v0.6.1` 这类 SemVer 标签发布版本。由于通过 GitHub 模板创建的仓库拥有
+项目使用 `v0.7.0` 这类 SemVer 标签发布版本。由于通过 GitHub 模板创建的仓库拥有
 独立的 Git 历史，模板更新会通过便于审查的 PR 交付。
 
 请先检查 `.template-version`。如果该文件不存在或版本低于 `0.6.0`，即使仓库已经
 包含更新工作流，也请使用下面的一次性迁移方式。
+
+`v0.6.x` 站点应先把 `v0.7.0` 中的 `.github/workflows/template-update.yml`
+复制到默认分支。这个步骤只需执行一次：旧更新器无法使用默认 GitHub token 更新自身的
+工作流。从 `v0.7.0` 开始，更新器会执行目标 release 自带的迁移逻辑，因此后续数据
+迁移不再需要替换更新工作流。
 
 ### v0.6.0 或更新版本的站点
 
@@ -285,14 +292,47 @@ pnpm build
    [工作流权限文档](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#preventing-github-actions-from-creating-or-approving-pull-requests)。
 2. 打开 **Actions → Template Update → Run workflow**。同一工作流也会在每周一
    自动检查新版本。
-3. 审查自动生成的 `chore/template-update-X.Y.Z` PR，等待 CI 通过，确认无误后合并。
+3. 审查自动生成的 `chore/template-update-X.Y.Z` PR，确认无误后合并。更新器会在创建
+   或更新 PR 前安装依赖并运行完整验证。
 
 运行工作流前，不要提前将 `.template-version` 改成目标版本，否则工作流会认为站点
 已经完成更新。
 
 `.template-sync.json` 中 `protected` 列出的路径不会被覆盖。默认保护站点配置、YAML
-和 BibTeX 数据、文章、头像、favicon 与环境变量文件；其他由模板维护的文件会替换为
-发布版本。合并前应检查完整 PR，尤其是修改过模板代码的站点。
+与 BibTeX 数据、内容条目、项目与教学图片、文章、头像、favicon 和环境变量文件；
+其他由模板维护的文件会替换为发布版本。合并前应检查完整 PR，尤其是修改过模板代码的
+站点。
+
+更新到 `v0.7.0` 时，更新器会在同步前检测已停用的 `src/data/projects.yml` 和
+`src/data/teaching.yml`。它会阻止模板示例条目进入更新，将每条个人记录转换为
+Markdown 内容条目，并保留原 YAML 文件用于比较或回滚。已有 Markdown 条目不会被
+覆盖。确认生成的条目和详情页正确后，即可删除旧 YAML 文件。
+
+#### 更新工作流文件时推送被拒绝
+
+仓库内置的 `GITHUB_TOKEN` 是 GitHub App installation token。推送新增或修改
+`.github/workflows` 下的文件时，GitHub 还要求单独的仓库 `Workflows` 权限；仅启用
+创建 PR 的权限并不会提供这项权限。
+
+因此，未配置 `TEMPLATE_UPDATE_TOKEN` 时，模板更新器会自动排除
+`.github/workflows/**`。使用默认 token 的新仓库仍能更新其他模板文件，不会再遇到
+workflow 权限导致的 push rejection；工作流差异应在审查后手动应用。
+
+如需让更新器同时同步 workflow 文件，请创建仅限当前仓库的 fine-grained personal
+access token，并授予 `Contents: Read and write`、`Pull requests: Read and write`
+和 `Workflows: Write` 权限。将其保存为仓库 Actions secret
+`TEMPLATE_UPDATE_TOKEN`，不要把 token 值写入 workflow。更新器会自动检测该 secret。
+
+如果站点安装的更新器早于 `v0.7.0`，请先完成上面的一次性 workflow 引导，再重新
+运行 **Template Update**。也可以把 `.github/workflows/**` 添加到站点
+`.template-sync.json` 的 `protected` 列表中，继续手动管理 workflow。
+
+请设置有效期、只授权目标仓库，并在不再需要时撤销令牌。组织仓库可能还需要管理员
+批准令牌。详情参见 GitHub 的
+[personal access token 权限文档](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)、
+[Actions secrets 文档](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets)，
+以及 GitHub App 的
+[`Workflows` 权限说明](https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/choosing-permissions-for-a-github-app#choosing-permissions-for-git-access)。
 
 ### 早于 v0.6.0 的站点
 
@@ -301,11 +341,11 @@ pnpm build
 robots 模板文件，同时保留个人内容：
 
 ```bash
-git switch -c chore/template-update-v0.6.1
+git switch -c chore/template-update-v0.7.0
 
 template_dir="$(mktemp -d)"
 template_dir="$(cd "$template_dir" && pwd -P)"
-git clone --depth 1 --branch v0.6.1 \
+git clone --depth 1 --branch v0.7.0 \
   https://github.com/jxpeng98/astro-theme-scholars.git \
   "$template_dir"
 
@@ -315,6 +355,7 @@ node "$template_dir/scripts/sync-template-release.mjs" \
   --config "$template_dir/.template-sync.json"
 
 pnpm install --frozen-lockfile
+node scripts/migrate-legacy-content.mjs
 pnpm verify
 git status --short
 git diff
@@ -333,10 +374,10 @@ git diff
 
 ```bash
 pnpm verify
-node scripts/check-release.mjs --tag v0.6.1
+node scripts/check-release.mjs --tag v0.7.0
 git push origin main
-git tag -a v0.6.1 -m "v0.6.1"
-git push origin v0.6.1
+git tag -a v0.7.0 -m "v0.7.0"
+git push origin v0.7.0
 ```
 
 发布时请确保 `package.json`、`.template-version` 和 `CHANGELOG.md` 最新条目中的

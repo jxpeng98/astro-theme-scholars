@@ -66,9 +66,10 @@ const modifiedTime = modifiedAt?.toISOString() || publishedTime;
 
 const currentYear = new Date().getFullYear();
 const siteTitle = siteConfig.author || siteConfig.title;
-const siteMonogram = Array.from(siteTitle.trim())[0]?.toUpperCase() || "S";
 const navLinks = siteConfig.navLinks;
-const footerCopyright = `${currentYear} ${siteConfig.author}. ${siteConfig.footer.copyright}`;
+const footerLinks = siteConfig.footer.showProfileLinks ? siteConfig.socialLinks : [];
+const footerOwner = siteConfig.footer.showAuthor ? `${siteConfig.author}. ` : "";
+const footerCopyright = `${currentYear} ${footerOwner}${siteConfig.footer.copyright}`;
 
 const siteRootUrl = buildCanonicalUrl("/", siteConfig.siteUrl);
 const parentNavLink = [...navLinks]
@@ -125,7 +126,10 @@ function isActiveNav(href: string): boolean {
 <html lang={siteConfig.language}>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <meta name="generator" content={Astro.generator} />
     <link
       rel="sitemap"
@@ -299,6 +303,23 @@ function isActiveNav(href: string): boolean {
         -webkit-font-smoothing: antialiased;
       }
 
+      :where(.page-title, .section-heading) {
+        text-wrap: balance;
+      }
+
+      .site-header {
+        padding-top: env(safe-area-inset-top);
+      }
+
+      .site-footer {
+        padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+      }
+
+      .mobile-safe-action {
+        right: max(1rem, env(safe-area-inset-right));
+        bottom: max(1rem, env(safe-area-inset-bottom));
+      }
+
       html.dark body {
 		background-image: radial-gradient(circle at 88% -8%, rgb(73 125 144 / 0.12), transparent 34rem);
       }
@@ -388,40 +409,46 @@ function isActiveNav(href: string): boolean {
         border-radius: 0.625rem;
       }
 
+      .desktop-nav-link {
+        border-bottom: 2px solid transparent;
+      }
+
+      .desktop-nav-link[aria-current="page"] {
+        border-bottom-color: #497d90;
+      }
+
       :where(.glass-control, .filter-btn)
         > :is([class^="i-"], [class*=" i-"]) {
-        font-size: 0.9375rem;
+        font-size: 1rem;
       }
 
       .icon-button > :is([class^="i-"], [class*=" i-"]) {
         font-size: 1rem;
       }
 
-      :where(.meta-chip, .page-kicker, .section-kicker)
+	  .meta-chip
         > :is([class^="i-"], [class*=" i-"]) {
-        font-size: 0.8125rem;
+	        font-size: 1rem;
       }
 
       .action-link > :is([class^="i-"], [class*=" i-"]) {
-        font-size: 0.875rem;
+        font-size: 1rem;
       }
 
       .section-heading > :is([class^="i-"], [class*=" i-"]) {
-        font-size: 0.9375rem;
+        font-size: 1rem;
       }
 
-      :where(.filter-btn, .page-jump-nav .glass-control) {
+      .filter-btn {
         border-radius: 0.625rem;
       }
 
-	  .filter-bar .filter-btn,
-	  .page-jump-nav .glass-control {
+	  .filter-bar .filter-btn {
 		border-color: transparent;
 		background: transparent;
 	  }
 
-	  .filter-bar .filter-btn:not(:disabled):hover,
-	  .page-jump-nav .glass-control:hover {
+	  .filter-bar .filter-btn:not(:disabled):hover {
 		border-color: transparent;
 		background: var(--glass-control-hover);
 	  }
@@ -446,20 +473,20 @@ function isActiveNav(href: string): boolean {
       }
 
       .theme-switch-button {
-        align-self: stretch;
-        width: 3rem;
-        min-height: 3.25rem;
+        align-self: center;
+        width: 2.75rem;
+        min-height: 2.75rem;
         padding: 0;
-		border: 0 !important;
-		border-left: 1px solid var(--glass-control-border) !important;
-		border-radius: 0 !important;
-		background: transparent !important;
-		box-shadow: none !important;
+			border: 1px solid transparent !important;
+			border-radius: 0.625rem !important;
+			background: transparent !important;
+			box-shadow: none !important;
       }
 
       .theme-switch-button:hover {
-		background: var(--glass-control-hover) !important;
-	  }
+		border-color: var(--glass-control-border-hover) !important;
+			background: var(--glass-control-hover) !important;
+		  }
 
 	  .theme-switch-button:focus-visible {
 		outline: 0;
@@ -495,7 +522,7 @@ function isActiveNav(href: string): boolean {
 		width: 1.0625rem;
 		height: 1.0625rem;
         color: #6d5517;
-		font-size: 1.0625rem;
+		font-size: 1rem;
         line-height: 1;
         opacity: 1;
         transform: translate(-50%, -50%) rotate(0deg) scale(1);
@@ -530,19 +557,10 @@ function isActiveNav(href: string): boolean {
         transform: translate(-50%, -50%) rotate(0deg) scale(1);
       }
 
-      .site-monogram-glass {
-        border-color: var(--glass-border-accent);
-		background: transparent;
-		box-shadow: none;
-      }
-
-	  .desktop-nav-shell {
-        align-items: stretch;
-		border: 1px solid var(--glass-control-border);
-		border-radius: 0.75rem;
-		background: var(--glass-control);
-		overflow: hidden;
-	  }
+		  .desktop-nav-shell {
+	        align-items: center;
+			gap: 0.5rem;
+		  }
 
       @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
         .liquid-glass-bar,
@@ -621,7 +639,7 @@ function isActiveNav(href: string): boolean {
     </style>
   </head>
   <body
-    class="min-h-screen bg-paper-50 text-ink-900 font-sans transition-colors duration-200 dark:bg-ink-950 dark:text-paper-100"
+	    class="min-h-[100dvh] bg-paper-50 text-ink-900 font-sans transition-colors duration-200 dark:bg-ink-950 dark:text-paper-100"
   >
     <a
       href="#main-content"
@@ -630,40 +648,34 @@ function isActiveNav(href: string): boolean {
       Skip to main content
     </a>
 
-    <div class="mx-auto flex min-h-screen max-w-6xl flex-col px-4 sm:px-6 md:px-8">
+    <div class="mx-auto flex min-h-[100dvh] max-w-6xl flex-col px-4 sm:px-6 md:px-8">
       <header
-        class="liquid-glass-bar sticky top-0 z-40 -mx-4 mb-5 border-b px-4 sm:-mx-6 sm:px-6 md:-mx-8 md:px-8"
+        class="site-header liquid-glass-bar sticky top-0 z-40 -mx-4 mb-5 border-b px-4 sm:-mx-6 sm:px-6 md:-mx-8 md:px-8"
       >
         <div class="relative flex min-h-16 items-center justify-between gap-4 py-1.5">
           <a
             data-site-title
-            class="group inline-flex min-h-11 min-w-0 items-center gap-2.5 rounded-md text-ink-950 no-underline dark:text-paper-50"
+	            class="group inline-flex min-h-11 min-w-0 items-center rounded-md text-ink-950 no-underline dark:text-paper-50"
             href="/"
           >
-            <span
-              aria-hidden="true"
-              class="site-monogram-glass inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border font-heading text-base font-semibold text-accent-800 transition-colors group-hover:border-accent-500 dark:text-accent-200 dark:group-hover:border-accent-600"
-            >
-              {siteMonogram}
-            </span>
-            <span class="truncate font-heading text-xl font-semibold tracking-[-0.015em]">
+            <span class="truncate font-heading text-2xl font-semibold tracking-[-0.015em]">
               {siteTitle}
             </span>
           </a>
 
           <!-- Desktop navigation and actions -->
-          <div class="desktop-nav-shell hidden items-stretch md:flex">
+	          <div class="desktop-nav-shell hidden lg:flex">
             <nav aria-label="Primary navigation">
-              <ul class="m-0 flex list-none items-center gap-0.5 p-1">
+	              <ul class="m-0 flex list-none items-center gap-1 p-0">
                 {
                   navLinks.map((link) => (
                     <li>
                       <a
                         class:list={[
-                          "glass-nav-link inline-flex min-h-11 items-center rounded-lg border border-transparent px-3 text-sm font-bold no-underline transition-colors duration-150",
+	                          "desktop-nav-link inline-flex min-h-11 items-center px-2.5 text-sm font-bold no-underline transition-colors duration-150",
                           isActiveNav(link.href)
-                            ? "glass-active text-accent-900 dark:text-accent-100"
-                            : "text-ink-600 hover:bg-accent-50/75 hover:text-ink-950 dark:text-paper-400 dark:hover:bg-accent-900/35 dark:hover:text-paper-100",
+	                            ? "text-accent-900 dark:text-accent-100"
+	                            : "text-ink-600 hover:text-ink-950 dark:text-paper-400 dark:hover:text-paper-100",
                         ]}
                         href={link.href}
                         aria-current={isActiveNav(link.href) ? "page" : undefined}
@@ -691,10 +703,10 @@ function isActiveNav(href: string): boolean {
           </div>
 
           <!-- Mobile menu button -->
-          <button
+	          <button
             type="button"
             id="mobile-menu-toggle"
-            class="icon-button z-50 md:hidden"
+	            class="icon-button z-50 lg:hidden"
             aria-label="Open navigation menu"
             aria-controls="mobile-menu"
             aria-expanded="false"
@@ -714,10 +726,10 @@ function isActiveNav(href: string): boolean {
           <div
             id="mobile-menu"
             hidden
-            class="glass-popover invisible absolute right-0 top-full z-40 mt-2 w-64 max-w-[calc(100vw-2rem)] origin-top-right scale-95 rounded-xl p-2 opacity-0 transition-[opacity,transform,visibility] duration-200"
+            class="glass-popover invisible absolute inset-x-0 top-full z-40 mt-2 max-h-[calc(100dvh-5rem)] w-auto max-w-none origin-top scale-95 overflow-y-auto overscroll-contain rounded-xl p-2 opacity-0 transition-[opacity,transform,visibility] duration-200 sm:left-auto sm:w-64 sm:max-w-[calc(100vw-2rem)] sm:origin-top-right lg:hidden"
           >
             <nav aria-label="Mobile navigation">
-              <ul class="m-0 flex list-none flex-col gap-2 p-0">
+              <ul class="m-0 flex list-none flex-col gap-1 p-0">
                 {
                   navLinks.map((link) => (
                     <li>
@@ -763,10 +775,32 @@ function isActiveNav(href: string): boolean {
       </main>
 
       <footer
-        class="mt-8 border-t border-paper-300 py-6 text-sm text-ink-600 dark:border-ink-700 dark:text-paper-400 sm:mt-10"
+        class="site-footer mt-8 border-t border-paper-300 pt-6 text-sm text-ink-600 dark:border-ink-700 dark:text-paper-400 sm:mt-10"
       >
-        <div class="flex justify-end text-right">
-          <p class="m-0">
+	        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+	          {footerLinks.length > 0 && (
+	            <nav aria-label="Profile links">
+	              <ul class="m-0 flex list-none flex-wrap gap-x-5 gap-y-2 p-0">
+	                {footerLinks.map((link) => {
+	                  const opensNewTab = /^https?:/i.test(link.href);
+	                  return (
+	                    <li class="flex">
+	                      <a
+	                        href={link.href}
+	                        target={opensNewTab ? "_blank" : undefined}
+	                        rel={opensNewTab ? "noopener noreferrer" : undefined}
+	                        class="link-muted inline-flex min-h-11 items-center py-2 font-semibold"
+	                      >
+	                        {link.label}
+	                        {opensNewTab && <span class="sr-only"> opens in a new tab</span>}
+	                      </a>
+	                    </li>
+	                  );
+	                })}
+	              </ul>
+	            </nav>
+	          )}
+          <p class="m-0 ml-auto text-right">
             &copy; {footerCopyright}
           </p>
         </div>
@@ -774,10 +808,11 @@ function isActiveNav(href: string): boolean {
     </div>
 
     <!-- Mobile floating back-to-top action -->
-    <div class="fixed bottom-4 right-4 z-50 md:hidden">
+    <div class="mobile-safe-action fixed z-50 md:hidden">
       <button
         type="button"
         id="back-to-top"
+	        tabindex="-1"
         class="icon-button pointer-events-none translate-y-4 opacity-0 duration-300 data-[visible=true]:pointer-events-auto data-[visible=true]:translate-y-0 data-[visible=true]:opacity-100"
         aria-label="Back to top"
         title="Back to top"
