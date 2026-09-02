@@ -7,10 +7,10 @@ scholar websites.
 
 Scholar Pages keeps the site itself fast and focused while making the content
 easy to maintain. Profile details live in one TypeScript configuration file;
-publications, projects, teaching records, and posts stay in familiar BibTeX,
-YAML, and Markdown files.
+publications stay in BibTeX, biography records in YAML, and projects, teaching,
+and posts in Markdown.
 
-![Scholar Pages desktop home page](./docs/screenshots/home-desktop.jpg)
+![Scholar Pages desktop home page](./docs/screenshots/academic-home-desktop.png)
 
 ## Highlights
 
@@ -18,7 +18,7 @@ YAML, and Markdown files.
   teaching, projects, service, awards, and research notes in a consistent
   editorial layout.
 - **Content-first workflow** — manage publications with BibTeX, structured
-  records with YAML, and posts with Markdown or MDX.
+  biography records with YAML, and long-form work with Markdown or MDX.
 - **Responsive and theme-aware** — polished desktop and mobile layouts with
   light and dark modes.
 - **Useful research navigation** — filter publications, projects, and teaching
@@ -34,13 +34,13 @@ YAML, and Markdown files.
 
 ### Publications and filters
 
-![Scholar Pages publications page](./docs/screenshots/research-desktop.jpg)
+![Scholar Pages publications page](./docs/screenshots/publications-unified-desktop.jpg)
 
 ### Mobile dark mode
 
 <p align="center">
   <img
-    src="./docs/screenshots/home-mobile-dark.jpg"
+    src="./docs/screenshots/academic-home-mobile-dark.png"
     alt="Scholar Pages mobile home page in dark mode"
     width="320"
   />
@@ -82,7 +82,8 @@ order is:
 1. Update `author`, `siteUrl`, and `hero` in `site.config.ts`.
 2. Replace `public/profile.svg` with your portrait or update `hero.profileImage`.
 3. Add your publications to `src/data/publications.bib`.
-4. Edit the YAML records in `src/data/`.
+4. Edit `src/data/about.yml`, then replace the project and teaching entries in
+   `src/content/`.
 5. Replace or remove the sample posts in `src/content/posts/`.
 
 Run `pnpm verify` when you are ready to deploy.
@@ -94,8 +95,8 @@ Run `pnpm verify` when you are ready to deploy.
 | Name, profile, affiliations, links, SEO, and page introductions | `site.config.ts` |
 | Publications and working papers | `src/data/publications.bib` |
 | Biography, experience, education, service, and awards | `src/data/about.yml` |
-| Research and software projects | `src/data/projects.yml` |
-| Current and past teaching | `src/data/teaching.yml` |
+| Research and software projects | `src/content/projects/*.md` |
+| Current and past teaching | `src/content/teaching/*.md` |
 | Blog posts and research notes | `src/content/posts/*.{md,mdx}` |
 | Profile image and other static assets | `public/` |
 | Colors, typography, icons, and reusable style tokens | `uno.config.ts` |
@@ -186,19 +187,19 @@ supported, plus a `public` field used to group records on the research page.
 Entries marked `public = {yes}` are eligible for the selected-publications
 section on the home page.
 
-### About, projects, and teaching
+### About
 
-The files in `src/data/` use YAML so records remain readable and easy to
-reorder. The included examples document the available fields:
+`src/data/about.yml` keeps profile facts, experience, education, service, and
+custom sections such as awards or talks in one structured YAML file.
 
-- `about.yml` supports profile facts, experience, education, service, and
-  custom sections such as awards or talks.
-- `projects.yml` supports status, period, descriptions, badges, highlights,
-  metadata, technologies, and multiple links.
-- `teaching.yml` separates current and past terms and supports course codes,
-  summaries, tags, highlights, and links.
+### Projects and teaching
 
-Most optional fields can be omitted; empty elements are not rendered.
+Projects and courses are Markdown content entries with validated YAML
+frontmatter. Store one record per file in `src/content/projects/` or
+`src/content/teaching/`; its filename becomes the internal detail-page URL.
+External resources remain in the `links` frontmatter field. See the complete
+[content authoring guide](./docs/content-authoring.md) for fields, examples,
+images, internal links, and migration guidance.
 
 ### Posts
 
@@ -227,7 +228,9 @@ Set `draft: true` to keep a post out of the generated site.
 | `/about` | Profile facts, experience, education, service, and custom sections |
 | `/researches` | Filterable publications grouped by research status |
 | `/teaching` | Current and past teaching grouped by term |
+| `/teaching/[slug]` | Individual course details and external resources |
 | `/projects` | Active and past projects with metadata and links |
+| `/projects/[slug]` | Individual project details and external resources |
 | `/posts` | Posts grouped by year |
 | `/posts/[slug]` | Individual Markdown or MDX post |
 
@@ -241,8 +244,8 @@ Set `draft: true` to keep a post out of the generated site.
 ├── src/
 │   ├── components/           # Shared page and filter components
 │   ├── config/               # Configuration defaults
-│   ├── content/posts/        # Markdown and MDX posts
-│   ├── data/                 # BibTeX and YAML content
+│   ├── content/              # Project, teaching, and post entries
+│   ├── data/                 # BibTeX publications and YAML biography data
 │   ├── layouts/              # Shared page shell
 │   ├── lib/                  # Content and SEO helpers
 │   └── pages/                # Astro routes
@@ -277,13 +280,20 @@ directory.
 
 ## Template updates
 
-Template releases use SemVer tags such as `v0.6.1`. Updates are delivered as
+Template releases use SemVer tags such as `v0.7.0`. Updates are delivered as
 reviewable pull requests because repositories created from a GitHub template
 have independent histories.
 
 Check `.template-version` first. If the file is missing or reports a version
 older than `0.6.0`, use the one-time migration below even if the repository
 already contains an update workflow.
+
+Sites on `v0.6.x` should first copy the `v0.7.0`
+`.github/workflows/template-update.yml` into their default branch. This is a
+one-time bootstrap: the older updater cannot update workflow files with its
+default GitHub token. From `v0.7.0` onward, the updater executes the migration
+logic shipped by the target release, so future data migrations do not require
+another workflow replacement.
 
 ### Sites on v0.6.0 or newer
 
@@ -301,17 +311,27 @@ To update one of these sites:
    [workflow permissions documentation](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#preventing-github-actions-from-creating-or-approving-pull-requests).
 2. Open **Actions → Template Update → Run workflow**. The same workflow also
    checks for releases every Monday.
-3. Review the generated `chore/template-update-X.Y.Z` pull request, wait for CI,
-   and merge it when the changes are correct.
+3. Review the generated `chore/template-update-X.Y.Z` pull request and merge it
+   when the changes are correct. The updater installs dependencies and runs the
+   full verification suite before opening or updating the pull request.
 
 Do not change `.template-version` to the target version before running the
 workflow; that would mark the site as already updated.
 
 The paths listed under `protected` in `.template-sync.json` are left untouched.
-By default this includes site configuration, YAML and BibTeX data, posts,
-profile images, the favicon, and environment files. Other template-owned files
-are replaced by the released versions. Review the complete pull request before
-merging, especially if the site contains custom template code.
+By default this includes site configuration, YAML and BibTeX data, content
+entries, project and teaching images, profile images, the favicon, and
+environment files. Other template-owned files are replaced by the released
+versions. Review the complete pull request before merging, especially if the
+site contains custom template code.
+
+When updating to `v0.7.0`, the updater detects the retired
+`src/data/projects.yml` and `src/data/teaching.yml` files before syncing. It
+keeps template demo entries out of the update, converts each personal record to
+a Markdown content entry, and leaves the original YAML files unchanged for
+comparison or rollback. Existing Markdown entries are never overwritten. After
+reviewing the generated entries and detail pages, the retired YAML files can be
+deleted.
 
 #### Push rejected while updating workflow files
 
@@ -332,10 +352,8 @@ requests: Read and write`, and `Workflows: Write`. Save it as the repository
 Actions secret `TEMPLATE_UPDATE_TOKEN`; never put the token value in the
 workflow file. The updater detects this secret automatically.
 
-Sites created before this protection was added need a one-time bootstrap because
-their installed updater cannot update itself. Copy the latest
-`.github/workflows/template-update.yml` from this template to the site's default
-branch, then rerun **Template Update**. Alternatively, add
+Sites whose installed updater predates `v0.7.0` need the one-time workflow
+bootstrap described above, then can rerun **Template Update**. Alternatively, add
 `.github/workflows/**` to the site's `.template-sync.json` `protected` list to
 keep managing workflows manually.
 
@@ -356,11 +374,11 @@ compatibility entry, and removes obsolete template-owned content and robots
 files without changing personal content:
 
 ```bash
-git switch -c chore/template-update-v0.6.1
+git switch -c chore/template-update-v0.7.0
 
 template_dir="$(mktemp -d)"
 template_dir="$(cd "$template_dir" && pwd -P)"
-git clone --depth 1 --branch v0.6.1 \
+git clone --depth 1 --branch v0.7.0 \
   https://github.com/jxpeng98/astro-theme-scholars.git \
   "$template_dir"
 
@@ -370,6 +388,7 @@ node "$template_dir/scripts/sync-template-release.mjs" \
   --config "$template_dir/.template-sync.json"
 
 pnpm install --frozen-lockfile
+node scripts/migrate-legacy-content.mjs
 pnpm verify
 git status --short
 git diff
@@ -392,10 +411,10 @@ Template maintainers can validate and publish a release with:
 
 ```bash
 pnpm verify
-node scripts/check-release.mjs --tag v0.6.1
+node scripts/check-release.mjs --tag v0.7.0
 git push origin main
-git tag -a v0.6.1 -m "v0.6.1"
-git push origin v0.6.1
+git tag -a v0.7.0 -m "v0.7.0"
+git push origin v0.7.0
 ```
 
 Keep `package.json`, `.template-version`, and the latest `CHANGELOG.md` entry on

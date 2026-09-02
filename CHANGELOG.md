@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.7.0 - 2026-09-02
+
+### Features
+
+- Added validated Markdown content collections and dedicated detail pages for
+  projects and teaching entries.
+- Added internal detail navigation alongside explicitly modeled external
+  project and course resources.
+
+### Improvements
+
+- Unified Projects, Teaching, and Publications around a quieter editorial list
+  system with clearer hierarchy, responsive layouts, and accessible controls.
+- Refined mobile navigation, detail-page metadata, footer configuration, theme
+  behavior, and generated-site assertions.
+- Added complete project and teaching authoring guidance with image, link, and
+  migration examples.
+
+### Upgrades
+
+- Added automatic conversion of legacy `src/data/projects.yml` and
+  `src/data/teaching.yml` records while preserving the original YAML files.
+- Changed the updater to use migration logic from the target release, verify
+  the personalized site before opening a pull request, and exclude workflow
+  files automatically when no workflow-enabled token is configured.
+
 ## 0.6.1 - 2026-08-12
 
 ### Fixes

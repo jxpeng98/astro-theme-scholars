@@ -71,6 +71,66 @@ async function listFiles(root, current = root) {
 	return files;
 }
 
+async function pathExists(path) {
+	try {
+		await stat(path);
+		return true;
+	} catch (error) {
+		if (error.code === "ENOENT") return false;
+		throw error;
+	}
+}
+
+async function legacyContentProtection(targetDir) {
+	const [projects, teaching] = await Promise.all([
+		pathExists(join(targetDir, "src/data/projects.yml")),
+		pathExists(join(targetDir, "src/data/teaching.yml")),
+	]);
+
+	return {
+		detected: projects || teaching,
+		paths: [
+			...(projects
+				? ["src/content/projects/**", "src/assets/projects/**"]
+				: []),
+			...(teaching
+				? ["src/content/teaching/**", "src/assets/teaching/**"]
+				: []),
+		],
+	};
+}
+
+async function removeObsoletePaths(
+	targetDir,
+	paths,
+	protectedPaths,
+	excludedPaths,
+) {
+	let removed = 0;
+	for (const path of paths) {
+		const normalized = toPosixPath(path);
+		if (
+			!normalized ||
+			normalized.startsWith("/") ||
+			normalized.split("/").includes("..")
+		) {
+			throw new Error(`Invalid template removal path: ${path}`);
+		}
+		if (
+			isProtectedPath(normalized, protectedPaths) ||
+			isProtectedPath(normalized, excludedPaths)
+		) {
+			continue;
+		}
+		const target = join(targetDir, normalized);
+		if (await pathExists(target)) {
+			await rm(target, { recursive: true, force: true });
+			removed += 1;
+		}
+	}
+	return removed;
+}
+
 async function migrateLegacySiteConfig(sourceDir, targetDir) {
 	const rootConfig = join(targetDir, "site.config.ts");
 	const legacyConfig = join(targetDir, "src/side.config.ts");
@@ -133,17 +193,37 @@ export async function syncTemplateRelease({
 	targetDir,
 	protectedPaths,
 	excludedPaths,
+	obsoletePaths,
 }) {
 	const migratedLegacyConfig = await migrateLegacySiteConfig(
 		sourceDir,
 		targetDir,
+	);
+	const legacyContent = await legacyContentProtection(targetDir);
+	const hasSyncConfig = await pathExists(join(targetDir, ".template-sync.json"));
+	const effectiveProtectedPaths = [
+		...new Set([
+			...protectedPaths.filter(
+				(path) => path !== ".template-sync.json" || hasSyncConfig,
+			),
+			...legacyContent.paths,
+		]),
+	];
+	const removed = await removeObsoletePaths(
+		targetDir,
+		obsoletePaths,
+		effectiveProtectedPaths,
+		excludedPaths,
 	);
 	const sourceFiles = await listFiles(sourceDir);
 	let copied = 0;
 	let skipped = 0;
 
 	for (const file of sourceFiles) {
-		if (isProtectedPath(file, protectedPaths) || isProtectedPath(file, excludedPaths)) {
+		if (
+			isProtectedPath(file, effectiveProtectedPaths) ||
+			isProtectedPath(file, excludedPaths)
+		) {
 			skipped += 1;
 			continue;
 		}
@@ -162,7 +242,13 @@ export async function syncTemplateRelease({
 		copied += 1;
 	}
 
-	return { copied, skipped, migratedLegacyConfig };
+	return {
+		copied,
+		skipped,
+		removed,
+		migratedLegacyConfig,
+		legacyContentDetected: legacyContent.detected,
+	};
 }
 
 function readArg(name) {
@@ -183,6 +269,10 @@ if (fileURLToPath(import.meta.url) === process.argv[1]) {
 	}
 
 	const config = JSON.parse(await readFile(configPath, "utf8"));
+	const sourceConfigPath = join(sourceDir, ".template-sync.json");
+	const sourceConfig = (await pathExists(sourceConfigPath))
+		? JSON.parse(await readFile(sourceConfigPath, "utf8"))
+		: {};
 	const result = await syncTemplateRelease({
 		sourceDir,
 		targetDir,
@@ -191,9 +281,10 @@ if (fileURLToPath(import.meta.url) === process.argv[1]) {
 			...(protectedPath ? [protectedPath] : []),
 		],
 		excludedPaths: config.exclude ?? [],
+		obsoletePaths: sourceConfig.remove ?? [],
 	});
 
 	console.log(
-		`Template sync copied ${result.copied} file(s), skipped ${result.skipped} file(s)${result.migratedLegacyConfig ? ", and migrated the legacy site configuration" : ""}.`,
+		`Template sync copied ${result.copied} file(s), skipped ${result.skipped} file(s), removed ${result.removed} obsolete path(s)${result.migratedLegacyConfig ? ", migrated the legacy site configuration" : ""}${result.legacyContentDetected ? ", and preserved legacy project or teaching data for content migration" : ""}.`,
 	);
 }

@@ -22,6 +22,11 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.TEMPLATE_UPDATE_TOKEN || github.token }}
 
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+
       - name: Set up Node
         uses: actions/setup-node@v7
         with:
@@ -44,8 +49,15 @@ jobs:
             sync_protection=(--protect ".github/workflows/**")
             echo "Workflow files are excluded because TEMPLATE_UPDATE_TOKEN is not configured."
           fi
-          node scripts/sync-template-release.mjs --source "$RUNNER_TEMP/template" --target "$GITHUB_WORKSPACE" --config ".template-sync.json" "${sync_protection[@]}"
+          node "$RUNNER_TEMP/template/scripts/sync-template-release.mjs" --source "$RUNNER_TEMP/template" --target "$GITHUB_WORKSPACE" --config ".template-sync.json" "${sync_protection[@]}"
           printf "%s\n" "${{ steps.latest.outputs.latest_version }}" > .template-version
+
+      - name: Migrate and verify updated site
+        if: steps.latest.outputs.update_available == 'true'
+        run: |
+          pnpm install --frozen-lockfile
+          node scripts/migrate-legacy-content.mjs
+          pnpm verify
 
       - name: Create or update pull request
         if: steps.latest.outputs.update_available == 'true'
@@ -67,7 +79,7 @@ jobs:
           git commit -m "chore(template): bump to ${TEMPLATE_TAG}"
           git push --force-with-lease origin "$branch"
 
-          body="$(printf 'Updates this site from astro-theme-scholars %s.\n\nProtected personal content paths from .template-sync.json were left untouched. Workflow files are included only when TEMPLATE_UPDATE_TOKEN is configured.\nReview the diff before merging, especially if local template files were customized.' "$TEMPLATE_TAG")"
+          body="$(printf 'Updates this site from astro-theme-scholars %s.\n\nProtected personal content paths from .template-sync.json were left untouched. Legacy project and teaching YAML is migrated automatically while the original files remain available for review. Workflow files are included only when TEMPLATE_UPDATE_TOKEN is configured.\n\nThe updated site passed the template verification suite before this pull request was opened. Review the diff before merging, especially if local template files were customized.' "$TEMPLATE_TAG")"
 
           existing_pr="$(gh pr list --head "$branch" --json number --jq '.[0].number // empty')"
           if [ -n "$existing_pr" ]; then

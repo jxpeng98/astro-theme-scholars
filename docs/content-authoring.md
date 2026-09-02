@@ -93,21 +93,20 @@ YAML is still used for frontmatter and remains fully validated. Only the former 
 
 ### Migrating an existing site
 
-Before applying a template update that introduces these collections:
+The `v0.7.0` template updater handles the former centralized YAML format:
 
-1. Add these paths to the existing downstream site's `.template-sync.json` `protected` array before running its first update to this version:
+1. Before syncing, it detects `src/data/projects.yml` and `src/data/teaching.yml` and prevents template demo entries and images from replacing personal content.
+2. It creates one Markdown file for every project and course, preserving order, metadata, tags, highlights, and valid external links.
+3. It leaves both original YAML files unchanged for comparison or rollback.
+4. It runs the complete verification suite before opening the update pull request.
 
-   ```json
-   "src/content/projects/**",
-   "src/content/teaching/**",
-   "src/assets/projects/**",
-   "src/assets/teaching/**"
-   ```
+If collection entries already exist, the migrator leaves them untouched. After reviewing the generated pages, delete the retired YAML files so there is only one content source.
 
-2. Create one file in `src/content/projects/` for every record in `src/data/projects.yml`, using the project example above.
-3. Create one file in `src/content/teaching/` for every course nested in `src/data/teaching.yml`, using the teaching example above. Copy the parent term into each course file.
-4. Put the former `description` value into `summary`; long-form text can be added below the frontmatter later.
-5. Run `pnpm verify` and confirm every generated detail URL.
-6. Delete the two old YAML files only after the new collection entries render correctly.
+To run the conversion manually after installing dependencies:
 
-Template sync protects both new content directories and their project/teaching asset folders, so later theme updates do not overwrite personal entries or covers.
+```bash
+node scripts/migrate-legacy-content.mjs
+pnpm verify
+```
+
+Template sync protects both collection directories and their project/teaching asset folders, so later theme updates do not overwrite personal entries or covers.

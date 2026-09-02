@@ -4,6 +4,9 @@ dist/
 # generated types
 .astro/
 
+# design review artifacts
+.impeccable/
+
 # dependencies
 node_modules/
 .pnpm-store/

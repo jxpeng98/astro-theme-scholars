@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import FilterBar from "../components/FilterBar.astro";
 import Layout from "../layouts/Layout.astro";
-import { groupTeachingLedger } from "../lib/teaching";
+import { groupTeachingLedger, isSameCourse } from "../lib/teaching";
 import siteConfig from "../side.config";
 
 const courses = (await getCollection("teaching", ({ data }) => !data.draft)).sort(
@@ -56,7 +56,7 @@ const pageDescription = siteConfig.pageTitles.teaching.description ||
                 <div class="divide-y divide-paper-300/90 dark:divide-ink-700">
                   {group.courses.map((course) => {
                     const previousTerms = past
-                      .filter((offering) => offering.data.code === course.data.code)
+                      .filter((offering) => isSameCourse(offering, course))
                       .map((offering) => offering.data.term);
 
                     return (
@@ -117,7 +117,7 @@ const pageDescription = siteConfig.pageTitles.teaching.description ||
 
 		  <div data-teaching-ledger class="overflow-hidden rounded-2xl border border-paper-300/90 bg-white/60 divide-y divide-paper-300/90 dark:border-ink-700 dark:bg-ink-900/62 dark:divide-ink-700">
 			{teachingLedger.map(({ course, terms }) => (
-			  <article data-course-code={course.data.code}>
+			  <article>
 				<a
 				  href={`/teaching/${course.id}`}
 				  class="group grid gap-3 px-4 py-4 text-inherit no-underline transition-colors duration-200 hover:bg-accent-50/58 dark:hover:bg-accent-900/16 sm:grid-cols-[6.5rem_minmax(0,1fr)_auto] sm:items-start sm:px-6 sm:py-5"

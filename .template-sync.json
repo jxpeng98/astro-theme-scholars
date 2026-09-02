@@ -1,6 +1,7 @@
 {
 	"upstream": "jxpeng98/astro-theme-scholars",
 	"protected": [
+		".template-sync.json",
 		"site.config.ts",
 		"src/data/**",
 		"src/content/posts/**",
@@ -19,5 +20,10 @@
 		"dist/**",
 		"node_modules/**",
 		".pnpm-store/**"
+	],
+	"remove": [
+		"src/components/projects.ts",
+		"src/lib/projects.ts",
+		"tests/project-status.test.ts"
 	]
 }
