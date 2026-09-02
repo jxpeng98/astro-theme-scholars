@@ -175,6 +175,7 @@ if (fileURLToPath(import.meta.url) === process.argv[1]) {
 	const sourceDir = readArg("--source");
 	const targetDir = readArg("--target") ?? process.cwd();
 	const configPath = readArg("--config") ?? ".template-sync.json";
+	const protectedPath = readArg("--protect");
 
 	if (!sourceDir) {
 		console.error("Missing --source path.");
@@ -185,7 +186,10 @@ if (fileURLToPath(import.meta.url) === process.argv[1]) {
 	const result = await syncTemplateRelease({
 		sourceDir,
 		targetDir,
-		protectedPaths: config.protected ?? [],
+		protectedPaths: [
+			...(config.protected ?? []),
+			...(protectedPath ? [protectedPath] : []),
+		],
 		excludedPaths: config.exclude ?? [],
 	});
 

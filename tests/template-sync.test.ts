@@ -1,3 +1,4 @@
+import { execFile as execFileCallback } from "node:child_process";
 import {
 	mkdtemp,
 	mkdir,
@@ -8,11 +9,14 @@ import {
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
+import { promisify } from "node:util";
 import { describe, expect, test } from "vitest";
 import {
 	isProtectedPath,
 	syncTemplateRelease,
 } from "../scripts/sync-template-release.mjs";
+
+const execFile = promisify(execFileCallback);
 
 describe("template sync path protection", () => {
 	test("protects user-owned content paths", () => {
@@ -67,6 +71,7 @@ describe("template sync path protection", () => {
 				"src/content/projects/my-project.md",
 				"src/content/teaching/my-course.md",
 				"src/assets/projects/cover.png",
+				".github/workflows/ci.yml",
 				"src/pages/projects.astro",
 			];
 			await Promise.all(
@@ -82,14 +87,24 @@ describe("template sync path protection", () => {
 				]),
 			);
 
-			await syncTemplateRelease({
+			const configPath = join(root, "template-sync.json");
+			await writeFile(
+				configPath,
+				JSON.stringify({ protected: protectedPaths, exclude: [] }),
+			);
+			await execFile(process.execPath, [
+				join(process.cwd(), "scripts/sync-template-release.mjs"),
+				"--source",
 				sourceDir,
+				"--target",
 				targetDir,
-				protectedPaths,
-				excludedPaths: [],
-			});
+				"--config",
+				configPath,
+				"--protect",
+				".github/workflows/**",
+			]);
 
-			for (const path of paths.slice(0, 3)) {
+			for (const path of paths.slice(0, -1)) {
 				expect(await readFile(join(targetDir, path), "utf8")).toBe(
 					`personal ${path}\n`,
 				);

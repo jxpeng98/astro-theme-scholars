@@ -318,32 +318,26 @@ merging, especially if the site contains custom template code.
 The repository `GITHUB_TOKEN` is a GitHub App installation token. GitHub
 requires a separate `Workflows` repository permission when a push creates or
 changes files under `.github/workflows`, so enabling pull-request creation alone
-does not prevent this error:
+does not grant that access.
 
-```text
-refusing to allow a GitHub App to create or update workflow
-`.github/workflows/ci.yml` without `workflows` permission
-```
+The template updater therefore excludes `.github/workflows/**` automatically
+when `TEMPLATE_UPDATE_TOKEN` is not configured. New repositories created from
+this template can update all other template-owned files with the default token
+without hitting the workflow-permission rejection. Apply workflow changes
+manually after reviewing them.
 
-Choose one of these approaches, then rerun **Template Update**:
+To let the updater include workflow files, create a fine-grained personal access
+token limited to this repository with `Contents: Read and write`, `Pull
+requests: Read and write`, and `Workflows: Write`. Save it as the repository
+Actions secret `TEMPLATE_UPDATE_TOKEN`; never put the token value in the
+workflow file. The updater detects this secret automatically.
 
-1. **Keep the default token and update workflows manually.** Add both
-   `.template-sync.json` and `.github/workflows/**` to the `protected` list in
-   `.template-sync.json`, commit that change to the default branch, and rerun
-   the updater. The update PR will exclude workflow files; compare them with the
-   target template release and apply the required workflow changes separately.
-2. **Allow the updater to sync workflow files.** Create a fine-grained personal
-   access token limited to this repository with `Contents: Read and write`,
-   `Pull requests: Read and write`, and `Workflows: Write`. Save it as the
-   repository Actions secret `TEMPLATE_UPDATE_TOKEN`; never put the token value
-   in the workflow file. The current updater uses this secret automatically and
-   falls back to `GITHUB_TOKEN` when it is absent. On sites created before this
-   support was added, change both the checkout `token` and `GH_TOKEN` in
-   `.github/workflows/template-update.yml` to:
-
-   ```yaml
-   ${{ secrets.TEMPLATE_UPDATE_TOKEN || github.token }}
-   ```
+Sites created before this protection was added need a one-time bootstrap because
+their installed updater cannot update itself. Copy the latest
+`.github/workflows/template-update.yml` from this template to the site's default
+branch, then rerun **Template Update**. Alternatively, add
+`.github/workflows/**` to the site's `.template-sync.json` `protected` list to
+keep managing workflows manually.
 
 Use an expiring, repository-scoped token and revoke it when it is no longer
 needed. Organization repositories may require an administrator to approve the

@@ -35,10 +35,16 @@ jobs:
         if: steps.latest.outputs.update_available == 'true'
         env:
           TEMPLATE_TAG: ${{ steps.latest.outputs.latest_tag }}
+          SYNC_WORKFLOWS: ${{ secrets.TEMPLATE_UPDATE_TOKEN != '' }}
         run: |
           upstream="$(node -p "JSON.parse(require('fs').readFileSync('.template-sync.json', 'utf8')).upstream")"
           git clone --depth 1 --branch "$TEMPLATE_TAG" "https://github.com/${upstream}.git" "$RUNNER_TEMP/template"
-          node scripts/sync-template-release.mjs --source "$RUNNER_TEMP/template" --target "$GITHUB_WORKSPACE" --config ".template-sync.json"
+          sync_protection=()
+          if [ "$SYNC_WORKFLOWS" != "true" ]; then
+            sync_protection=(--protect ".github/workflows/**")
+            echo "Workflow files are excluded because TEMPLATE_UPDATE_TOKEN is not configured."
+          fi
+          node scripts/sync-template-release.mjs --source "$RUNNER_TEMP/template" --target "$GITHUB_WORKSPACE" --config ".template-sync.json" "${sync_protection[@]}"
           printf "%s\n" "${{ steps.latest.outputs.latest_version }}" > .template-version
 
       - name: Create or update pull request
@@ -61,7 +67,7 @@ jobs:
           git commit -m "chore(template): bump to ${TEMPLATE_TAG}"
           git push --force-with-lease origin "$branch"
 
-          body="$(printf 'Updates this site from astro-theme-scholars %s.\n\nProtected personal content paths from .template-sync.json were left untouched.\nReview the diff before merging, especially if local template files were customized.' "$TEMPLATE_TAG")"
+          body="$(printf 'Updates this site from astro-theme-scholars %s.\n\nProtected personal content paths from .template-sync.json were left untouched. Workflow files are included only when TEMPLATE_UPDATE_TOKEN is configured.\nReview the diff before merging, especially if local template files were customized.' "$TEMPLATE_TAG")"
 
           existing_pr="$(gh pr list --head "$branch" --json number --jq '.[0].number // empty')"
           if [ -n "$existing_pr" ]; then
