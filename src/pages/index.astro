@@ -315,9 +315,11 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
 
     {showPosts && recentPosts.length > 0 && (
       <section class="content-section" aria-labelledby="latest-posts">
-      <div class="mb-4 flex flex-col gap-3 border-b border-paper-300/90 pb-4 dark:border-ink-700 sm:flex-row sm:items-end sm:justify-between">
+      <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h2 id="latest-posts" class="section-heading">{siteConfig.homeBlocks.posts.title}</h2>
+          <h2 id="latest-posts" class="font-heading text-3xl font-semibold tracking-[-0.02em] text-ink-950 dark:text-paper-50 sm:text-4xl">
+            {siteConfig.homeBlocks.posts.title}
+          </h2>
           {siteConfig.homeBlocks.posts.description && (
             <p class="mt-1 text-sm text-ink-600 dark:text-paper-300">{siteConfig.homeBlocks.posts.description}</p>
           )}
@@ -329,10 +331,10 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
       </div>
 
       {primaryPost && (
-        <div class="grid gap-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)]">
+        <div>
           <PostCard post={primaryPost} variant="featured" />
           {secondaryPosts.length > 0 && (
-            <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-1">
+            <div class="mt-8 grid gap-8 sm:grid-cols-2">
               {secondaryPosts.map((post) => <PostCard post={post} />)}
             </div>
           )}

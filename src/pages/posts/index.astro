@@ -31,50 +31,53 @@ const totalPosts = posts.length;
   description={pageDescription}
   schemaType="CollectionPage"
 >
-  <div class="page-stack">
-    <header class="page-header">
-      <h1 class="page-title">{pageTitle}</h1>
-      <p class="page-description">{pageDescription}</p>
-
-      <div class="flex flex-wrap items-center gap-2 border-t border-paper-300/90 pt-4 dark:border-ink-700">
-        <span class="meta-chip">
-          <span class="i-mdi:file-document-multiple text-base text-accent-700 dark:text-accent-300" aria-hidden="true"></span>
-          <strong class="font-semibold text-ink-950 dark:text-paper-50">{totalPosts}</strong>
-          {totalPosts === 1 ? "post" : "posts"}
-        </span>
-        {years.length > 0 && (
-          <span class="meta-chip">
-            <span class="i-mdi:calendar-range text-sm" aria-hidden="true"></span>
-			<span class="tabular-nums font-mono">{years[years.length - 1]} - {years[0]}</span>
-          </span>
-        )}
+  <div class="space-y-12 pb-2 sm:space-y-16 sm:pb-4">
+    <header class="grid gap-7 border-b-2 border-ink-950 pb-7 pt-2 dark:border-paper-100 md:grid-cols-[minmax(0,1fr)_13rem] md:items-end md:gap-12">
+      <div class="space-y-3">
+        <h1 class="font-heading text-[clamp(3.75rem,10vw,6rem)] font-semibold leading-[0.9] tracking-[-0.035em] text-ink-950 dark:text-paper-50">
+          {pageTitle}
+        </h1>
+        <p class="max-w-[40rem] text-[1.0625rem] leading-7 text-ink-600 dark:text-paper-300">
+          {pageDescription}
+        </p>
       </div>
+
+      <dl class="grid gap-2 border-l border-paper-400 pl-5 text-sm text-ink-600 dark:border-ink-600 dark:text-paper-300">
+        <div class="flex items-baseline justify-between gap-6">
+          <dt>Published notes</dt>
+          <dd class="m-0 font-mono font-semibold tabular-nums text-ink-950 dark:text-paper-50">{totalPosts}</dd>
+        </div>
+        {years.length > 0 && (
+          <div class="flex items-baseline justify-between gap-6">
+            <dt>Archive</dt>
+            <dd class="m-0 font-mono tabular-nums">{years[years.length - 1]}-{years[0]}</dd>
+          </div>
+        )}
+      </dl>
     </header>
 
     {featuredPost && (
-      <section class="content-section space-y-4" aria-labelledby="featured-note">
-        <div class="flex items-end justify-between gap-4 border-b border-paper-300/90 pb-3 dark:border-ink-700">
-          <h2 id="featured-note" class="section-heading">Start here</h2>
-          <span class="meta-chip mb-0.5 shrink-0">
-            <span class="i-mdi:star text-sm text-accent-700 dark:text-accent-300" aria-hidden="true"></span>
-            Featured
-          </span>
-        </div>
+      <section aria-labelledby="featured-note">
+        <h2 id="featured-note" class="sr-only">Featured note</h2>
         <PostCard post={featuredPost} variant="featured" eager />
       </section>
     )}
 
     {remainingPosts.length > 0 && (
-      <section class="content-section space-y-4" aria-labelledby="more-notes">
-        <div class="flex items-end justify-between gap-4 border-b border-paper-300/90 pb-3 dark:border-ink-700">
-          <h2 id="more-notes" class="section-heading">More notes</h2>
-          <span class="meta-chip mb-0.5 shrink-0">
-            {remainingPosts.length} {remainingPosts.length === 1 ? "post" : "posts"}
-          </span>
+      <section class="space-y-6" aria-labelledby="more-notes">
+        <div class="flex items-baseline justify-between gap-4">
+          <h2 id="more-notes" class="font-heading text-3xl font-semibold tracking-[-0.02em] text-ink-950 dark:text-paper-50 sm:text-4xl">
+            Archive
+          </h2>
+          <p class="m-0 font-mono text-xs tabular-nums text-ink-500 dark:text-paper-400">
+            {remainingPosts.length} {remainingPosts.length === 1 ? "entry" : "entries"}
+          </p>
         </div>
-        <ol class="m-0 grid list-none gap-5 p-0 md:grid-cols-2">
-          {remainingPosts.map((post) => (
-            <li><PostCard post={post} /></li>
+        <ol class="m-0 grid list-none gap-y-10 p-0 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] md:gap-x-9 md:gap-y-12">
+          {remainingPosts.map((post, index) => (
+            <li class:list={["min-w-0", index % 2 === 1 && "md:mt-10"]}>
+              <PostCard post={post} />
+            </li>
           ))}
         </ol>
       </section>

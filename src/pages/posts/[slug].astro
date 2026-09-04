@@ -34,8 +34,8 @@ const heroImage = post.data.heroImage;
 	modifiedAt={post.data.updatedAt}
 	tags={post.data.tags}
 >
-	<article class="page-stack mx-auto max-w-2xl">
-		<header class="page-header">
+	<article class="pb-2 sm:pb-4">
+		<header class="mx-auto max-w-4xl border-b-2 border-ink-950 pb-7 pt-2 dark:border-paper-100">
 			<nav aria-label="Breadcrumb" class="flex min-w-0 items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
 				<a href="/posts" class="action-link shrink-0">
 					<span class="i-mdi:arrow-left text-sm" aria-hidden="true"></span>
@@ -45,47 +45,64 @@ const heroImage = post.data.heroImage;
 				<span aria-current="page" class="truncate text-gray-700 dark:text-gray-300">{post.data.title}</span>
 			</nav>
 
-			<div class="space-y-3">
-				<div class="flex flex-wrap items-center gap-2">
-					<time class="meta-chip" datetime={post.data.publishedAt.toISOString()}>
-						<span class="i-mdi:calendar text-sm text-accent-700 dark:text-accent-200" aria-hidden="true"></span>
-						{new Date(post.data.publishedAt).toLocaleDateString(undefined, {
-							year: 'numeric',
-							month: 'long',
-							day: 'numeric'
-						})}
-					</time>
+			<div class="mt-8 grid gap-7 md:grid-cols-[10rem_minmax(0,1fr)] md:items-start md:gap-10">
+				<div class="space-y-4 md:col-start-2 md:row-start-1">
+					<h1 class="max-w-3xl font-heading text-[clamp(2.75rem,7vw,5rem)] font-semibold leading-[0.96] tracking-[-0.035em] text-ink-950 dark:text-paper-50">
+						{post.data.title}
+					</h1>
 
-					<span class="meta-chip">
-						<span class="i-mdi:clock-outline text-sm text-accent-700 dark:text-accent-200" aria-hidden="true"></span>
-						{readingTime} min read
-					</span>
-
-					{post.data.updatedAt && (
-						<time
-							class="meta-chip"
-							datetime={post.data.updatedAt.toISOString()}
-						>
-							<span class="i-mdi:update text-sm" aria-hidden="true"></span>
-							Updated {new Date(post.data.updatedAt).toLocaleDateString(undefined, {
-								month: 'short',
-								day: 'numeric',
-								year: 'numeric'
-							})}
-						</time>
+					{post.data.description && (
+						<p class="max-w-[65ch] text-[1.125rem] leading-7 text-ink-600 dark:text-paper-300">
+							{post.data.description}
+						</p>
 					)}
 				</div>
 
-				<h1 class="page-title max-w-3xl">{post.data.title}</h1>
+				<aside class="md:col-start-1 md:row-start-1 md:pt-2" aria-label="Article details">
+					<dl class="grid grid-cols-2 gap-x-5 gap-y-3 border-t border-paper-400 pt-4 text-xs dark:border-ink-600 md:grid-cols-1 md:border-t-0 md:pt-0">
+						<div>
+							<dt class="text-ink-500 dark:text-paper-400">Published</dt>
+							<dd class="m-0 mt-1 font-mono text-ink-800 dark:text-paper-200">
+								<time datetime={post.data.publishedAt.toISOString()}>
+									{new Date(post.data.publishedAt).toLocaleDateString(undefined, {
+										month: 'short',
+										day: 'numeric',
+										year: 'numeric'
+									})}
+								</time>
+							</dd>
+						</div>
+						<div>
+							<dt class="text-ink-500 dark:text-paper-400">Reading time</dt>
+							<dd class="m-0 mt-1 font-mono text-ink-800 dark:text-paper-200">{readingTime} min</dd>
+						</div>
+						{post.data.updatedAt && (
+							<div>
+								<dt class="text-ink-500 dark:text-paper-400">Updated</dt>
+								<dd class="m-0 mt-1 font-mono text-ink-800 dark:text-paper-200">
+									<time datetime={post.data.updatedAt.toISOString()}>
+										{new Date(post.data.updatedAt).toLocaleDateString(undefined, {
+											month: 'short',
+											day: 'numeric',
+											year: 'numeric'
+										})}
+									</time>
+								</dd>
+							</div>
+						)}
+					</dl>
 
-				{post.data.description && (
-					<p class="page-description max-w-2xl">{post.data.description}</p>
-				)}
+					{post.data.tags.length > 0 && (
+						<ul class="m-0 mt-5 flex list-none flex-wrap gap-x-3 gap-y-1 border-t border-paper-300 pt-4 p-0 font-mono text-[11px] text-accent-700 dark:border-ink-700 dark:text-accent-300" aria-label="Article topics">
+							{post.data.tags.map((tag) => <li>{tag}</li>)}
+						</ul>
+					)}
+				</aside>
 			</div>
 		</header>
 
 		{heroImage && (
-			<figure class="m-0 overflow-hidden rounded-xl border border-paper-300/90 bg-paper-100 shadow-paper dark:border-ink-700 dark:bg-ink-800">
+			<figure class="mx-auto mb-0 mt-8 max-w-4xl overflow-hidden rounded-xl bg-paper-100 dark:bg-ink-800">
 				<img
 					src={heroImage.src}
 					alt={post.data.heroImageAlt || post.data.title}
@@ -99,29 +116,27 @@ const heroImage = post.data.heroImage;
 			</figure>
 		)}
 
-		{post.data.tags.length > 0 && (
-			<ul class="m-0 flex list-none flex-wrap gap-2 border-b border-paper-300/90 pb-5 p-0 dark:border-ink-700" aria-label="Article topics">
-				{post.data.tags.map((tag) => <li class="scholarly-pill">{tag}</li>)}
-			</ul>
-		)}
-
-		<div class="prose prose-neutral max-w-none text-[1.0625rem] leading-[1.8] dark:prose-invert
-			prose-headings:scroll-mt-24 prose-headings:font-heading prose-headings:font-semibold prose-headings:tracking-[-0.01em] prose-headings:text-gray-900 dark:prose-headings:text-gray-50
-			prose-h2:text-[1.75rem] prose-h2:leading-[1.15] prose-h3:text-[1.375rem] prose-h3:leading-[1.25]
-			prose-p:text-gray-700 dark:prose-p:text-gray-300
-			prose-li:text-gray-700 dark:prose-li:text-gray-300
-			prose-a:font-medium prose-a:text-accent-700 prose-a:decoration-accent-300 prose-a:underline-offset-4 hover:prose-a:text-accent-800 dark:prose-a:text-accent-200 dark:prose-a:decoration-accent-600 dark:hover:prose-a:text-accent-100
-			prose-strong:text-gray-900 dark:prose-strong:text-gray-50
-			prose-code:rounded prose-code:bg-gray-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:text-accent-800 prose-code:before:content-none prose-code:after:content-none dark:prose-code:bg-gray-800 dark:prose-code:text-accent-200
-			prose-pre:border prose-pre:border-gray-700 prose-pre:bg-gray-900 dark:prose-pre:border-gray-700 dark:prose-pre:bg-gray-950
-			prose-blockquote:border-l-accent-500 prose-blockquote:bg-accent-50/70 prose-blockquote:px-5 prose-blockquote:py-2 prose-blockquote:not-italic dark:prose-blockquote:bg-accent-900/20
-			prose-img:rounded-xl prose-img:border prose-img:border-gray-200 dark:prose-img:border-gray-700
-			prose-hr:border-gray-200 dark:prose-hr:border-gray-700
-		">
+		<div
+			class:list={[
+				`post-body prose prose-neutral mx-auto max-w-2xl text-[1.0625rem] leading-[1.8] dark:prose-invert
+				prose-headings:scroll-mt-24 prose-headings:font-heading prose-headings:font-semibold prose-headings:tracking-[-0.01em] prose-headings:text-gray-900 dark:prose-headings:text-gray-50
+				prose-h2:text-[1.75rem] prose-h2:leading-[1.15] prose-h3:text-[1.375rem] prose-h3:leading-[1.25]
+				prose-p:text-gray-700 dark:prose-p:text-gray-300
+				prose-li:text-gray-700 dark:prose-li:text-gray-300
+				prose-a:font-medium prose-a:text-accent-700 prose-a:decoration-accent-300 prose-a:underline-offset-4 hover:prose-a:text-accent-800 dark:prose-a:text-accent-200 dark:prose-a:decoration-accent-600 dark:hover:prose-a:text-accent-100
+				prose-strong:text-gray-900 dark:prose-strong:text-gray-50
+				prose-code:rounded prose-code:bg-gray-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:text-accent-800 prose-code:before:content-none prose-code:after:content-none dark:prose-code:bg-gray-800 dark:prose-code:text-accent-200
+				prose-pre:border prose-pre:border-gray-700 prose-pre:bg-gray-900 dark:prose-pre:border-gray-700 dark:prose-pre:bg-gray-950
+				prose-blockquote:border-l-accent-500 prose-blockquote:bg-accent-50/70 prose-blockquote:px-5 prose-blockquote:py-2 prose-blockquote:not-italic dark:prose-blockquote:bg-accent-900/20
+				prose-img:rounded-xl prose-img:border prose-img:border-gray-200 dark:prose-img:border-gray-700
+				prose-hr:border-gray-200 dark:prose-hr:border-gray-700`,
+				heroImage ? 'mt-10' : 'mt-8'
+			]}
+		>
 			<Content />
 		</div>
 
-		<footer class="border-t border-gray-200 pt-5 dark:border-gray-700">
+		<footer class="mx-auto mt-12 max-w-2xl border-t border-gray-200 pt-5 dark:border-gray-700">
 			<div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
 				<a href="/posts" class="action-link self-start">
 					<span class="i-mdi:arrow-left" aria-hidden="true"></span>
@@ -155,3 +170,26 @@ const heroImage = post.data.heroImage;
 		</footer>
 	</article>
 </Layout>
+
+<style is:global>
+	.post-body > p:first-child::first-letter {
+		float: left;
+		margin-right: 0.55rem;
+		padding-top: 0.45rem;
+		font-family: 'Crimson Pro', Georgia, 'Times New Roman', serif;
+		font-size: 4.5rem;
+		font-weight: 600;
+		line-height: 0.72;
+		color: #2f5363;
+	}
+
+	.dark .post-body > p:first-child::first-letter {
+		color: #96bdc9;
+	}
+
+	@media (max-width: 639px) {
+		.post-body > p:first-child::first-letter {
+			font-size: 3.75rem;
+		}
+	}
+</style>

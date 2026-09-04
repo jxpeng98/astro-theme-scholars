@@ -21,22 +21,24 @@ const publishedAt = post.data.publishedAt.toLocaleDateString("en-US", {
 
 <a
   href={`/posts/${post.id}`}
-  class="group block h-full rounded-xl no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-ink-950"
+  class="group block h-full no-underline transition-transform duration-150 active:translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-4 dark:focus-visible:ring-offset-ink-950"
   aria-label={`Read ${post.data.title}`}
 >
   <article
     class:list={[
-      "h-full overflow-hidden rounded-xl border bg-white/70 shadow-paper transition duration-200 group-hover:-translate-y-0.5 group-hover:border-accent-400 group-hover:shadow-paper-lg dark:bg-ink-900/65 dark:group-hover:border-accent-600",
+      "h-full",
       featured
-        ? "grid border-accent-200/90 dark:border-accent-800/80 md:grid-cols-[minmax(0,1.15fr)_minmax(15rem,0.85fr)]"
-        : "flex flex-col border-paper-300/90 dark:border-ink-700/80",
+        ? "grid gap-6 border-y border-ink-950/20 py-5 dark:border-paper-50/20 md:grid-cols-[minmax(16rem,0.9fr)_minmax(0,1.1fr)] md:items-stretch md:gap-8 md:py-7"
+        : "flex flex-col border-t border-paper-400/80 pt-4 dark:border-ink-600",
     ]}
   >
     {heroImage && (
       <div
         class:list={[
           "overflow-hidden bg-paper-100 dark:bg-ink-800",
-          featured ? "aspect-[16/10] md:order-2 md:aspect-auto" : "aspect-[16/9]",
+          featured
+            ? "aspect-[16/10] rounded-xl md:aspect-auto md:min-h-[22rem]"
+            : "aspect-[16/10] rounded-lg",
         ]}
       >
         <img
@@ -52,14 +54,8 @@ const publishedAt = post.data.publishedAt.toLocaleDateString("en-US", {
       </div>
     )}
 
-    <div class:list={["flex min-w-0 flex-1 flex-col", featured ? "p-6 sm:p-7" : "p-5 sm:p-6"]}>
+    <div class:list={["flex min-w-0 flex-1 flex-col", !featured && heroImage && "pt-4"]}>
       <div class="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-xs text-ink-500 dark:text-paper-400">
-        {featured && (
-          <span class="font-semibold uppercase tracking-[0.12em] text-accent-700 dark:text-accent-300">
-            Featured note
-          </span>
-        )}
-        {featured && <span aria-hidden="true">/</span>}
         <time datetime={post.data.publishedAt.toISOString()} class="tabular-nums">
           {publishedAt}
         </time>
@@ -67,11 +63,11 @@ const publishedAt = post.data.publishedAt.toLocaleDateString("en-US", {
         <span>{getReadingTimeMinutes(post.body ?? "")} min read</span>
       </div>
 
-      <div class:list={["space-y-2", featured ? "mt-5" : "mt-4"]}>
+      <div class:list={["space-y-2", featured ? "mt-6" : "mt-4"]}>
         <h3
           class:list={[
             "font-heading font-semibold leading-[1.15] tracking-[-0.015em] text-ink-950 transition-colors group-hover:text-accent-700 dark:text-paper-50 dark:group-hover:text-accent-300",
-            featured ? "text-[1.9rem] sm:text-[2.25rem]" : "text-[1.35rem]",
+            featured ? "text-[2.25rem] sm:text-[2.75rem] lg:text-[3.25rem]" : "text-[1.45rem]",
           ]}
         >
           {post.data.title}
@@ -83,11 +79,16 @@ const publishedAt = post.data.publishedAt.toLocaleDateString("en-US", {
         )}
       </div>
 
-      <div class="mt-auto flex flex-wrap items-end justify-between gap-4 pt-6">
-        <ul class="m-0 flex list-none flex-wrap gap-1.5 p-0" aria-label="Topics">
-          {tags.map((tag) => <li class="scholarly-pill">{tag}</li>)}
+      <div class="mt-auto flex flex-wrap items-end justify-between gap-4 pt-7">
+        <ul class="m-0 flex list-none flex-wrap gap-x-2 p-0 font-mono text-[11px] text-ink-500 dark:text-paper-400" aria-label="Topics">
+          {tags.map((tag, index) => (
+            <li class="flex items-center gap-2">
+              <span>{tag}</span>
+              {index < tags.length - 1 && <span aria-hidden="true">/</span>}
+            </li>
+          ))}
         </ul>
-        <span class="action-link min-h-0 shrink-0 px-0 text-xs">
+        <span class="inline-flex min-h-11 shrink-0 items-center gap-1.5 text-sm font-bold text-accent-700 underline-offset-4 group-hover:underline dark:text-accent-300">
           Read note
           <span class="i-ph-arrow-right text-sm transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true"></span>
         </span>

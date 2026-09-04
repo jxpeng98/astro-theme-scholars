@@ -2,6 +2,8 @@
 title: Imaginary Workshop Highlights
 description: A fictional recap from the invented Symposium on Shared Signals.
 publishedAt: 2024-04-19
+heroImage: ../../assets/posts/imaginary-workshop.jpg
+heroImageAlt: Circular paper forms and blank notes joined in an open constellation
 tags:
   - workshops
   - community

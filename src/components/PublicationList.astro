@@ -26,11 +26,11 @@ const dialogId = `citation-dialog-${papers[0]?.id ?? "empty"}`;
 
       return (
         <li>
-          <article class="group grid grid-cols-[min-content_minmax(0,1fr)] gap-2 px-4 py-4.5 transition-colors duration-200 hover:bg-accent-50/50 dark:hover:bg-accent-950/20 sm:px-6 sm:py-5 md:grid-cols-[3rem_minmax(0,1fr)] md:gap-5">
-            <p class="entry-index">{String(index + 1).padStart(2, "0")}</p>
+          <article class="group relative grid grid-cols-[min-content_minmax(0,1fr)] gap-2 px-4 py-4.5 transition-colors duration-200 hover:bg-accent-50/50 dark:hover:bg-accent-950/20 sm:px-6 sm:py-5 md:grid-cols-[3rem_minmax(0,1fr)] md:gap-5">
+            <p class="entry-index min-h-9">{String(index + 1).padStart(2, "0")}</p>
 
-            <div class="min-w-0 space-y-2.5">
-              <div class="space-y-1">
+            <div class="col-span-2 min-w-0 space-y-2.5 md:col-span-1 md:col-start-2 md:row-start-1">
+              <div class="space-y-1 md:pr-20">
                 <h3 class="entry-title text-[1.1875rem]">
                   {paper.url ? (
                     <a
@@ -71,39 +71,40 @@ const dialogId = `citation-dialog-${papers[0]?.id ?? "empty"}`;
                 )}
               </div>
 
-              <div class="flex flex-wrap items-center gap-2 pt-1">
+              <button
+                type="button"
+                class="publication-control action-link glass-control absolute right-4 top-4.5 min-h-9 cursor-pointer px-2.5 text-xs font-semibold leading-none sm:right-6 sm:top-5"
+                data-citation-trigger
+                data-citation-title={paper.title}
+                data-citations={JSON.stringify(citations)}
+                aria-label={`Cite ${paper.title}`}
+                aria-haspopup="dialog"
+                aria-controls={dialogId}
+                title="View citation formats"
+              >
+                <span class="i-mdi:content-copy !text-sm" aria-hidden="true"></span>
+                <span>Cite</span>
+              </button>
+
+              <div class="flex flex-wrap items-center gap-1.5 pt-0.5">
                 {paper.url && (
                   <a
                     href={paper.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="action-link glass-control min-h-10 px-3 text-xs font-semibold"
+                    class="publication-control action-link glass-control min-h-9 px-2.5 text-xs font-semibold leading-none"
                   >
-                    <span class="i-mdi:file-pdf-box text-base" aria-hidden="true"></span>
+                    <span class="i-mdi:file-pdf-box !text-sm" aria-hidden="true"></span>
                     <span>PDF</span>
                     <span class="sr-only"> for {paper.title}, opens in a new tab</span>
                   </a>
                 )}
 
-                <button
-                  type="button"
-                  class="action-link glass-control min-h-10 cursor-pointer px-3 text-xs font-semibold"
-                  data-citation-trigger
-                  data-citation-title={paper.title}
-                  data-citations={JSON.stringify(citations)}
-                  aria-haspopup="dialog"
-                  aria-controls={dialogId}
-                  title="View citation formats"
-                >
-                  <span class="i-mdi:content-copy text-sm" aria-hidden="true"></span>
-                  <span>Cite</span>
-                </button>
-
                 {hasAbstract && (
                   <details class="group">
-                    <summary class="action-link glass-control min-h-10 cursor-pointer list-none px-3 text-xs font-semibold">
+                    <summary class="publication-control action-link glass-control min-h-9 cursor-pointer list-none px-2.5 text-xs font-semibold leading-none">
                       <span
-                        class="i-mdi:chevron-down text-base transition-transform duration-200 group-open:rotate-180"
+                        class="i-mdi:chevron-down !text-sm transition-transform duration-200 group-open:rotate-180"
                         aria-hidden="true"
                       ></span>
                       Abstract
@@ -176,6 +177,12 @@ const dialogId = `citation-dialog-${papers[0]?.id ?? "empty"}`;
 </div>
 
 <style>
+  .publication-control {
+    appearance: none;
+    border: 1px solid var(--glass-control-border);
+    background: var(--glass-control);
+  }
+
   .citation-dialog::backdrop {
     background: rgb(22 25 24 / 0.58);
   }
