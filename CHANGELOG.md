@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.8.0 - 2026-09-04
+
+### Features
+
+- Added compact publication actions and a citation dialog with BibTeX, APA 7,
+  Chicago, and Harvard formats.
+- Added an editorial Blog index, reusable post cards, cover imagery, and
+  reading-time metadata while retaining simple Markdown authoring.
+
+### Improvements
+
+- Expanded the active-project demonstration and aligned publications, courses,
+  projects, posts, and profile records around one entirely fictional identity.
+- Refined the About page hierarchy, responsive section navigation, content
+  guidance, and tolerance for existing partial records.
+- Improved light and dark interface contrast and kept publication controls
+  compact without competing with expanded abstracts.
+
 ## 0.7.0 - 2026-09-02
 
 ### Features

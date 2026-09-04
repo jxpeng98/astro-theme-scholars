@@ -178,7 +178,9 @@ export default siteConfig;
 ### 关于
 
 `src/data/about.yml` 使用一个结构化 YAML 文件管理个人信息、工作经历、教育经历、
-学术服务，以及奖项、演讲等自定义区块。
+学术服务，以及奖项、演讲等自定义区块。日常编辑无需修改 Astro 组件：删除某个顶层
+列表即可隐藏对应区块，列表中的顺序就是页面展示顺序。About 页的标题与简介仍在
+`site.config.ts` 中编辑；第一个自定义区块会在宽屏上与 Academic Service 并排展示。
 
 ### 项目与教学
 
@@ -265,7 +267,7 @@ pnpm build
 
 ## 模板更新
 
-项目使用 `v0.7.0` 这类 SemVer 标签发布版本。由于通过 GitHub 模板创建的仓库拥有
+项目使用 `v0.8.0` 这类 SemVer 标签发布版本。由于通过 GitHub 模板创建的仓库拥有
 独立的 Git 历史，模板更新会通过便于审查的 PR 交付。
 
 请先检查 `.template-version`。如果该文件不存在或版本低于 `0.6.0`，即使仓库已经
@@ -341,11 +343,11 @@ access token，并授予 `Contents: Read and write`、`Pull requests: Read and w
 robots 模板文件，同时保留个人内容：
 
 ```bash
-git switch -c chore/template-update-v0.7.0
+git switch -c chore/template-update-v0.8.0
 
 template_dir="$(mktemp -d)"
 template_dir="$(cd "$template_dir" && pwd -P)"
-git clone --depth 1 --branch v0.7.0 \
+git clone --depth 1 --branch v0.8.0 \
   https://github.com/jxpeng98/astro-theme-scholars.git \
   "$template_dir"
 
@@ -374,10 +376,10 @@ git diff
 
 ```bash
 pnpm verify
-node scripts/check-release.mjs --tag v0.7.0
+node scripts/check-release.mjs --tag v0.8.0
 git push origin main
-git tag -a v0.7.0 -m "v0.7.0"
-git push origin v0.7.0
+git tag -a v0.8.0 -m "v0.8.0"
+git push origin v0.8.0
 ```
 
 发布时请确保 `package.json`、`.template-version` 和 `CHANGELOG.md` 最新条目中的

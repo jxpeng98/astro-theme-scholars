@@ -190,7 +190,11 @@ section on the home page.
 ### About
 
 `src/data/about.yml` keeps profile facts, experience, education, service, and
-custom sections such as awards or talks in one structured YAML file.
+custom sections such as awards or talks in one structured YAML file. Routine
+editing does not require touching Astro components: remove a top-level list to
+hide it, and arrange entries in the order you want them displayed. The About
+page title and introduction remain in `site.config.ts`; the first custom section
+appears beside Service on wide screens.
 
 ### Projects and teaching
 
@@ -280,7 +284,7 @@ directory.
 
 ## Template updates
 
-Template releases use SemVer tags such as `v0.7.0`. Updates are delivered as
+Template releases use SemVer tags such as `v0.8.0`. Updates are delivered as
 reviewable pull requests because repositories created from a GitHub template
 have independent histories.
 
@@ -374,11 +378,11 @@ compatibility entry, and removes obsolete template-owned content and robots
 files without changing personal content:
 
 ```bash
-git switch -c chore/template-update-v0.7.0
+git switch -c chore/template-update-v0.8.0
 
 template_dir="$(mktemp -d)"
 template_dir="$(cd "$template_dir" && pwd -P)"
-git clone --depth 1 --branch v0.7.0 \
+git clone --depth 1 --branch v0.8.0 \
   https://github.com/jxpeng98/astro-theme-scholars.git \
   "$template_dir"
 
@@ -411,10 +415,10 @@ Template maintainers can validate and publish a release with:
 
 ```bash
 pnpm verify
-node scripts/check-release.mjs --tag v0.7.0
+node scripts/check-release.mjs --tag v0.8.0
 git push origin main
-git tag -a v0.7.0 -m "v0.7.0"
-git push origin v0.7.0
+git tag -a v0.8.0 -m "v0.8.0"
+git push origin v0.8.0
 ```
 
 Keep `package.json`, `.template-version`, and the latest `CHANGELOG.md` entry on
