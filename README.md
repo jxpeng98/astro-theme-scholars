@@ -2,49 +2,44 @@
 
 # Scholar Pages
 
-A refined Astro theme for academic portfolios, research profiles, and personal
-scholar websites.
+An Astro theme for academics who want a polished website without turning every
+content update into a frontend task.
 
-Scholar Pages keeps the site itself fast and focused while making the content
-easy to maintain. Profile details live in one TypeScript configuration file;
-publications stay in BibTeX, biography records in YAML, and projects, teaching,
-and posts in Markdown.
+Scholar Pages separates content from presentation: site-wide details live in one
+TypeScript configuration file, publications stay in BibTeX, biography records
+use YAML, and projects, courses, and posts are written in Markdown. The bundled
+Mira Latticewell profile is entirely fictional and exists only to demonstrate
+the theme.
 
 ![Scholar Pages desktop home page](./docs/screenshots/academic-home-desktop.png)
 
 ## Highlights
 
-- **Designed for academic work** — present publications, appointments,
-  teaching, projects, service, awards, and research notes in a consistent
-  editorial layout.
-- **Content-first workflow** — manage publications with BibTeX, structured
-  biography records with YAML, and long-form work with Markdown or MDX.
-- **Responsive and theme-aware** — polished desktop and mobile layouts with
-  light and dark modes.
-- **Useful research navigation** — filter publications, projects, and teaching
-  records without duplicating page navigation.
-- **Flexible home page** — enable or hide the hero, selected publications, and
-  latest posts without editing page templates.
-- **SEO-ready output** — canonical URLs, Open Graph metadata, JSON-LD, sitemap,
-  and generated `robots.txt` are included.
-- **Built for long-term use** — downstream sites can receive versioned template
-  updates while preserving personal content.
+- **A complete academic structure** — publish a profile, appointments,
+  publications, projects, teaching, service, awards, and research notes.
+- **Straightforward editing** — keep publication data in BibTeX, profile records
+  in YAML, and longer writing in Markdown or MDX.
+- **Better publication tools** — filter records, expand abstracts in place, and
+  copy BibTeX, APA 7, Chicago, or Harvard citations from one compact dialog.
+- **A distinct editorial blog** — feature one post, add optional cover images,
+  show reading time automatically, and keep the archive visually separate from
+  the portfolio grids.
+- **A configurable home page** — show or hide the profile hero, featured
+  initiatives, selected publications, and recent posts from `site.config.ts`.
+- **Responsive by default** — desktop and mobile layouts include light and dark
+  modes, keyboard focus states, and accessible native controls.
+- **Ready to publish and maintain** — canonical URLs, Open Graph metadata,
+  JSON-LD, sitemap, `robots.txt`, and versioned template updates are included.
 
 ## More previews
 
-### Publications and filters
+### Editorial blog
+
+![Scholar Pages editorial blog](./docs/screenshots/blog-editorial-desktop.png)
+
+### Publications, abstracts, and citations
 
 ![Scholar Pages publications page](./docs/screenshots/publications-unified-desktop.jpg)
-
-### Mobile dark mode
-
-<p align="center">
-  <img
-    src="./docs/screenshots/academic-home-mobile-dark.png"
-    alt="Scholar Pages mobile home page in dark mode"
-    width="320"
-  />
-</p>
 
 ## Quick start
 
@@ -76,15 +71,17 @@ pnpm install
 pnpm dev
 ```
 
-Before publishing, replace the sample identity, links, and content. A useful
-order is:
+The included identity, institutions, publications, projects, courses, and posts
+are fictional. Replace them before publishing your own site. The quickest order
+is:
 
 1. Update `author`, `siteUrl`, and `hero` in `site.config.ts`.
 2. Replace `public/profile.svg` with your portrait or update `hero.profileImage`.
 3. Add your publications to `src/data/publications.bib`.
-4. Edit `src/data/about.yml`, then replace the project and teaching entries in
-   `src/content/`.
-5. Replace or remove the sample posts in `src/content/posts/`.
+4. Edit the profile records in `src/data/about.yml`.
+5. Replace the project, teaching, and post entries in `src/content/`.
+6. Replace the matching cover images in `src/assets/`, or remove their image
+   fields.
 
 Run `pnpm verify` when you are ready to deploy.
 
@@ -98,14 +95,15 @@ Run `pnpm verify` when you are ready to deploy.
 | Research and software projects | `src/content/projects/*.md` |
 | Current and past teaching | `src/content/teaching/*.md` |
 | Blog posts and research notes | `src/content/posts/*.{md,mdx}` |
-| Profile image and other static assets | `public/` |
+| Profile image, favicon, and other public files | `public/` |
+| Project, teaching, and post cover images | `src/assets/` |
 | Colors, typography, icons, and reusable style tokens | `uno.config.ts` |
 
 ## Site configuration
 
-`site.config.ts` is the main entry point for routine personalization.
-`defineSiteConfig` fills in sensible defaults for navigation, page titles,
-footer copy, image dimensions, and home-page section labels.
+Most site-wide changes begin in `site.config.ts`. You provide the identity and
+the details you care about; `defineSiteConfig` supplies stable defaults for
+navigation, page titles, footer copy, image dimensions, and home-page labels.
 
 ```ts
 import { defineSiteConfig } from "./src/config/site";
@@ -145,6 +143,10 @@ export const siteConfig = defineSiteConfig({
   ],
   homeBlocks: {
     hero: { enabled: true },
+    showcase: {
+      enabled: true,
+      title: "Featured Initiatives",
+    },
     publications: { enabled: true },
     posts: { enabled: true },
   },
@@ -161,19 +163,20 @@ deploying.
 
 ### Publications
 
-Add publications to `src/data/publications.bib`. Standard BibTeX fields are
-supported, plus a `public` field used to group records on the research page.
+Add publications to `src/data/publications.bib`. The theme reads standard
+BibTeX fields and uses the extra `public` field to group records on the Research
+page.
 
 ```bibtex
-@inproceedings{key2026paper,
-  title = {Your Paper Title},
-  author = {Last, First and Other, Author},
-  booktitle = {Conference Name},
+@inproceedings{latticewell2026signalatlas,
+  title = {Signal Atlas for an Imaginary Archive},
+  author = {Latticewell, Mira},
+  booktitle = {Proceedings of the Fictional Systems Forum},
   year = {2026},
-  url = {https://doi.org/...},
-  abstract = {A short abstract.},
+  url = {https://example.com/signal-atlas},
+  abstract = {A fictional paper used to demonstrate citation metadata.},
   public = {yes},
-  keywords = {keyword1, keyword2}
+  keywords = {fictional archives, demo data}
 }
 ```
 
@@ -185,25 +188,28 @@ supported, plus a `public` field used to group records on the research page.
 | Any other value or omitted | Other |
 
 Entries marked `public = {yes}` are eligible for the selected-publications
-section on the home page.
+section on the home page. When an entry includes an `abstract`, readers can
+expand it without leaving the list. The Cite action prepares BibTeX, APA 7,
+Chicago, and Harvard versions from the same record. Add a `url` to link the
+title and show the compact PDF action.
 
 ### About
 
-`src/data/about.yml` keeps profile facts, experience, education, service, and
-custom sections such as awards or talks in one structured YAML file. Routine
-editing does not require touching Astro components: remove a top-level list to
-hide it, and arrange entries in the order you want them displayed. The About
-page title and introduction remain in `site.config.ts`; the first custom section
-appears beside Service on wide screens.
+`src/data/about.yml` holds profile facts, experience, education, service, and
+custom sections such as awards or talks. Reorder the entries to change their
+display order; remove a top-level list, or set it to `[]`, to hide that block.
+Empty optional records are ignored, so routine edits do not require changes to
+the Astro page. Keep the page title and introduction in `site.config.ts`. On
+wide screens, the first custom section sits beside Service.
 
 ### Projects and teaching
 
-Projects and courses are Markdown content entries with validated YAML
-frontmatter. Store one record per file in `src/content/projects/` or
-`src/content/teaching/`; its filename becomes the internal detail-page URL.
-External resources remain in the `links` frontmatter field. See the complete
-[content authoring guide](./docs/content-authoring.md) for fields, examples,
-images, internal links, and migration guidance.
+Each project or course is a Markdown file with validated YAML frontmatter. Put
+one record in each file under `src/content/projects/` or
+`src/content/teaching/`; the filename becomes its detail-page URL. Add external
+resources through the `links` field. The full
+[content authoring guide](./docs/content-authoring.md) covers every field,
+images, internal links, and migration from the earlier YAML format.
 
 ### Posts
 
@@ -215,6 +221,9 @@ title: "Post title"
 description: "A short summary."
 publishedAt: 2026-01-15
 updatedAt: 2026-02-03
+featured: true
+heroImage: ../../assets/posts/post-cover.jpg
+heroImageAlt: "Describe the cover image"
 tags:
   - methods
   - open-science
@@ -222,21 +231,24 @@ draft: false
 ---
 ```
 
-Set `draft: true` to keep a post out of the generated site.
+Set `draft: true` to keep a post out of the generated site. The newest post with
+`featured: true` becomes the lead story; if none is featured, the newest
+published post is used. Reading time is calculated from the Markdown body. A
+`heroImageAlt` value is required whenever `heroImage` is present.
 
 ## Included pages
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Profile, research interests, selected publications, and latest posts |
+| `/` | Profile, featured initiatives, selected publications, and recent posts |
 | `/about` | Profile facts, experience, education, service, and custom sections |
 | `/researches` | Filterable publications grouped by research status |
 | `/teaching` | Current and past teaching grouped by term |
 | `/teaching/[slug]` | Individual course details and external resources |
 | `/projects` | Active and past projects with metadata and links |
 | `/projects/[slug]` | Individual project details and external resources |
-| `/posts` | Posts grouped by year |
-| `/posts/[slug]` | Individual Markdown or MDX post |
+| `/posts` | Featured story and editorial post archive |
+| `/posts/[slug]` | Individual article with reading metadata and sharing links |
 
 ## Project structure
 
@@ -246,7 +258,8 @@ Set `draft: true` to keep a post out of the generated site.
 ├── docs/screenshots/         # README previews
 ├── site.config.ts            # Main site configuration
 ├── src/
-│   ├── components/           # Shared page and filter components
+│   ├── assets/               # Optimized project, teaching, and post images
+│   ├── components/           # Shared page, card, and filter components
 │   ├── config/               # Configuration defaults
 │   ├── content/              # Project, teaching, and post entries
 │   ├── data/                 # BibTeX publications and YAML biography data
@@ -271,43 +284,43 @@ Set `draft: true` to keep a post out of the generated site.
 
 ## Deployment
 
-Scholar Pages builds to a static `dist/` directory:
+Run the full verification before deploying. It runs the tests and type checks,
+then creates the static site in `dist/`:
 
 ```bash
 pnpm verify
-pnpm build
 ```
 
 Deploy `dist/` to any static host, including Cloudflare Pages, Vercel, Netlify,
-or GitHub Pages. Use `pnpm build` as the build command and `dist` as the output
-directory.
+or GitHub Pages. In a hosting dashboard, set the build command to `pnpm build`
+and the output directory to `dist`.
 
 ## Template updates
 
-Template releases use SemVer tags such as `v0.8.0`. Updates are delivered as
-reviewable pull requests because repositories created from a GitHub template
-have independent histories.
+Template releases use SemVer tags such as `v0.8.0`. A site created from the
+GitHub template has its own history, so updates arrive as pull requests that you
+can review instead of direct merges from this repository.
 
 Check `.template-version` first. If the file is missing or reports a version
 older than `0.6.0`, use the one-time migration below even if the repository
 already contains an update workflow.
 
-Sites on `v0.6.x` should first copy the `v0.7.0`
-`.github/workflows/template-update.yml` into their default branch. This is a
-one-time bootstrap: the older updater cannot update workflow files with its
-default GitHub token. From `v0.7.0` onward, the updater executes the migration
-logic shipped by the target release, so future data migrations do not require
-another workflow replacement.
+Sites on `v0.6.x` must first copy
+`.github/workflows/template-update.yml` from `v0.7.0` into their default branch.
+This one-time bootstrap is necessary because the older updater cannot replace
+workflow files with its default GitHub token. From `v0.7.0` onward, the updater
+runs the migration logic included in the target release, so later data
+migrations do not require another workflow replacement.
 
 ### Sites on v0.6.0 or newer
 
-These sites contain all three update files:
+Automated updates require these three files:
 
 - `.github/workflows/template-update.yml`
 - `.template-sync.json`
 - `.template-version`
 
-To update one of these sites:
+To apply a template update:
 
 1. Open **Settings → Actions → General → Workflow permissions** and enable
    **Allow GitHub Actions to create and approve pull requests**. This setting
@@ -315,19 +328,20 @@ To update one of these sites:
    [workflow permissions documentation](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#preventing-github-actions-from-creating-or-approving-pull-requests).
 2. Open **Actions → Template Update → Run workflow**. The same workflow also
    checks for releases every Monday.
-3. Review the generated `chore/template-update-X.Y.Z` pull request and merge it
-   when the changes are correct. The updater installs dependencies and runs the
-   full verification suite before opening or updating the pull request.
+3. Review the generated `chore/template-update-X.Y.Z` pull request. The updater
+   installs dependencies and runs the full verification suite before it opens or
+   updates the pull request; merge only after the diff also looks right for your
+   site.
 
 Do not change `.template-version` to the target version before running the
 workflow; that would mark the site as already updated.
 
-The paths listed under `protected` in `.template-sync.json` are left untouched.
-By default this includes site configuration, YAML and BibTeX data, content
-entries, project and teaching images, profile images, the favicon, and
-environment files. Other template-owned files are replaced by the released
-versions. Review the complete pull request before merging, especially if the
-site contains custom template code.
+The updater leaves every path listed under `protected` in `.template-sync.json`
+untouched. The default list covers site configuration, YAML and BibTeX data,
+content entries, project and teaching images, profile images, the favicon, and
+environment files. Released versions replace the remaining template-owned
+files. Review the complete pull request before merging, especially if you have
+edited template code.
 
 When updating to `v0.7.0`, the updater detects the retired
 `src/data/projects.yml` and `src/data/teaching.yml` files before syncing. It
@@ -339,22 +353,19 @@ deleted.
 
 #### Push rejected while updating workflow files
 
-The repository `GITHUB_TOKEN` is a GitHub App installation token. GitHub
-requires a separate `Workflows` repository permission when a push creates or
-changes files under `.github/workflows`, so enabling pull-request creation alone
-does not grant that access.
+The repository's `GITHUB_TOKEN` is a GitHub App installation token. GitHub
+requires a separate `Workflows` permission when a push creates or changes files
+under `.github/workflows`; permission to create pull requests is not enough.
 
-The template updater therefore excludes `.github/workflows/**` automatically
-when `TEMPLATE_UPDATE_TOKEN` is not configured. New repositories created from
-this template can update all other template-owned files with the default token
-without hitting the workflow-permission rejection. Apply workflow changes
-manually after reviewing them.
+Without `TEMPLATE_UPDATE_TOKEN`, the updater therefore excludes
+`.github/workflows/**` automatically. The default token can still update every
+other template-owned file. Review and apply workflow changes manually.
 
-To let the updater include workflow files, create a fine-grained personal access
-token limited to this repository with `Contents: Read and write`, `Pull
-requests: Read and write`, and `Workflows: Write`. Save it as the repository
-Actions secret `TEMPLATE_UPDATE_TOKEN`; never put the token value in the
-workflow file. The updater detects this secret automatically.
+To include workflow files, create a fine-grained personal access token limited
+to this repository with `Contents: Read and write`, `Pull requests: Read and
+write`, and `Workflows: Write`. Save it as the Actions secret
+`TEMPLATE_UPDATE_TOKEN`; never write the token itself into a workflow file. The
+updater detects the secret automatically.
 
 Sites whose installed updater predates `v0.7.0` need the one-time workflow
 bootstrap described above, then can rerun **Template Update**. Alternatively, add
@@ -371,11 +382,11 @@ and the GitHub App
 
 ### Sites older than v0.6.0
 
-Start from a clean working tree and run this one-time migration from the old
-site's repository root in a Bash-compatible shell. The current sync script
-moves the legacy personal configuration to `site.config.ts`, installs the new
-compatibility entry, and removes obsolete template-owned content and robots
-files without changing personal content:
+Start with a clean working tree, then run this one-time migration from the old
+site's repository root in a Bash-compatible shell. The sync script moves the
+legacy personal configuration to `site.config.ts`, installs the compatibility
+entry, and removes obsolete template-owned content and robots files without
+changing personal content:
 
 ```bash
 git switch -c chore/template-update-v0.8.0
@@ -398,12 +409,11 @@ git status --short
 git diff
 ```
 
-Review and commit the migration on this branch, then open a pull request. The
-migration installs the automatic update files, so future releases can use the
-workflow above. If the script reports an unsupported legacy configuration,
-migrate that customized file manually instead of forcing the sync. Restore any
-additional user-owned files that are not covered by the default protected paths
-before committing.
+Review and commit the migration on this branch, then open a pull request. It also
+installs the automatic update files, so later releases can use the workflow
+above. If the script reports an unsupported legacy configuration, migrate that
+customized file by hand instead of forcing the sync. Before committing, restore
+any additional user-owned files that fall outside the default protected paths.
 
 Avoid merging the template repository directly with
 `--allow-unrelated-histories`; GitHub documents that
@@ -427,8 +437,8 @@ GitHub Release automatically.
 
 ## Contributing
 
-Issues and pull requests are welcome. For significant changes, open an issue
-first so the intended behavior and scope can be discussed.
+Issues and pull requests are welcome. For a substantial change, open an issue
+first so we can agree on the intended behavior and scope.
 
 ## License
 
