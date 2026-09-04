@@ -89,6 +89,7 @@ export interface SiteConfig {
 	// --- Home Page Blocks ---
 	homeBlocks: {
 		hero: { enabled: boolean };
+		showcase: { enabled: boolean; title?: string; description?: string };
 		publications: { enabled: boolean; title: string; description?: string };
 		posts: { enabled: boolean; title: string; description?: string };
 	};

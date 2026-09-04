@@ -1,0 +1,97 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getReadingTimeMinutes } from "../lib/reading-time";
+
+interface Props {
+  post: CollectionEntry<"posts">;
+  variant?: "featured" | "compact";
+  eager?: boolean;
+}
+
+const { post, variant = "compact", eager = false } = Astro.props;
+const featured = variant === "featured";
+const heroImage = post.data.heroImage;
+const tags = (post.data.tags ?? []).slice(0, featured ? 3 : 2);
+const publishedAt = post.data.publishedAt.toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+});
+---
+
+<a
+  href={`/posts/${post.id}`}
+  class="group block h-full rounded-xl no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-ink-950"
+  aria-label={`Read ${post.data.title}`}
+>
+  <article
+    class:list={[
+      "h-full overflow-hidden rounded-xl border bg-white/70 shadow-paper transition duration-200 group-hover:-translate-y-0.5 group-hover:border-accent-400 group-hover:shadow-paper-lg dark:bg-ink-900/65 dark:group-hover:border-accent-600",
+      featured
+        ? "grid border-accent-200/90 dark:border-accent-800/80 md:grid-cols-[minmax(0,1.15fr)_minmax(15rem,0.85fr)]"
+        : "flex flex-col border-paper-300/90 dark:border-ink-700/80",
+    ]}
+  >
+    {heroImage && (
+      <div
+        class:list={[
+          "overflow-hidden bg-paper-100 dark:bg-ink-800",
+          featured ? "aspect-[16/10] md:order-2 md:aspect-auto" : "aspect-[16/9]",
+        ]}
+      >
+        <img
+          src={heroImage.src}
+          alt={post.data.heroImageAlt || post.data.title}
+          width={heroImage.width}
+          height={heroImage.height}
+          loading={eager ? "eager" : "lazy"}
+          fetchpriority={eager ? "high" : "auto"}
+          decoding="async"
+          class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.025]"
+        />
+      </div>
+    )}
+
+    <div class:list={["flex min-w-0 flex-1 flex-col", featured ? "p-6 sm:p-7" : "p-5 sm:p-6"]}>
+      <div class="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-xs text-ink-500 dark:text-paper-400">
+        {featured && (
+          <span class="font-semibold uppercase tracking-[0.12em] text-accent-700 dark:text-accent-300">
+            Featured note
+          </span>
+        )}
+        {featured && <span aria-hidden="true">/</span>}
+        <time datetime={post.data.publishedAt.toISOString()} class="tabular-nums">
+          {publishedAt}
+        </time>
+        <span aria-hidden="true">/</span>
+        <span>{getReadingTimeMinutes(post.body ?? "")} min read</span>
+      </div>
+
+      <div class:list={["space-y-2", featured ? "mt-5" : "mt-4"]}>
+        <h3
+          class:list={[
+            "font-heading font-semibold leading-[1.15] tracking-[-0.015em] text-ink-950 transition-colors group-hover:text-accent-700 dark:text-paper-50 dark:group-hover:text-accent-300",
+            featured ? "text-[1.9rem] sm:text-[2.25rem]" : "text-[1.35rem]",
+          ]}
+        >
+          {post.data.title}
+        </h3>
+        {post.data.description && (
+          <p class:list={["text-ink-600 dark:text-paper-300", featured ? "text-base leading-7" : "line-clamp-3 text-sm leading-6"]}>
+            {post.data.description}
+          </p>
+        )}
+      </div>
+
+      <div class="mt-auto flex flex-wrap items-end justify-between gap-4 pt-6">
+        <ul class="m-0 flex list-none flex-wrap gap-1.5 p-0" aria-label="Topics">
+          {tags.map((tag) => <li class="scholarly-pill">{tag}</li>)}
+        </ul>
+        <span class="action-link min-h-0 shrink-0 px-0 text-xs">
+          Read note
+          <span class="i-ph-arrow-right text-sm transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true"></span>
+        </span>
+      </div>
+    </div>
+  </article>
+</a>

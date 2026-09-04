@@ -54,24 +54,26 @@ const aboutNavItems = [
 
     <PageJumpNav items={aboutNavItems} />
 
-    <div class="space-y-7 sm:space-y-8">
+    <div class="space-y-10 sm:space-y-12">
       <!-- Profile Section -->
       {
         profile.length > 0 && (
           <section id="profile" class="content-section scroll-mt-20 space-y-4">
-            <header class="border-b border-gray-200 pb-3 dark:border-gray-700">
+            <header class="border-b border-paper-300/90 pb-3 dark:border-ink-700">
               <h2 class="section-heading">Profile</h2>
             </header>
-			<dl class="grid border-y border-gray-200 dark:border-gray-700 md:grid-cols-3 md:divide-x md:divide-gray-200 md:dark:divide-gray-700">
+            <dl class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {profile.map((item) => (
-				<div class="border-b border-gray-200 py-4 last:border-b-0 dark:border-gray-700 md:border-b-0 md:px-5 md:first:pl-0 md:last:pr-0">
-				  <dt class="entry-meta font-semibold">{item.label}</dt>
-				  <dd class="entry-title mt-2 text-[1.125rem]">
+                <div class="surface-card p-4 sm:p-5">
+                  <dt class="font-mono text-xs uppercase tracking-wider text-ink-500 dark:text-paper-400 font-medium">
+                    {item.label}
+                  </dt>
+                  <dd class="entry-title mt-2 text-base sm:text-lg text-ink-950 dark:text-paper-50">
                     {item.value}
-				  </dd>
+                  </dd>
                 </div>
               ))}
-			</dl>
+            </dl>
           </section>
         )
       }
@@ -80,20 +82,21 @@ const aboutNavItems = [
       {
         education.length > 0 && (
           <section id="education" class="content-section scroll-mt-20 space-y-4">
-            <header class="border-b border-gray-200 pb-3 dark:border-gray-700">
+            <header class="border-b border-paper-300/90 pb-3 dark:border-ink-700">
               <h2 class="section-heading">Education</h2>
             </header>
-            <div class="divide-y divide-gray-200 border-y border-gray-200 dark:divide-gray-700 dark:border-gray-700">
+            <div class="relative pl-6 sm:pl-8 border-l-2 border-paper-300 dark:border-ink-700 space-y-6 ml-3 my-4">
               {education.map((edu) => (
-                <article class="grid gap-2 py-4 md:grid-cols-[9rem_minmax(0,1fr)] md:gap-6">
-				  <p class="entry-index">
-                    {edu.year}
-                  </p>
+                <article class="relative group">
+                  <span class="absolute -left-[31px] sm:-left-[39px] top-1.5 h-3 w-3 rounded-full border-2 border-accent-600 bg-paper-50 dark:bg-ink-950 dark:border-accent-400" aria-hidden="true"></span>
                   <div class="space-y-1">
-					<h3 class="entry-title">
+                    <p class="font-mono text-xs font-semibold tabular-nums text-accent-700 dark:text-accent-300">
+                      {edu.year}
+                    </p>
+                    <h3 class="entry-title text-lg">
                       {edu.degree}
                     </h3>
-					<p class="entry-supporting">
+                    <p class="entry-supporting text-sm">
                       {edu.institution}
                     </p>
                   </div>
@@ -108,32 +111,35 @@ const aboutNavItems = [
       {
         experience.length > 0 && (
           <section id="experience" class="content-section scroll-mt-20 space-y-4">
-            <header class="border-b border-gray-200 pb-3 dark:border-gray-700">
+            <header class="border-b border-paper-300/90 pb-3 dark:border-ink-700">
               <h2 class="section-heading">Experience</h2>
             </header>
-            <div class="divide-y divide-gray-200 border-y border-gray-200 dark:divide-gray-700 dark:border-gray-700">
+            <div class="relative pl-6 sm:pl-8 border-l-2 border-paper-300 dark:border-ink-700 space-y-8 ml-3 my-4">
               {experience.map((exp) => (
-                <article class="grid gap-3 py-5 md:grid-cols-[9rem_minmax(0,1fr)] md:gap-6">
-				  <p class="entry-index">
-                    {exp.period}
-                  </p>
-                  <div class="space-y-3">
-                    <div class="space-y-1">
-					  <h3 class="entry-title">
+                <article class="relative group">
+                  <span class="absolute -left-[31px] sm:-left-[39px] top-1.5 h-3 w-3 rounded-full border-2 border-accent-600 bg-paper-50 dark:bg-ink-950 dark:border-accent-400" aria-hidden="true"></span>
+                  <div class="space-y-2">
+                    <p class="font-mono text-xs font-semibold tabular-nums text-accent-700 dark:text-accent-300">
+                      {exp.period}
+                    </p>
+                    <div class="space-y-0.5">
+                      <h3 class="entry-title text-lg">
                         {exp.role}
                       </h3>
-					  <p class="entry-supporting font-semibold">
+                      <p class="entry-supporting font-medium text-ink-800 dark:text-paper-200">
                         {exp.organization}
                       </p>
                     </div>
 
-                    <ul class="list-disc space-y-2 pl-5 marker:text-accent-500 dark:marker:text-accent-400">
-                      {(exp.bullets || []).map((bullet) => (
-                        <li class="body-copy pl-1">
-                          {bullet}
-                        </li>
-                      ))}
-                    </ul>
+                    {exp.bullets && exp.bullets.length > 0 && (
+                      <ul class="list-disc space-y-1.5 pl-5 pt-1 marker:text-accent-500 dark:marker:text-accent-400">
+                        {exp.bullets.map((bullet) => (
+                          <li class="body-copy text-sm pl-1 leading-relaxed">
+                            {bullet}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 </article>
               ))}
@@ -146,26 +152,26 @@ const aboutNavItems = [
       {
         service.length > 0 && (
           <section id="service" class="content-section scroll-mt-20 space-y-4">
-            <header class="border-b border-gray-200 pb-3 dark:border-gray-700">
+            <header class="border-b border-paper-300/90 pb-3 dark:border-ink-700">
               <h2 class="section-heading">Academic Service</h2>
             </header>
-			<div class="grid gap-x-8 border-y border-gray-200 dark:border-gray-700 md:grid-cols-2">
+            <div class="grid gap-4 sm:grid-cols-2">
               {service.map((item) => {
                 if (typeof item === "string") {
                   return (
-					<article class="border-b border-gray-200 py-4 dark:border-gray-700">
-					  <p class="body-copy">{item}</p>
+                    <article class="surface-card p-4">
+                      <p class="body-copy text-sm">{item}</p>
                     </article>
                   );
                 }
                 return (
-				  <article class="space-y-2 border-b border-gray-200 py-4 dark:border-gray-700">
-					<p class="entry-meta font-semibold text-accent-700 dark:text-accent-300">{item.period}</p>
+                  <article class="surface-card space-y-2 p-4 sm:p-5">
+                    <p class="font-mono text-xs font-semibold text-accent-700 dark:text-accent-300 tabular-nums">{item.period}</p>
                     <div class="space-y-1">
-                      <h3 class="font-heading text-lg font-semibold text-gray-950 dark:text-gray-50">
+                      <h3 class="font-heading text-base font-semibold text-ink-950 dark:text-paper-50">
                         {item.role}
                       </h3>
-                      <p class="body-copy">
+                      <p class="body-copy text-sm text-ink-600 dark:text-paper-400">
                         {item.organization}
                       </p>
                     </div>
@@ -181,7 +187,7 @@ const aboutNavItems = [
       {
         customSections.map((section) => (
           <section id={section.id} class="content-section scroll-mt-20 space-y-4">
-            <header class="border-b border-gray-200 pb-3 dark:border-gray-700">
+            <header class="border-b border-paper-300/90 pb-3 dark:border-ink-700">
               <h2 class="section-heading flex items-center gap-2">
                 {section.icon && (
                   <span class={`${section.icon} text-accent-600 dark:text-accent-300`} aria-hidden="true"></span>
@@ -189,7 +195,7 @@ const aboutNavItems = [
                 <span>{section.title}</span>
               </h2>
             </header>
-            <div class="space-y-3">
+            <div class="space-y-4">
               {(section.items || []).map((item) => {
                 if (typeof item === "string") {
                   return (
@@ -260,7 +266,7 @@ const aboutNavItems = [
                       )}
                     </div>
                     {item.date && (
-                      <p class="entry-meta tabular-nums">
+                      <p class="entry-meta tabular-nums font-mono text-xs text-ink-500 dark:text-paper-400">
                         {item.date}
                       </p>
                     )}

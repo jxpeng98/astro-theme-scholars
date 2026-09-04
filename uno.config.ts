@@ -60,6 +60,14 @@ iconSafelist.push(
 	'i-mdi:update',
 	'i-mdi:twitter',
 	'i-mdi:linkedin',
+	'i-mdi:content-copy',
+	'i-mdi:check',
+	'i-mdi:star',
+	'i-mdi:calendar-clock',
+	'i-mdi:chevron-down',
+	'i-mdi:file-pdf-box',
+	'i-ph-arrow-down',
+	'i-ph-arrow-right',
 );
 
 export default defineConfig({
@@ -125,11 +133,19 @@ export default defineConfig({
 
 		// Surfaces and metadata
 		'surface-card':
-			'rounded-lg border border-paper-300/90 bg-white/64 p-4 dark:border-ink-700 dark:bg-ink-900/68 sm:p-5',
+			'rounded-xl border border-paper-300/90 bg-white/70 p-5 shadow-paper transition-all duration-200 dark:border-ink-700/80 dark:bg-ink-900/65 sm:p-6',
 		'surface-card-hover':
-			'surface-card transition-[background-color,border-color] duration-150 hover:border-accent-300 hover:bg-white/88 focus-within:border-accent-400 dark:hover:border-accent-700 dark:hover:bg-ink-900',
+			'surface-card hover:-translate-y-0.5 hover:shadow-paper-lg hover:border-accent-400 focus-within:border-accent-400 dark:hover:border-accent-600 dark:hover:bg-ink-900',
+		'bento-card-hero':
+			'relative overflow-hidden rounded-2xl border border-accent-200/80 bg-gradient-to-br from-accent-50/50 via-white/85 to-paper-50/70 p-6 shadow-paper transition-all duration-200 hover:-translate-y-0.5 hover:shadow-paper-lg hover:border-accent-400 dark:border-accent-800/70 dark:from-accent-900/25 dark:via-ink-900/75 dark:to-ink-900/50 dark:hover:border-accent-500 sm:p-7',
 		'meta-chip':
-			'inline-flex min-h-7 items-center gap-1.5 rounded-md border border-paper-300 bg-paper-100/85 px-2.5 py-1 font-sans text-xs font-bold leading-none text-ink-600 dark:border-ink-700 dark:bg-ink-800 dark:text-paper-300',
+			'inline-flex min-h-7 items-center gap-1.5 rounded-md border border-paper-300 bg-paper-100/90 px-2.5 py-1 font-sans text-xs font-semibold leading-none text-ink-700 dark:border-ink-700 dark:bg-ink-800 dark:text-paper-300',
+		'scholarly-pill':
+			'inline-flex min-h-6 items-center gap-1 rounded border border-paper-300/80 bg-paper-100/60 px-2 py-0.5 font-mono text-[11px] font-medium text-ink-600 dark:border-ink-700/80 dark:bg-ink-800/50 dark:text-paper-300',
+		'chip-status-active':
+			'inline-flex min-h-7 items-center gap-1.5 rounded-md border border-emerald-300/50 bg-emerald-50/85 px-2.5 py-1 text-xs font-semibold text-emerald-800 dark:border-emerald-800/50 dark:bg-emerald-950/40 dark:text-emerald-300',
+		'chip-status-past':
+			'inline-flex min-h-7 items-center gap-1.5 rounded-md border border-paper-300 bg-paper-100/75 px-2.5 py-1 text-xs font-semibold text-ink-600 dark:border-ink-700 dark:bg-ink-800/60 dark:text-paper-400',
 
 		// Actions
 		'action-link':

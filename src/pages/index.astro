@@ -1,13 +1,24 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import PostCard from "../components/PostCard.astro";
+import PublicationList from "../components/PublicationList.astro";
 import { getCollection } from "astro:content";
 import { getFeaturedPapers } from "../lib/papers";
 import siteConfig from "../side.config";
 import { Image } from "astro:assets";
 
 const showHero = siteConfig.homeBlocks.hero.enabled;
+const showShowcase = siteConfig.homeBlocks.showcase?.enabled ?? true;
 const showPublications = siteConfig.homeBlocks.publications.enabled;
 const showPosts = siteConfig.homeBlocks.posts.enabled;
+
+const allProjects = showShowcase
+  ? (await getCollection("projects", ({ data }) => !data.draft)).sort(
+      (a, b) => a.data.order - b.data.order,
+    )
+  : [];
+const featuredProject = allProjects.find((p) => p.data.featured) || allProjects[0];
+const secondaryProject = allProjects.find((p) => p.id !== featuredProject?.id);
 
 const recentPosts = showPosts
   ? (await getCollection("posts"))
@@ -19,6 +30,8 @@ const recentPosts = showPosts
       )
       .slice(0, 3)
   : [];
+const primaryPost = recentPosts.find((post) => post.data.featured) ?? recentPosts[0];
+const secondaryPosts = recentPosts.filter((post) => post.id !== primaryPost?.id);
 
 const selectedPapers = showPublications ? getFeaturedPapers(3) : [];
 
@@ -54,12 +67,12 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
   description={siteConfig.hero.subheadline}
   schemaType="ProfilePage"
 >
-  <div class="space-y-10 pb-2 sm:space-y-14 sm:pb-4">
+  <div class="space-y-12 pb-2 sm:space-y-16 sm:pb-4">
     {showHero && (
       <section class="relative border-b border-paper-300/90 pb-9 pt-3 dark:border-ink-700 sm:pb-12 sm:pt-6">
       <div class="relative grid gap-6 lg:grid-cols-[minmax(0,1fr)_13rem] lg:items-start lg:gap-x-14">
         <div class="min-w-0 lg:col-start-1 lg:row-start-1">
-          <h1 class="max-w-4xl font-heading text-[clamp(2.5rem,6vw,4.5rem)] font-semibold leading-[1] tracking-[-0.035em] text-gray-900 dark:text-gray-50">
+          <h1 class="max-w-4xl font-heading text-[clamp(2.5rem,6vw,4.5rem)] font-semibold leading-[1] tracking-[-0.035em] text-ink-950 dark:text-paper-50">
             {about.name}
           </h1>
 
@@ -67,7 +80,7 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
             <div class="mt-4">
               <div class="space-y-1">
                 {affiliations.map((aff) => (
-                  <p class="text-base leading-7 text-gray-600 dark:text-gray-300">
+                  <p class="text-base leading-7 text-ink-600 dark:text-paper-300">
                     {aff.role}
                     {aff.department && <span>, {aff.department}</span>}
                     {aff.url ? (
@@ -90,7 +103,7 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
         </div>
 
         <aside class="flex w-full items-center gap-4 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:block" aria-label="Profile">
-          <div class="relative w-20 shrink-0 overflow-hidden rounded-lg border border-paper-300 bg-white/64 p-1 dark:border-ink-700 dark:bg-ink-900/68 sm:w-24 lg:w-full lg:p-1.5">
+          <div class="relative w-20 shrink-0 overflow-hidden rounded-xl border border-paper-300/90 bg-white/70 p-1.5 shadow-paper dark:border-ink-700 dark:bg-ink-900/70 sm:w-24 lg:w-full lg:p-2">
             <Image
               src={about.avatar}
               alt={profileAlt}
@@ -99,18 +112,19 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
               layout="constrained"
               fit="cover"
               priority
-              class="aspect-square h-auto w-full rounded-md object-cover"
+              class="aspect-square h-auto w-full rounded-lg object-cover"
             />
           </div>
           {statusBadge && (
-            <p class="text-left text-sm font-semibold text-accent-700 dark:text-accent-300 lg:mt-4">
-              {statusBadge}
-            </p>
+            <div class="inline-flex items-center gap-1.5 rounded-md border border-accent-300/40 bg-accent-50/70 px-2.5 py-1 text-xs font-semibold text-accent-800 dark:border-accent-700/50 dark:bg-accent-950/40 dark:text-accent-200 lg:mt-4">
+              <span class="h-1.5 w-1.5 rounded-full bg-accent-500 animate-pulse" aria-hidden="true" />
+              <span>{statusBadge}</span>
+            </div>
           )}
         </aside>
 
         <div class="min-w-0 lg:col-start-1 lg:row-start-2">
-          <p class="max-w-[38rem] font-heading text-[1.5rem] font-medium leading-[1.25] tracking-[-0.015em] text-gray-900 dark:text-gray-100 sm:text-[1.75rem]">
+          <p class="max-w-[38rem] font-heading text-[1.5rem] font-medium leading-[1.25] tracking-[-0.015em] text-ink-900 dark:text-paper-100 sm:text-[1.75rem]">
             {headline}
           </p>
 
@@ -138,33 +152,155 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
             })}
           </div>
 
-		  <p class="mt-5 max-w-[65ch] text-[1.0625rem] leading-7 text-gray-700 dark:text-gray-200">
+		  <p class="mt-5 max-w-[65ch] text-[1.0625rem] leading-7 text-ink-700 dark:text-paper-300">
 			{about.bio}
 		  </p>
 
           {researchInterests.length > 0 && (
-            <ul class="mt-6 flex list-none flex-wrap gap-x-5 gap-y-2 border-t border-gray-200 pt-4 dark:border-gray-700" aria-label="Research interests">
-              {researchInterests.map((interest) => (
-                <li class="text-sm font-semibold text-gray-600 dark:text-gray-300">
-                  {interest}
-                </li>
-              ))}
-            </ul>
+            <div class="mt-6 border-t border-paper-300/80 pt-4 dark:border-ink-700/80" aria-label="Research interests">
+              <span class="sr-only">Research interests:</span>
+              <ul class="flex list-none flex-wrap gap-2 p-0 m-0">
+                {researchInterests.map((interest) => (
+                  <li class="meta-chip">
+                    <span class="h-1 w-1 rounded-full bg-accent-500" aria-hidden="true"></span>
+                    <span>{interest}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </div>
       </div>
       </section>
     )}
 
+    {showShowcase && featuredProject && (
+      <section class="content-section" aria-labelledby="featured-initiatives">
+        <div class="mb-5 flex flex-col gap-3 border-b border-paper-300/90 pb-4 dark:border-ink-700 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 id="featured-initiatives" class="section-heading">
+              {siteConfig.homeBlocks.showcase?.title || "Featured Initiatives"}
+            </h2>
+            {siteConfig.homeBlocks.showcase?.description && (
+              <p class="mt-1 text-sm text-ink-600 dark:text-paper-300">
+                {siteConfig.homeBlocks.showcase.description}
+              </p>
+            )}
+          </div>
+          <a href="/projects" class="action-link self-start px-0 sm:self-auto">
+            <span>Explore all projects</span>
+            <span class="i-mdi:arrow-right text-base" aria-hidden="true"></span>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+          <article class="bento-card-hero group flex flex-col justify-between md:col-span-2">
+            <div>
+              <div class="flex items-center gap-2 mb-3.5">
+                <span class="chip-accent text-[11px]">
+                  <span class="i-mdi:star text-xs" aria-hidden="true" />
+                  Featured Initiative
+                </span>
+                <span class={featuredProject.data.status === "active" ? "chip-status-active" : "chip-status-past"}>
+                  {featuredProject.data.status}
+                </span>
+                <time class="font-mono text-xs text-ink-500 dark:text-paper-400 ml-auto tabular-nums">
+                  {featuredProject.data.period}
+                </time>
+              </div>
+
+              <div class="grid gap-5 sm:grid-cols-[1fr_160px] items-start">
+                <div class="space-y-2.5">
+                  <h3 class="entry-title text-2xl font-semibold">
+                    <a href={`/projects/${featuredProject.id}`} class="no-underline text-inherit hover:text-accent-700 dark:hover:text-accent-300 transition-colors">
+                      {featuredProject.data.title}
+                    </a>
+                  </h3>
+                  {featuredProject.data.subtitle && (
+                    <p class="font-sans text-xs font-semibold text-accent-700 dark:text-accent-300">
+                      {featuredProject.data.subtitle}
+                    </p>
+                  )}
+                  <p class="entry-summary text-sm line-clamp-3 leading-relaxed">
+                    {featuredProject.data.summary}
+                  </p>
+                </div>
+
+                {featuredProject.data.cover && (
+                  <div class="hidden sm:block overflow-hidden rounded-xl border border-paper-300/90 aspect-[4/3] bg-paper-100 dark:border-ink-700 dark:bg-ink-800 shadow-sm">
+                    <img
+                      src={featuredProject.data.cover.src}
+                      alt={featuredProject.data.coverAlt || featuredProject.data.title}
+                      width={featuredProject.data.cover.width}
+                      height={featuredProject.data.cover.height}
+                      loading="lazy"
+                      decoding="async"
+                      class="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-paper-200/90 dark:border-ink-700/80 flex flex-wrap items-center justify-between gap-3 text-xs">
+              <div class="flex flex-wrap items-center gap-1.5">
+                {featuredProject.data.tech.slice(0, 3).map((t) => (
+                  <span class="scholarly-pill">{t}</span>
+                ))}
+              </div>
+              <a href={`/projects/${featuredProject.id}`} class="action-link text-xs font-semibold px-0">
+                <span>View initiative</span>
+                <span class="i-mdi:arrow-right text-sm transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true"></span>
+              </a>
+            </div>
+          </article>
+
+          {secondaryProject && (
+            <article class="surface-card-hover group flex flex-col justify-between p-6">
+              <div class="space-y-3">
+                <div class="flex items-center justify-between text-xs">
+                  <span class={secondaryProject.data.status === "active" ? "chip-status-active" : "chip-status-past"}>
+                    {secondaryProject.data.status}
+                  </span>
+                  <time class="font-mono text-xs tabular-nums text-ink-500 dark:text-paper-400">
+                    {secondaryProject.data.period}
+                  </time>
+                </div>
+
+                <div class="space-y-1">
+                  <h3 class="entry-title text-lg">
+                    <a href={`/projects/${secondaryProject.id}`} class="no-underline text-inherit hover:text-accent-700 dark:hover:text-accent-300 transition-colors">
+                      {secondaryProject.data.title}
+                    </a>
+                  </h3>
+                  <p class="entry-summary text-xs line-clamp-4 leading-relaxed">
+                    {secondaryProject.data.summary}
+                  </p>
+                </div>
+              </div>
+
+              <div class="mt-5 pt-4 border-t border-paper-200/90 dark:border-ink-700/80 flex items-center justify-between text-xs">
+                <span class="scholarly-pill">{secondaryProject.data.tech[0]}</span>
+                <a href={`/projects/${secondaryProject.id}`} class="action-link text-xs font-semibold px-0">
+                  <span>Details</span>
+                  <span class="i-mdi:arrow-right text-sm transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true"></span>
+                </a>
+              </div>
+            </article>
+          )}
+        </div>
+      </section>
+    )}
+
     {showPublications && selectedPapers.length > 0 && (
       <section class="content-section" aria-labelledby="selected-publications">
-      <div class="mb-4 flex flex-col gap-3 border-b border-gray-300 pb-4 dark:border-gray-700 sm:flex-row sm:items-end sm:justify-between">
+      <div class="mb-4 flex flex-col gap-3 border-b border-paper-300/90 pb-4 dark:border-ink-700 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h2 id="selected-publications" class="section-heading">
             {siteConfig.homeBlocks.publications.title}
           </h2>
           {siteConfig.homeBlocks.publications.description && (
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">{siteConfig.homeBlocks.publications.description}</p>
+            <p class="mt-1 text-sm text-ink-600 dark:text-paper-300">{siteConfig.homeBlocks.publications.description}</p>
           )}
         </div>
         <a href="/researches" class="action-link self-start px-0 sm:self-auto">
@@ -173,74 +309,17 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
         </a>
       </div>
 
-      <div class="divide-y divide-gray-200 border-b border-gray-200 dark:divide-gray-700 dark:border-gray-700">
-        {selectedPapers.map((paper) => {
-          const hasAbstract = Boolean(paper.abstract);
-
-          return (
-            <article class="group py-5">
-			  <div class="min-w-0">
-				<h3 class="entry-title max-w-4xl">
-                  {paper.url ? (
-                    <a
-                      href={paper.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      class="inline text-inherit no-underline transition-colors hover:text-accent-700 dark:hover:text-accent-300"
-                    >
-                      {paper.title}
-                      <span class="i-ph-arrow-up-right ml-1 inline-block text-sm text-accent-600 dark:text-accent-300" aria-hidden="true"></span>
-                    </a>
-                  ) : paper.title}
-                </h3>
-
-                {paper.authors.length > 0 && (
-				  <p class="entry-supporting mt-1.5">
-                    {paper.authors.join(", ")}
-                  </p>
-                )}
-
-				<div class="entry-meta mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-				  {paper.venue && <span class="text-accent-800 dark:text-accent-200">{paper.venue}</span>}
-				  {paper.venue && paper.year && <span class="text-gray-400 dark:text-gray-500" aria-hidden="true">/</span>}
-				  {paper.year && <span class="tabular-nums text-gray-600 dark:text-gray-300">{paper.year}</span>}
-                </div>
-
-                {paper.url && (
-                  <div class="mt-3 flex flex-wrap items-center gap-2">
-                    <a href={paper.url} target="_blank" rel="noreferrer" class="action-link px-0">
-                      <span class="i-ph-file-pdf text-lg" aria-hidden="true"></span>
-                      View paper
-                    </a>
-                  </div>
-                )}
-
-                {hasAbstract && (
-                  <details class="group mt-3">
-                    <summary class="action-link min-h-11 cursor-pointer list-none px-0">
-                      <span class="i-ph-caret-down text-base transition-transform duration-200 group-open:rotate-180" aria-hidden="true"></span>
-                      Abstract
-                    </summary>
-                    <div class="body-copy mt-3 border-l border-accent-400 bg-accent-50/55 px-4 py-3 dark:border-accent-700 dark:bg-accent-900/15">
-                      <p>{paper.abstract}</p>
-                    </div>
-                  </details>
-                )}
-              </div>
-            </article>
-          );
-        })}
-      </div>
+      <PublicationList papers={selectedPapers} />
       </section>
     )}
 
     {showPosts && recentPosts.length > 0 && (
       <section class="content-section" aria-labelledby="latest-posts">
-      <div class="mb-4 flex flex-col gap-3 border-b border-gray-300 pb-4 dark:border-gray-700 sm:flex-row sm:items-end sm:justify-between">
+      <div class="mb-4 flex flex-col gap-3 border-b border-paper-300/90 pb-4 dark:border-ink-700 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h2 id="latest-posts" class="section-heading">{siteConfig.homeBlocks.posts.title}</h2>
           {siteConfig.homeBlocks.posts.description && (
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">{siteConfig.homeBlocks.posts.description}</p>
+            <p class="mt-1 text-sm text-ink-600 dark:text-paper-300">{siteConfig.homeBlocks.posts.description}</p>
           )}
         </div>
         <a href="/posts" class="action-link self-start px-0 sm:self-auto">
@@ -249,33 +328,16 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
         </a>
       </div>
 
-      <div class="divide-y divide-gray-200 border-b border-gray-200 dark:divide-gray-700 dark:border-gray-700">
-        {recentPosts.map((post) => (
-          <a href={`/posts/${post.id}`} class="group block py-5 no-underline">
-            <article class="grid gap-3 sm:grid-cols-[8rem_minmax(0,1fr)_auto] sm:items-start sm:gap-6">
-              <time datetime={post.data.publishedAt.toISOString()} class="font-mono text-xs text-gray-500 dark:text-gray-400">
-                  {post.data.publishedAt.toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })}
-              </time>
-              <div class="min-w-0">
-			    <h3 class="entry-title transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-300">
-                  {post.data.title}
-                </h3>
-                {post.data.description && (
-				  <p class="entry-summary mt-2 line-clamp-2">{post.data.description}</p>
-                )}
-              </div>
-              <span class="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-accent-700 dark:text-accent-300 sm:self-center">
-                Read note
-                <span class="i-ph-arrow-right transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true"></span>
-              </span>
-            </article>
-          </a>
-        ))}
-      </div>
+      {primaryPost && (
+        <div class="grid gap-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(18rem,0.65fr)]">
+          <PostCard post={primaryPost} variant="featured" />
+          {secondaryPosts.length > 0 && (
+            <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-1">
+              {secondaryPosts.map((post) => <PostCard post={post} />)}
+            </div>
+          )}
+        </div>
+      )}
       </section>
     )}
   </div>

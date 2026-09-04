@@ -1,64 +1,64 @@
 hero:
   title: About
   description: >
-    Scholar, educator, and builder focused on learning analytics, humane computing, and tools
-    that support open collaboration.
+    An entirely fictional scholar profile created to demonstrate the theme. No appointment,
+    institution, award, or service record below refers to a real person or organization.
 
 profile:
   - label: Current Role
-    value: Assistant Professor, School of Information
+    value: Fictional Associate Professor, School of Imaginary Systems
   - label: Research Areas
-    value: Learning analytics, web infrastructure, civic tech
+    value: Synthetic learning environments, fictional archives, speculative interfaces
   - label: Education
-    value: Ph.D., Human-Computer Interaction, 2021
+    value: Ph.D., Speculative Informatics, 2021 (fictional)
 
 
 experience:
-  - role: Assistant Professor
-    organization: School of Information
+  - role: Fictional Associate Professor
+    organization: Northstar Commons University (fictional)
     period: 2022 - Present
     bullets:
-      - Lead the Learning Signals Lab with collaborators across education and computer science.
-      - Teach graduate seminars on human-centered AI and reproducible research pipelines.
-      - Co-chair the university open scholarship task force, advising on platform governance.
-  - role: Research Scientist
-    organization: Civic Innovation Lab
+      - Leads the imaginary Learning Constellations Lab using synthetic classroom data.
+      - Teaches fictional seminars on humane systems and reproducible demo workflows.
+      - Coordinates a simulated working group on shared archive governance.
+  - role: Research Designer
+    organization: Lantern Civic Studio (fictional)
     period: 2019 - 2022
     bullets:
-      - Designed public data dashboards for municipal partners across five cities.
-      - Published foundational work on measuring knowledge transfer in informal communities.
+      - Designed prototype dashboards for invented community partners.
+      - Developed fictional methods for studying knowledge exchange in simulated communities.
 
 service:
-  - role: Program Chair Assistant
-    organization: ACM Conference on Learning at Scale (L@S) 2024
+  - role: Program Chair
+    organization: Symposium on Shared Signals (fictional)
     period: 2023 - 2024
-  - Editorial Board - Journal of Learning Analytics
-  - Organizer - Web Science Workshop on Social Learning Signals
+  - Editorial Board - Journal of Imaginary Learning Systems (fictional)
+  - Organizer - Synthetic Archives Workshop (fictional)
 
 education:
-  - degree: Ph.D., Human-Computer Interaction
-    institution: Northridge University
+  - degree: Ph.D., Speculative Informatics
+    institution: Northstar Commons University (fictional)
     year: 2021
-  - degree: M.S., Learning Sciences
-    institution: Horizon Institute of Technology
+  - degree: M.S., Synthetic Learning Sciences
+    institution: Lumenfield Institute (fictional)
     year: 2016
-  - degree: B.S., Computer Science
-    institution: Clearwater College
+  - degree: B.S., Imaginary Computing
+    institution: Moonbridge College (fictional)
     year: 2014
 
 sections:
   - title: Awards
     icon: i-mdi:trophy-award
     items:
-      - title: Best Paper Award
-        subtitle: ACM CHI 2023
+      - title: Imaginary Research Communication Prize
+        subtitle: Fictional Commons Computing Symposium 2023
         date: 2023
-        description: For the paper "Social Learning Signals in the Wild"
+        description: For the fictional paper "Gentle Signals in Simulated Learning Commons"
         badges:
-          - Best Paper
-          - Peer reviewed
+          - Fictional award
+          - Demo record
         highlights:
-          - Recognized for mixed-methods analysis of social learning communities.
-      - title: NSF Graduate Research Fellowship
+          - Demonstrates how a highlighted award description appears on the page.
+      - title: Northstar Graduate Demo Fellowship
         date: 2016 - 2021
-      - Dean's List, Clearwater College (2010-2014)
+      - Demo Academic Distinction, Moonbridge College (2010-2014)

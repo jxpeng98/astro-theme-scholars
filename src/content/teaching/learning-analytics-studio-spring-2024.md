@@ -1,7 +1,7 @@
 ---
-title: Learning Analytics Studio
-code: INFO 623
-summary: Cohort focused on qualitative and quantitative methods for studying learning communities.
+title: Learning Constellations Studio
+code: DEMO 623
+summary: A fictional cohort using qualitative and quantitative methods to study invented learning communities.
 term: Spring 2024
 status: past
 order: 4
@@ -9,17 +9,17 @@ tags:
   - analytics
   - studio
 highlights:
-  - Mixed-method analysis connected participation patterns to community context.
+  - Mixed-method analysis connects synthetic participation patterns to an imaginary context.
 ---
 
 ## Course focus
 
-This cohort examined how qualitative observation and quantitative traces can inform one another when studying learning communities.
+This fictional cohort examines how generated observations and quantitative traces might inform one another in a simulated learning community.
 
 ## Structure
 
-Students worked in small teams through data familiarization, method selection, exploratory analysis, and interpretive critique. The course emphasized documenting uncertainty and keeping claims proportional to the available evidence.
+Imaginary student teams move through synthetic data familiarization, method selection, exploratory analysis, and interpretive critique.
 
 ## Final work
 
-Projects paired a reproducible analytical notebook with a concise interpretive report for a community or educational partner.
+Fictional projects pair a reproducible demo notebook with an interpretive report for an invented educational partner.

@@ -151,6 +151,12 @@ assert(
 		(!index.includes("<details") || index.includes("<summary")),
 	"home page abstracts should use native disclosure elements when rendered",
 );
+if (index.includes('id="selected-publications"')) {
+	assert(
+		main(index).includes("data-publication-list"),
+		"selected publications should use the shared publication list",
+	);
+}
 
 const research = await readDist("researches/index.html");
 const researchCanonical = assertPageMetadata(research, "research");
@@ -160,6 +166,10 @@ assert(
 		!research.includes("data-abstract-toggle") &&
 		(!research.includes("<details") || research.includes("<summary")),
 	"research filters should not duplicate section navigation and abstracts should work natively when rendered",
+);
+assert(
+	main(research).includes("data-publication-list"),
+	"research categories should use the shared publication list",
 );
 
 const postEntries = await readdir(new URL("posts/", root), {

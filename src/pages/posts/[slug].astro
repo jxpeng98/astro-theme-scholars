@@ -26,7 +26,7 @@ const heroImage = post.data.heroImage;
 	title={post.data.title}
 	description={post.data.description}
 	image={heroImage?.src}
-	imageAlt={heroImage ? post.data.title : undefined}
+	imageAlt={heroImage ? post.data.heroImageAlt : undefined}
 	imageWidth={heroImage?.width}
 	imageHeight={heroImage?.height}
 	schemaType="BlogPosting"
@@ -83,6 +83,27 @@ const heroImage = post.data.heroImage;
 				)}
 			</div>
 		</header>
+
+		{heroImage && (
+			<figure class="m-0 overflow-hidden rounded-xl border border-paper-300/90 bg-paper-100 shadow-paper dark:border-ink-700 dark:bg-ink-800">
+				<img
+					src={heroImage.src}
+					alt={post.data.heroImageAlt || post.data.title}
+					width={heroImage.width}
+					height={heroImage.height}
+					loading="eager"
+					fetchpriority="high"
+					decoding="async"
+					class="aspect-[3/2] h-auto w-full object-cover"
+				/>
+			</figure>
+		)}
+
+		{post.data.tags.length > 0 && (
+			<ul class="m-0 flex list-none flex-wrap gap-2 border-b border-paper-300/90 pb-5 p-0 dark:border-ink-700" aria-label="Article topics">
+				{post.data.tags.map((tag) => <li class="scholarly-pill">{tag}</li>)}
+			</ul>
+		)}
 
 		<div class="prose prose-neutral max-w-none text-[1.0625rem] leading-[1.8] dark:prose-invert
 			prose-headings:scroll-mt-24 prose-headings:font-heading prose-headings:font-semibold prose-headings:tracking-[-0.01em] prose-headings:text-gray-900 dark:prose-headings:text-gray-50

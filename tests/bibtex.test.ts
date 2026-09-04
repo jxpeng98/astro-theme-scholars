@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
-import { parseBibtex } from "../src/lib/bibtex";
-import { getFeaturedPapers } from "../src/lib/papers";
+import { formatCitations, parseBibtex } from "../src/lib/bibtex";
+import { getAllPapers, getFeaturedPapers } from "../src/lib/papers";
+import siteConfig from "../site.config";
 
 describe("parseBibtex", () => {
 	test("parses nested braces in titles and abstracts", () => {
@@ -65,5 +66,35 @@ describe("parseBibtex", () => {
 		expect(getFeaturedPapers(3, entries).map((entry) => entry.id)).toEqual([
 			"published",
 		]);
+	});
+
+	test("formats copy-ready citations in the supported styles", () => {
+		const [paper] = parseBibtex(`
+      @inproceedings{smith2025citations,
+        title = {A Practical Citation Test},
+        author = {Smith, Ada and Lee, Bo},
+        booktitle = {Proceedings of Testing},
+        year = {2025},
+        url = {https://example.com/paper}
+      }
+    `);
+		const citations = formatCitations(paper);
+
+		expect(citations.apa).toBe(
+			"Smith, A., & Lee, B. (2025). A Practical Citation Test. Proceedings of Testing. https://example.com/paper",
+		);
+		expect(citations.chicago).toBe(
+			'Smith, Ada, and Bo Lee. “A Practical Citation Test.” Proceedings of Testing (2025). https://example.com/paper',
+		);
+		expect(citations.harvard).toBe(
+			"Smith, A. and Lee, B. (2025) ‘A Practical Citation Test’, Proceedings of Testing. Available at: https://example.com/paper.",
+		);
+		expect(citations.bibtex).toContain("@inproceedings{smith2025citations,");
+	});
+
+	test("keeps every demo publication aligned with the fictional profile", () => {
+		for (const paper of getAllPapers()) {
+			expect(paper.authors).toEqual([siteConfig.author]);
+		}
 	});
 });

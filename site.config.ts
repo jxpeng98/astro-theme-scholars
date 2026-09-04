@@ -9,27 +9,27 @@ import { defineSiteConfig } from "./src/config/site";
 
 export const siteConfig = defineSiteConfig({
 	// Required: the four values most sites should personalize first.
-	author: "Scholar Pages Demo",
+	author: "Mira Latticewell",
 	siteUrl: "https://astro-theme-scholars.pages.dev",
 	hero: {
 		headline:
-			"Scholarship at the intersection of learning analytics and web infrastructure.",
+			"Fictional research on learning systems, shared archives, and humane web infrastructure.",
 		subheadline:
-			"This sample profile demonstrates how Scholar Pages presents research, teaching, projects, and notes in one maintainable academic site.",
+			"Mira Latticewell is an entirely fictional scholar created to demonstrate this academic portfolio theme.",
 		profileImage: "/profile.svg",
-		profileAlt: "Generic profile illustration",
-		statusBadge: "Demo content",
+		profileAlt: "Abstract illustration representing the fictional researcher Mira Latticewell",
+		statusBadge: "Fictional demo profile",
 	},
 
 	// Common profile and discovery settings.
 	description:
-		"Live demonstration of Scholar Pages, an Astro theme for academic portfolios and research profiles.",
+		"An entirely fictional academic profile demonstrating the Scholar Pages Astro theme.",
 	keywords: [
-		"learning analytics",
-		"open scholarship",
-		"web infrastructure",
+		"synthetic learning environments",
+		"fictional archives",
+		"humane web infrastructure",
 		"academic website",
-		"research",
+		"demo profile",
 	],
 	// Optional social-preview overrides:
 	// language: "en",
@@ -40,30 +40,31 @@ export const siteConfig = defineSiteConfig({
 	// ogImageHeight: 630,
 	affiliations: [
 		{
-			role: "Sample academic profile",
-			institution: "Example University",
+			role: "Fictional Associate Professor",
+			department: "School of Imaginary Systems",
+			institution: "Northstar Commons University (fictional)",
 		},
 	],
 	researchInterests: [
-		"Learning Analytics",
-		"Human-Computer Interaction",
-		"Open Scholarship",
-		"Civic Technology",
+		"Synthetic Learning Environments",
+		"Speculative Interfaces",
+		"Fictional Archives",
+		"Imaginary Civic Systems",
 	],
 	socialLinks: [
 		{
-			label: "Repository",
-			href: "https://github.com/jxpeng98/astro-theme-scholars",
+			label: "Sample repository",
+			href: "https://example.com/mira-latticewell/repository",
 			icon: "i-mdi:github",
 		},
 		{
-			label: "Documentation",
-			href: "https://github.com/jxpeng98/astro-theme-scholars#readme",
+			label: "Sample notes",
+			href: "https://example.com/mira-latticewell/notes",
 			icon: "i-mdi:bookshelf",
 		},
 		{
-			label: "Releases",
-			href: "https://github.com/jxpeng98/astro-theme-scholars/releases",
+			label: "Sample archive",
+			href: "https://example.com/mira-latticewell/archive",
 			icon: "i-mdi:tag-outline",
 		},
 	],
@@ -78,31 +79,39 @@ export const siteConfig = defineSiteConfig({
 	pageTitles: {
 		about: {
 			description:
-				"Scholar, educator, and builder focused on learning analytics, humane computing, and tools that support open collaboration.",
+				"A fictional academic background created solely to demonstrate profile, experience, service, and award layouts.",
 		},
 		researches: {
 			description:
-				"Peer-reviewed publications, working papers, and essays on learning analytics, open scholarship, and civic technology.",
+				"Fictional publications attributed to Mira Latticewell for demonstrating scholarly records and citation tools.",
 		},
 		projects: {
 			description:
-				"Open-source tools and research infrastructure projects for the academic community.",
+				"Fictional research tools and imaginary infrastructure projects created for this theme demo.",
 		},
 		teaching: {
 			description:
-				"Courses designed to bridge technical skills with critical inquiry in learning sciences and information studies.",
+				"Fictional courses showing how teaching records, terms, and materials appear in the theme.",
 		},
 		posts: {
 			description:
-				"Thoughts on academia, research methods, technology, and the spaces in between.",
+				"Fictional notes from the Mira Latticewell demo profile.",
 		},
 	},
 
 	// Homepage composition: switch off any block you do not want to display.
 	homeBlocks: {
 		hero: { enabled: true },
-		publications: { enabled: true },
-		posts: { enabled: true },
+		showcase: {
+			enabled: true,
+			title: "Fictional Initiatives",
+			description: "Imaginary systems and prototype research infrastructure",
+		},
+		publications: {
+			enabled: true,
+			description: "Selected fictional publications",
+		},
+		posts: { enabled: true, description: "Notes from a fictional practice" },
 	},
 });
 

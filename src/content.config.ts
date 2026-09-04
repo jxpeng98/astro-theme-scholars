@@ -20,15 +20,27 @@ const posts = defineCollection({
 		base: './src/content/posts'
 	}),
 	schema: ({ image }) =>
-		z.object({
-			title: z.string(),
-			description: z.string(),
-			publishedAt: z.coerce.date(),
-			updatedAt: z.coerce.date().optional(),
-			tags: z.array(z.string()).optional(),
-			heroImage: image().optional(),
-			draft: z.boolean().default(false)
-		})
+		z
+			.object({
+				title: text,
+				description: text,
+				publishedAt: z.coerce.date(),
+				updatedAt: z.coerce.date().optional(),
+				tags: z.array(text).default([]),
+				featured: z.boolean().default(false),
+				heroImage: image().optional(),
+				heroImageAlt: text.optional(),
+				draft: z.boolean().default(false)
+			})
+			.superRefine((data, ctx) => {
+				if (data.heroImage && !data.heroImageAlt) {
+					ctx.addIssue({
+						code: 'custom',
+						path: ['heroImageAlt'],
+						message: 'heroImageAlt is required when heroImage is set'
+					});
+				}
+			})
 });
 
 const projects = defineCollection({

@@ -14,13 +14,13 @@ interface Props {
 
 const { items, allIcon, total } = Astro.props;
 const visibleItems = items.filter((item) => item.count > 0);
-const shouldRender = visibleItems.length > 1 && total > 8;
+const shouldRender = visibleItems.length > 1;
 ---
 
 {
   shouldRender && (
     <div
-	      class="filter-bar -mx-1 mt-2 flex items-center gap-1 overflow-x-auto px-1 pb-1"
+      class="filter-bar -mx-1 mt-2 inline-flex max-w-full flex-wrap items-center gap-1.5 rounded-xl border border-paper-300/80 bg-paper-100/60 p-1.5 dark:border-ink-700/80 dark:bg-ink-900/50"
       role="group"
       aria-label="Filter sections"
     >
@@ -29,7 +29,7 @@ const shouldRender = visibleItems.length > 1 && total > 8;
         data-filter="all"
         data-active="true"
         aria-pressed="true"
-        class="filter-btn inline-flex h-11 min-h-10 cursor-pointer items-center gap-2 rounded-[0.625rem] px-3.5 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-800 active"
+        class="filter-btn inline-flex h-10 min-h-10 cursor-pointer items-center gap-2 rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all duration-150 focus-visible:ring-2 focus-visible:ring-accent-500 active"
       >
         <span data-filter-icon class={`${allIcon} text-base text-accent-700 dark:text-accent-300`} aria-hidden="true"></span>
         <span data-filter-label class="font-semibold text-accent-800 dark:text-accent-200">All</span>
@@ -42,7 +42,7 @@ const shouldRender = visibleItems.length > 1 && total > 8;
             data-filter={item.filter}
             data-active="false"
             aria-pressed="false"
-            class="filter-btn inline-flex h-11 min-h-10 cursor-pointer items-center gap-2 rounded-[0.625rem] px-3.5 py-2 text-sm transition-colors focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-800"
+            class="filter-btn inline-flex h-10 min-h-10 cursor-pointer items-center gap-2 rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all duration-150 focus-visible:ring-2 focus-visible:ring-accent-500"
           >
             <span data-filter-icon class={`${item.icon} text-base text-gray-500 dark:text-gray-300`} aria-hidden="true"></span>
             <span data-filter-label class="font-semibold capitalize text-gray-700 dark:text-gray-200">{item.label}</span>

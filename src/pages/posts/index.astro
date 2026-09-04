@@ -1,8 +1,8 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import PostCard from "../../components/PostCard.astro";
 import { getCollection } from "astro:content";
 import siteConfig from "../../side.config";
-import { getReadingTimeMinutes } from "../../lib/reading-time";
 
 const posts = (await getCollection("posts"))
   .filter((post) => !post.data.draft)
@@ -12,16 +12,10 @@ const posts = (await getCollection("posts"))
       new Date(a.data.publishedAt).getTime(),
   );
 
-const groupedPosts = new Map<string, typeof posts>();
-for (const post of posts) {
-  const year = post.data.publishedAt.getFullYear().toString();
-  if (!groupedPosts.has(year)) {
-    groupedPosts.set(year, []);
-  }
-  groupedPosts.get(year)?.push(post);
-}
-const years = Array.from(groupedPosts.keys()).sort((a, b) =>
-  b.localeCompare(a),
+const featuredPost = posts.find((post) => post.data.featured) ?? posts[0];
+const remainingPosts = posts.filter((post) => post.id !== featuredPost?.id);
+const years = [...new Set(posts.map((post) => post.data.publishedAt.getFullYear()))].sort(
+  (a, b) => b - a,
 );
 
 const pageTitle = siteConfig.pageTitles.posts.title || "Blog";
@@ -42,80 +36,48 @@ const totalPosts = posts.length;
       <h1 class="page-title">{pageTitle}</h1>
       <p class="page-description">{pageDescription}</p>
 
-      <div class="flex flex-wrap items-center gap-2 border-t border-gray-200 pt-4 dark:border-gray-700">
+      <div class="flex flex-wrap items-center gap-2 border-t border-paper-300/90 pt-4 dark:border-ink-700">
         <span class="meta-chip">
-          <span class="i-mdi:file-document-multiple text-base text-accent-700 dark:text-accent-200" aria-hidden="true"></span>
-          <strong class="font-semibold text-gray-900 dark:text-gray-50">{totalPosts}</strong>
+          <span class="i-mdi:file-document-multiple text-base text-accent-700 dark:text-accent-300" aria-hidden="true"></span>
+          <strong class="font-semibold text-ink-950 dark:text-paper-50">{totalPosts}</strong>
           {totalPosts === 1 ? "post" : "posts"}
         </span>
         {years.length > 0 && (
           <span class="meta-chip">
             <span class="i-mdi:calendar-range text-sm" aria-hidden="true"></span>
-			<span class="tabular-nums">{years[years.length - 1]} - {years[0]}</span>
+			<span class="tabular-nums font-mono">{years[years.length - 1]} - {years[0]}</span>
           </span>
         )}
       </div>
     </header>
 
-    <div class="space-y-7 sm:space-y-8">
-      {
-        years.map((year) => (
-          <section class="content-section space-y-4" aria-labelledby={`posts-${year}`}>
-            <div class="flex items-end justify-between gap-4 border-b border-gray-200 pb-3 dark:border-gray-700">
-			  <h2 id={`posts-${year}`} class="section-heading tabular-nums">{year}</h2>
-              <span class="meta-chip mb-0.5 shrink-0">
-                {groupedPosts.get(year)?.length} {groupedPosts.get(year)?.length === 1 ? "post" : "posts"}
-              </span>
-            </div>
+    {featuredPost && (
+      <section class="content-section space-y-4" aria-labelledby="featured-note">
+        <div class="flex items-end justify-between gap-4 border-b border-paper-300/90 pb-3 dark:border-ink-700">
+          <h2 id="featured-note" class="section-heading">Start here</h2>
+          <span class="meta-chip mb-0.5 shrink-0">
+            <span class="i-mdi:star text-sm text-accent-700 dark:text-accent-300" aria-hidden="true"></span>
+            Featured
+          </span>
+        </div>
+        <PostCard post={featuredPost} variant="featured" eager />
+      </section>
+    )}
 
-			<ol class="m-0 list-none border-t border-gray-200 p-0 dark:border-gray-700">
-              {groupedPosts.get(year)?.map((post) => (
-                <li>
-                  <a
-                    href={`/posts/${post.id}`}
-					class="group block border-b border-gray-200 py-5 no-underline dark:border-gray-700"
-                    aria-label={`Read ${post.data.title}`}
-                  >
-                    <article class="grid gap-4 md:grid-cols-[5.5rem_minmax(0,1fr)_auto] md:items-start md:gap-6">
-                      <div class="flex flex-wrap items-center gap-x-2 gap-y-1 md:block">
-                        <time
-                          datetime={post.data.publishedAt.toISOString()}
-                          class="text-xs font-semibold uppercase tracking-wide text-gray-600 tabular-nums dark:text-gray-300"
-                        >
-                          {post.data.publishedAt.toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "numeric",
-                          })}
-                        </time>
-                        <span class="text-gray-500 dark:text-gray-400 md:hidden" aria-hidden="true">·</span>
-                        <span class="text-xs text-gray-500 dark:text-gray-400 md:mt-1 md:block">
-                          {getReadingTimeMinutes(post.body ?? "")} min read
-                        </span>
-                      </div>
-
-                      <div class="min-w-0 space-y-2">
-						<h3 class="entry-title transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-200">
-                          {post.data.title}
-                        </h3>
-                        {post.data.description && (
-						  <p class="entry-summary text-gray-600 dark:text-gray-300">
-                            {post.data.description}
-                          </p>
-                        )}
-                      </div>
-
-                      <span class="action-link self-center md:self-start">
-                        Read article
-                        <span class="i-mdi:arrow-right transition-transform group-hover:translate-x-0.5" aria-hidden="true"></span>
-                      </span>
-                    </article>
-                  </a>
-                </li>
-              ))}
-            </ol>
-          </section>
-        ))
-      }
-    </div>
+    {remainingPosts.length > 0 && (
+      <section class="content-section space-y-4" aria-labelledby="more-notes">
+        <div class="flex items-end justify-between gap-4 border-b border-paper-300/90 pb-3 dark:border-ink-700">
+          <h2 id="more-notes" class="section-heading">More notes</h2>
+          <span class="meta-chip mb-0.5 shrink-0">
+            {remainingPosts.length} {remainingPosts.length === 1 ? "post" : "posts"}
+          </span>
+        </div>
+        <ol class="m-0 grid list-none gap-5 p-0 md:grid-cols-2">
+          {remainingPosts.map((post) => (
+            <li><PostCard post={post} /></li>
+          ))}
+        </ol>
+      </section>
+    )}
   </div>
 </Layout>

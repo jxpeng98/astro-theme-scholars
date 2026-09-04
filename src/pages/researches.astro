@@ -1,6 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import FilterBar from "../components/FilterBar.astro";
+import PublicationList from "../components/PublicationList.astro";
 import { getAllPapers } from "../lib/papers";
 import { slugifySectionId } from "../lib/section-id";
 import siteConfig from "../side.config";
@@ -84,100 +85,14 @@ const pageDescription = siteConfig.pageTitles.researches.description ||
               class="content-section paper-section scroll-mt-20 space-y-4"
               data-filter-section={categorySlug}
             >
-              <header class="flex items-end justify-between gap-4 border-b border-gray-200 pb-3 dark:border-gray-700">
+              <header class="flex items-end justify-between gap-4 border-b border-paper-300/90 pb-3 dark:border-ink-700">
 				<h2 class="section-heading">{category}</h2>
-				<p class="shrink-0 text-sm font-semibold text-gray-500 dark:text-gray-400">
+				<p class="shrink-0 font-mono text-xs font-semibold tabular-nums text-ink-500 dark:text-paper-400">
                   {categoryPapers.length} {categoryPapers.length === 1 ? "entry" : "entries"}
                 </p>
               </header>
 
-              <ol class="m-0 list-none overflow-hidden rounded-2xl border border-paper-300/90 bg-white/60 p-0 divide-y divide-paper-300/90 dark:border-ink-700 dark:bg-ink-900/62 dark:divide-ink-700">
-                {categoryPapers.map((paper, index) => {
-                  const hasAbstract = Boolean(paper.abstract);
-
-                  return (
-                    <li>
-					  <article class="group grid grid-cols-[min-content_minmax(0,1fr)] gap-2 px-4 py-4 transition-colors duration-200 hover:bg-accent-50/58 dark:hover:bg-accent-900/16 sm:px-6 sm:py-5 md:grid-cols-[3rem_minmax(0,1fr)] md:gap-5">
-						<p class="entry-index">
-                          {String(index + 1).padStart(2, "0")}
-                        </p>
-
-						<div class="min-w-0 space-y-2.5">
-						  <div class="space-y-1">
-							<h3 class="entry-title">
-                              {paper.url ? (
-                                <a
-                                  href={paper.url}
-                                  target="_blank"
-                                  rel="noreferrer"
-								  class="inline text-inherit no-underline transition-colors hover:text-accent-700 focus-visible:text-accent-700 dark:hover:text-accent-300 dark:focus-visible:text-accent-300"
-                                >
-                                  <span>{paper.title}</span>
-                                  <span
-									class="i-mdi:open-in-new ml-1 inline-block align-[0.05em] text-xs text-accent-600 dark:text-accent-300"
-                                    aria-hidden="true"
-                                  ></span>
-                                </a>
-                              ) : paper.title}
-                            </h3>
-
-                            {paper.authors.length > 0 && (
-							  <p class="entry-supporting">
-                                {paper.authors.join(", ")}
-                              </p>
-                            )}
-                          </div>
-
-						  <div class="entry-meta flex flex-wrap items-center gap-x-2 gap-y-1">
-                            {paper.venue && (
-							  <span class="text-accent-800 dark:text-accent-200">
-                                {paper.venue}
-                              </span>
-                            )}
-                            {paper.venue && paper.year && (
-                              <span class="text-gray-500 dark:text-gray-400" aria-hidden="true">/</span>
-                            )}
-                            {paper.year && (
-							  <time class="tabular-nums text-gray-600 dark:text-gray-300">
-                                {paper.year}
-                              </time>
-                            )}
-                          </div>
-
-                          {paper.url && (
-                            <div class="flex flex-wrap items-center gap-2 pt-1">
-                              <a
-                                href={paper.url}
-                                target="_blank"
-                                rel="noreferrer"
-                                class="action-link glass-control min-h-11 px-3.5"
-                              >
-                                <span class="i-mdi:file-pdf-box text-base" aria-hidden="true"></span>
-                                PDF
-                              </a>
-                            </div>
-                          )}
-
-                          {hasAbstract && (
-                            <details class="group pt-1">
-                              <summary class="action-link glass-control min-h-11 cursor-pointer list-none px-3.5">
-                                <span
-                                  class="i-mdi:chevron-down text-base transition-transform duration-200 group-open:rotate-180"
-                                  aria-hidden="true"
-                                ></span>
-                                Abstract
-                              </summary>
-							  <div class="body-copy mt-3 border-l border-accent-300 py-1 pl-4 dark:border-accent-700">
-                                <p>{paper.abstract}</p>
-                              </div>
-                            </details>
-                          )}
-                        </div>
-                      </article>
-                    </li>
-                  );
-                })}
-              </ol>
+              <PublicationList papers={categoryPapers} />
             </section>
           );
         })

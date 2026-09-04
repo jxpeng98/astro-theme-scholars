@@ -1,13 +1,45 @@
-# Projects and teaching content
+# Content authoring
 
-Projects and courses are Astro Content Collection entries. Each entry is one Markdown file with YAML frontmatter followed by the long-form detail content.
+Posts, projects, and courses are Astro Content Collection entries. Each entry is one Markdown file with YAML frontmatter followed by the long-form detail content.
 
+- Posts live in `src/content/posts/`.
 - Projects live in `src/content/projects/`.
 - Teaching entries live in `src/content/teaching/`.
 - The filename becomes the internal detail URL. For example, `scholars-portal.md` is published at `/projects/scholars-portal`.
 - Do not add that internal URL to frontmatter. Index pages generate it automatically.
 - `order` controls list order. Lower numbers appear first.
 - `draft: true` hides an entry from both the index and generated routes.
+
+## Blog entry
+
+The filename becomes the URL, so `field-note.md` is published at `/posts/field-note`. Set `draft: true` to hide a post. Set `featured: true` on one post to give it the lead position on the Blog page; if none is marked, the newest post becomes the lead automatically.
+
+```md
+---
+title: A Specific, Useful Title
+description: One sentence that states the question and what the reader will learn.
+publishedAt: 2026-09-04
+updatedAt: 2026-09-10
+featured: false
+tags:
+  - methods
+  - field-notes
+heroImage: ../../assets/posts/example.jpg
+heroImageAlt: Layered paper notes connected by fine blue lines
+---
+
+Open with the question or observation in two or three sentences.
+
+## What changed
+
+Explain the decision, evidence, or process. Prefer concrete examples over a long preamble.
+
+## What readers can reuse
+
+End with the practical implication, a short checklist, or the next open question.
+```
+
+`heroImage` is optional, but `heroImageAlt` is required whenever an image is present. Cards derive reading time automatically. Keep the description useful outside the article because it also appears in cards and search metadata. Two or three tags are usually enough.
 
 ## Project entry
 

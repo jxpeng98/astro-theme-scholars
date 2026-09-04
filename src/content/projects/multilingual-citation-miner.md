@@ -1,31 +1,31 @@
 ---
-title: Multilingual Citation Miner
-summary: Natural-language processing pipeline that extracts multilingual citations from PDF proceedings to improve bibliometric coverage for underrepresented venues.
-status: past
-period: 2022 to 2023
+title: Polyglot Echo Index
+summary: A fictional language-processing prototype that extracts citations from synthetic proceedings to demonstrate multilingual bibliography workflows.
+status: active
+period: 2022 to Present
 order: 2
 tech:
   - Python
   - spaCy
   - PostgreSQL
 highlights:
-  - Combined document parsing with language-aware entity extraction.
-  - Produced reviewable citation candidates instead of opaque automated matches.
+  - Combines generated document parsing with language-aware entity extraction.
+  - Produces reviewable fictional citation candidates instead of opaque matches.
 metadata:
   - label: Role
-    value: Research engineer
+    value: Fictional research engineer
   - label: Focus
     value: Scholarly infrastructure
 ---
 
 ## Research question
 
-How can bibliographic pipelines recover useful citation records from proceedings that are poorly represented in dominant scholarly indexes?
+How might a demo bibliography pipeline recover citation records from an entirely synthetic multilingual archive?
 
 ## Approach
 
-The pipeline separates PDF extraction, language-aware parsing, and candidate review. That separation made it possible to improve individual stages without rebuilding the entire workflow and kept uncertain matches visible to researchers.
+The fictional pipeline separates document extraction, language-aware parsing, and candidate review. That separation demonstrates how individual stages can change without rebuilding the entire workflow.
 
 ## Outcome
 
-The project established a reproducible route from heterogeneous proceedings to structured citation candidates. Its strongest contribution was methodological: automation accelerated review while human judgment remained part of the evidence chain.
+The project demonstrates a reproducible route from generated proceedings to structured citation candidates. All source documents, venues, and results in this example are fictional.

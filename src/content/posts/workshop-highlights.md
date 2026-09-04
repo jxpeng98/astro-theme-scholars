@@ -1,10 +1,10 @@
 ---
-title: WebSci Workshop Highlights
-description: Recap of the social learning signals workshop we co-hosted at WebSci 2024.
+title: Imaginary Workshop Highlights
+description: A fictional recap from the invented Symposium on Shared Signals.
 publishedAt: 2024-04-19
 tags:
   - workshops
   - community
 ---
 
-We gathered researchers studying knowledge transfer across social platforms for a half-day session. The best discussions centered around reproducible infrastructure: attendees want containerized pipelines and benchmark datasets more than flashy demos. My follow-up task is to open-source our data collection stack.
+This invented event brought fictional researchers together for a half-day discussion about synthetic learning communities. The recap demonstrates a post layout only; the symposium, participants, discussions, and follow-up work are not real.

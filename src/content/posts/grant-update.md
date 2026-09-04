@@ -1,10 +1,10 @@
 ---
-title: Grant Update - Learning Signals Lab
-description: What we accomplished in the first six months of the Learning Signals grant.
+title: Demo Update - Learning Constellations Lab
+description: A fictional progress note for the imaginary Learning Constellations Lab.
 publishedAt: 2024-02-06
 tags:
   - grants
   - lab-updates
 ---
 
-Quarterly goals focused on instrumenting classroom pilots and running formative interviews with instructors. We hit both targets and added a lightweight dashboard so teachers can see aggregate engagement trends without exposing any personally identifiable information.
+The fictional quarter focused on generating classroom traces and testing an invented interview workflow. The demo team also prototyped a lightweight dashboard for viewing aggregate patterns in entirely synthetic data.

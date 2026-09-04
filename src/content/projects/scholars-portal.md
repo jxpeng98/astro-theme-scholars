@@ -1,45 +1,45 @@
 ---
-title: Scholars Portal
-subtitle: Template infrastructure for academic homepages
-summary: Source-available portal that brings publications, talks, teaching materials, and projects into one maintainable academic profile.
+title: Lantern Atlas
+subtitle: Fictional infrastructure for imaginary academic profiles
+summary: A fictional portal prototype that brings synthetic publications, teaching records, projects, and notes into one maintainable demo profile.
 status: active
 period: 2023 to Present
 order: 1
 featured: true
 cover: ../../assets/projects/scholars-portal.png
-coverAlt: Desktop view of the Scholars academic portfolio homepage
+coverAlt: Demo screenshot representing the fictional Lantern Atlas project
 badges:
-  - Template
-  - Open source
+  - Fictional demo
+  - Prototype
 tech:
   - Astro
   - TypeScript
   - Content Collections
 highlights:
-  - Keeps publications, posts, and project metadata in simple content files.
-  - Supports release-tagged updates for downstream personal sites.
+  - Keeps fictional publications, posts, and project metadata in simple content files.
+  - Demonstrates release-style updates without representing a real research product.
 metadata:
   - label: Role
-    value: Maintainer
+    value: Fictional project lead
   - label: Audience
-    value: Researchers
+    value: Theme evaluators
 links:
-  - label: Repository
-    href: https://github.com/jxpeng98/astro-theme-scholars
-  - label: Documentation
-    href: https://github.com/jxpeng98/astro-theme-scholars#readme
+  - label: Sample repository
+    href: https://example.com/lantern-atlas/repository
+  - label: Sample documentation
+    href: https://example.com/lantern-atlas/documentation
 ---
 
 ## Why it exists
 
-Academic websites often begin as a small profile and become difficult to maintain as publications, teaching, talks, and service accumulate. Scholars Portal keeps those records close to the site while preserving a calm, readable public interface.
+This fictional project imagines how an academic website might remain easy to maintain as publications, teaching, and service records accumulate. Lantern Atlas keeps the demo records close to the site while preserving a calm, readable interface.
 
-## What I contributed
+## Fictional contribution
 
-I shaped the information architecture, the content model, and the reusable theme layer. The current system favors native Astro features so an individual researcher can update the site without maintaining an application backend.
+Within this fictional case study, Mira Latticewell shaped the information architecture, content model, and reusable theme layer. The prototype favors native Astro features so the demo remains transparent and easy to inspect.
 
 ## How it works
 
 Content collections validate long-form records at build time. Shared layouts handle navigation, metadata, accessibility, and responsive presentation, while each collection retains the fields its content actually needs.
 
-The result is a source-available starting point that can grow with a scholarly career without turning routine editing into frontend work.
+The result is an imaginary starting point that demonstrates how a scholarly profile can grow without turning routine editing into frontend work.

@@ -51,133 +51,128 @@ const pageDescription = siteConfig.pageTitles.projects.description ||
     </header>
 
     <div id="projects-container" class="space-y-10 sm:space-y-12">
-      {groups.filter((group) => group.projects.length > 0).map((group) => {
-        const featured = group.projects.find((project) => project.data.featured);
-        const remaining = group.projects.filter((project) => project.id !== featured?.id);
+      {groups.filter((group) => group.projects.length > 0).map((group) => (
+        <section
+          class="content-section project-section space-y-6"
+          data-filter-section={group.status}
+          aria-labelledby={`projects-${group.status}`}
+        >
+          <header class="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 gap-y-1.5 border-b border-paper-300/90 pb-4 dark:border-ink-700 sm:flex sm:items-end sm:justify-between sm:gap-6">
+            <div class="contents sm:block sm:space-y-1.5">
+              <h2 id={`projects-${group.status}`} class="section-heading col-start-1 row-start-1">{group.title}</h2>
+              <p class="body-copy col-span-2 row-start-2 max-w-2xl text-ink-600 dark:text-paper-300">{group.description}</p>
+            </div>
+            <p class="entry-meta col-start-2 row-start-1 shrink-0 font-bold">
+              {group.projects.length} {group.projects.length === 1 ? "project" : "projects"}
+            </p>
+          </header>
 
-        return (
-          <section
-            class="content-section project-section space-y-5"
-            data-filter-section={group.status}
-            aria-labelledby={`projects-${group.status}`}
-          >
-            <header class="grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 gap-y-1.5 border-b border-paper-300/90 pb-4 dark:border-ink-700 sm:flex sm:items-end sm:justify-between sm:gap-6">
-              <div class="contents sm:block sm:space-y-1.5">
-                <h2 id={`projects-${group.status}`} class="section-heading col-start-1 row-start-1">{group.title}</h2>
-                <p class="body-copy col-span-2 row-start-2 max-w-2xl text-ink-600 dark:text-paper-300">{group.description}</p>
-              </div>
-              <p class="entry-meta col-start-2 row-start-1 shrink-0 font-bold">
-                {group.projects.length} {group.projects.length === 1 ? "project" : "projects"}
-              </p>
-            </header>
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {group.projects.map((project) => {
+              const isFeatured = project.data.featured;
+              const role = project.data.metadata?.find((item) => item.label.toLowerCase() === "role")?.value;
+              const isActive = project.data.status === "active";
 
-            {featured && (
-              <article class="overflow-hidden rounded-2xl border border-paper-300/90 bg-white/68 dark:border-ink-700 dark:bg-ink-900/68">
-                <a
-                  href={`/projects/${featured.id}`}
+              return (
+                <article
                   class:list={[
-                    "group grid min-h-full text-inherit no-underline",
-                    featured.data.cover && "md:grid-cols-[minmax(0,1fr)_11rem]",
+                    "surface-card-hover group flex flex-col justify-between overflow-hidden",
+                    isFeatured && "md:col-span-2",
                   ]}
                 >
-                  <div class="flex flex-col justify-between gap-4 p-4 sm:p-6">
-                    <div class="space-y-3">
-                      <div class="flex flex-wrap gap-2">
-                        <span class="meta-chip">{featured.data.status === "active" ? "Active" : "Selected"}</span>
-                        <span class="meta-chip">{featured.data.period}</span>
-                      </div>
-                      <div class="space-y-1.5">
-                        <h3
-                          class="entry-title text-[1.5rem] transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-200 sm:text-[1.625rem]"
-                          transition:name={`project-${featured.id}-title`}
-                        >
-                          {featured.data.title}
-                        </h3>
-                        {featured.data.subtitle && (
-                          <p class="entry-supporting font-bold text-accent-700 dark:text-accent-200">{featured.data.subtitle}</p>
+                  <div class="space-y-4">
+                    <div class="flex items-center justify-between gap-2">
+                      <div class="flex items-center gap-2">
+                        <span class={isActive ? "chip-status-active" : "chip-status-past"}>
+                          {isActive && <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />}
+                          {project.data.status}
+                        </span>
+                        {isFeatured && (
+                          <span class="chip-accent text-[11px]">
+                            <span class="i-mdi:star text-xs" aria-hidden="true" />
+                            Featured
+                          </span>
                         )}
                       </div>
-                      <p class="entry-summary max-w-[34rem]">{featured.data.summary}</p>
+                      <time class="font-mono text-xs tabular-nums text-ink-500 dark:text-paper-400">
+                        {project.data.period}
+                      </time>
                     </div>
 
-                    <span class="action-link w-fit px-0 group-hover:text-accent-900 group-hover:underline dark:group-hover:text-accent-100">
-                      View project
-                      <span class="i-mdi:arrow-right transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none" aria-hidden="true"></span>
-                    </span>
+                    {isFeatured && project.data.cover && project.data.coverAlt && (
+                      <div
+                        class="overflow-hidden rounded-lg border border-paper-300/80 bg-paper-200 aspect-[16/9] sm:aspect-[21/9] dark:border-ink-700 dark:bg-ink-800"
+                        transition:name={`project-${project.id}-cover`}
+                      >
+                        <img
+                          src={project.data.cover.src}
+                          alt={project.data.coverAlt}
+                          width={project.data.cover.width}
+                          height={project.data.cover.height}
+                          loading="lazy"
+                          decoding="async"
+                          class="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.02]"
+                        />
+                      </div>
+                    )}
+
+                    <div class="space-y-1">
+                      <h3
+                        class="entry-title text-xl transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-300"
+                        transition:name={`project-${project.id}-title`}
+                      >
+                        <a href={`/projects/${project.id}`} class="no-underline text-inherit">
+                          {project.data.title}
+                        </a>
+                      </h3>
+                      {project.data.subtitle && (
+                        <p class="font-sans text-xs font-semibold text-accent-700 dark:text-accent-300">
+                          {project.data.subtitle}
+                        </p>
+                      )}
+                    </div>
+
+                    <p class="entry-summary text-sm line-clamp-3 leading-relaxed">
+                      {project.data.summary}
+                    </p>
+
+                    {project.data.highlights?.[0] && !isFeatured && (
+                      <p class="text-xs text-ink-600 dark:text-paper-400 font-sans line-clamp-2 border-l-2 border-accent-300/60 pl-2.5 dark:border-accent-700/60">
+                        <span class="font-semibold text-ink-800 dark:text-paper-200">Highlight: </span>
+                        {project.data.highlights[0]}
+                      </p>
+                    )}
                   </div>
 
-                  {featured.data.cover && featured.data.coverAlt && (
-                    <div
-                      class="hidden min-h-44 overflow-hidden border-l border-paper-300/90 bg-paper-200 dark:border-ink-700 dark:bg-ink-800 md:block"
-                      transition:name={`project-${featured.id}-cover`}
-                    >
-                      <img
-                        src={featured.data.cover.src}
-                        alt={featured.data.coverAlt}
-                        width={featured.data.cover.width}
-                        height={featured.data.cover.height}
-                        loading="eager"
-                        decoding="async"
-                        class="h-full w-full object-cover object-top"
-                      />
+                  <div class="mt-5 pt-4 border-t border-paper-200/80 dark:border-ink-700/70 flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <div class="flex flex-wrap items-center gap-1.5">
+                      {role && (
+                        <span class="font-sans font-semibold text-ink-700 dark:text-paper-300 mr-1">
+                          {role}
+                        </span>
+                      )}
+                      {project.data.tech.slice(0, 3).map((tech) => (
+                        <span class="scholarly-pill">{tech}</span>
+                      ))}
                     </div>
-                  )}
-                </a>
-              </article>
-            )}
 
-            {remaining.length > 0 && (
-              <div data-project-index class="overflow-hidden rounded-2xl border border-paper-300/90 bg-white/60 divide-y divide-paper-300/90 dark:border-ink-700 dark:bg-ink-900/62 dark:divide-ink-700">
-                {remaining.map((project) => {
-                  const role = project.data.metadata.find((item) => item.label.toLowerCase() === "role")?.value;
-
-                  return (
-                    <article>
-                      <a
-                        href={`/projects/${project.id}`}
-                        class="group grid gap-4 px-4 py-4 text-inherit no-underline transition-colors duration-200 hover:bg-accent-50/58 dark:hover:bg-accent-900/16 sm:px-6 sm:py-5 lg:grid-cols-[7.5rem_minmax(0,1fr)_12rem_auto] lg:items-start lg:gap-6"
-                      >
-                        <div class="flex items-center justify-between lg:block">
-                          <p class="entry-meta font-bold tabular-nums">{project.data.period}</p>
-                          <span class="i-mdi:arrow-right text-lg text-accent-600 transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none dark:text-accent-300 lg:hidden" aria-hidden="true"></span>
-                        </div>
-
-                        <div class="space-y-2">
-                          <h3
-                            class="entry-title text-[1.375rem] transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-200"
-                            transition:name={`project-${project.id}-title`}
-                          >
-                            {project.data.title}
-                          </h3>
-                          <p class="entry-summary max-w-[42rem]">{project.data.summary}</p>
-                          {project.data.highlights[0] && (
-                            <p class="hidden font-sans text-sm leading-6 text-ink-600 dark:text-paper-300 sm:block">
-                              <span class="font-bold text-ink-800 dark:text-paper-100">Highlight:</span> {project.data.highlights[0]}
-                            </p>
-                          )}
-                        </div>
-
-                        {(role || project.data.tech.length > 0) && (
-                          <div class="flex flex-wrap items-baseline gap-x-2 gap-y-1 lg:block lg:space-y-2 lg:pt-0.5">
-                            {role && <p class="font-sans text-sm font-bold leading-5 text-ink-700 dark:text-paper-200">{role}</p>}
-                            {project.data.tech.length > 0 && (
-                              <p class="font-sans text-xs leading-5 text-ink-500 dark:text-paper-400">
-                                {project.data.tech.slice(0, 3).join(", ")}
-                              </p>
-                            )}
-                          </div>
-                        )}
-
-                        <span class="i-mdi:arrow-right mt-0.5 hidden text-lg text-accent-600 transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none dark:text-accent-300 lg:col-start-4 lg:block" aria-hidden="true"></span>
-                      </a>
-                    </article>
-                  );
-                })}
-              </div>
-            )}
-          </section>
-        );
-      })}
+                    <a
+                      href={`/projects/${project.id}`}
+                      class="action-link text-xs font-semibold px-0 group-hover:text-accent-900 dark:group-hover:text-accent-100"
+                    >
+                      <span>View details</span>
+                      <span
+                        class="i-mdi:arrow-right text-sm transition-transform duration-200 group-hover:translate-x-1"
+                        aria-hidden="true"
+                      />
+                    </a>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      ))}
     </div>
   </div>
 </Layout>

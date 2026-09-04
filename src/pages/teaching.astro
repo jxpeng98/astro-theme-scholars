@@ -47,10 +47,10 @@ const pageDescription = siteConfig.pageTitles.teaching.description ||
             <p class="entry-meta col-start-2 row-start-1 shrink-0 font-bold">{recent.length} {recent.length === 1 ? "course" : "courses"}</p>
           </header>
 
-          <div class="space-y-4">
+          <div class="space-y-5">
             {recentTerms.map((group) => (
-              <section class="overflow-hidden rounded-2xl border border-paper-300/90 bg-white/60 dark:border-ink-700 dark:bg-ink-900/62" aria-labelledby={`term-${group.term.replace(/\s+/g, "-").toLowerCase()}`}>
-                <header class="border-b border-paper-300/90 bg-paper-100/72 px-4 py-3 dark:border-ink-700 dark:bg-ink-800/60 sm:px-6">
+              <section class="overflow-hidden rounded-xl border border-paper-300/90 bg-white/70 shadow-paper dark:border-ink-700 dark:bg-ink-900/65" aria-labelledby={`term-${group.term.replace(/\s+/g, "-").toLowerCase()}`}>
+                <header class="border-b border-paper-300/90 bg-paper-100/80 px-4 py-3 dark:border-ink-700 dark:bg-ink-800/70 sm:px-6">
                   <h3 id={`term-${group.term.replace(/\s+/g, "-").toLowerCase()}`} class="entry-title text-[1.125rem]">{group.term}</h3>
                 </header>
                 <div class="divide-y divide-paper-300/90 dark:divide-ink-700">
@@ -63,24 +63,24 @@ const pageDescription = siteConfig.pageTitles.teaching.description ||
                       <article>
                         <a
                           href={`/teaching/${course.id}`}
-                          class="group grid gap-3 px-4 py-4 text-inherit no-underline transition-colors duration-200 hover:bg-accent-50/58 dark:hover:bg-accent-900/16 sm:grid-cols-[6.5rem_minmax(0,1fr)_auto] sm:items-start sm:px-6 sm:py-5"
+                          class="group grid gap-3 px-4 py-4.5 text-inherit no-underline transition-colors duration-200 hover:bg-accent-50/50 dark:hover:bg-accent-950/20 sm:grid-cols-[7rem_minmax(0,1fr)_auto] sm:items-start sm:px-6 sm:py-5"
                         >
                           <div class="flex items-center justify-between sm:block">
-                            <p class="font-mono text-xs font-bold tracking-[0.08em] text-accent-700 dark:text-accent-300">{course.data.code}</p>
+                            <span class="inline-flex items-center px-2 py-0.5 rounded border border-accent-300/60 bg-accent-50/70 font-mono text-xs font-bold tracking-[0.05em] text-accent-800 dark:border-accent-700/60 dark:bg-accent-950/40 dark:text-accent-200">{course.data.code}</span>
                             <span class="i-mdi:arrow-right text-lg text-accent-600 sm:hidden dark:text-accent-300" aria-hidden="true"></span>
                           </div>
                           <div class="space-y-1.5">
                             <h4
-                              class="entry-title text-[1.375rem] transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-200"
+                              class="entry-title text-[1.25rem] transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-300"
                               transition:name={`teaching-${course.id}-title`}
                             >
                               {course.data.title}
                             </h4>
-                            <p class="entry-summary max-w-[42rem]">{course.data.summary}</p>
+                            <p class="entry-summary text-sm max-w-[42rem]">{course.data.summary}</p>
                             {course.data.tags.length > 0 && (
-                              <div class="flex flex-wrap gap-x-3 gap-y-1 pt-0.5">
+                              <div class="flex flex-wrap gap-1.5 pt-1">
                                 {course.data.tags.map((tag) => (
-                                  <span class="font-sans text-xs font-bold text-ink-500 dark:text-paper-400">{tag}</span>
+                                  <span class="meta-chip text-[11px]">{tag}</span>
                                 ))}
                               </div>
                             )}
@@ -115,25 +115,25 @@ const pageDescription = siteConfig.pageTitles.teaching.description ||
             </p>
           </header>
 
-		  <div data-teaching-ledger class="overflow-hidden rounded-2xl border border-paper-300/90 bg-white/60 divide-y divide-paper-300/90 dark:border-ink-700 dark:bg-ink-900/62 dark:divide-ink-700">
+		  <div data-teaching-ledger class="overflow-hidden rounded-xl border border-paper-300/90 bg-white/70 shadow-paper divide-y divide-paper-300/90 dark:border-ink-700 dark:bg-ink-900/65 dark:divide-ink-700">
 			{teachingLedger.map(({ course, terms }) => (
 			  <article>
 				<a
 				  href={`/teaching/${course.id}`}
-				  class="group grid gap-3 px-4 py-4 text-inherit no-underline transition-colors duration-200 hover:bg-accent-50/58 dark:hover:bg-accent-900/16 sm:grid-cols-[6.5rem_minmax(0,1fr)_auto] sm:items-start sm:px-6 sm:py-5"
+				  class="group grid gap-3 px-4 py-4.5 text-inherit no-underline transition-colors duration-200 hover:bg-accent-50/50 dark:hover:bg-accent-950/20 sm:grid-cols-[7rem_minmax(0,1fr)_auto] sm:items-start sm:px-6 sm:py-5"
 				>
 				  <div class="flex items-center justify-between sm:block">
-					<p class="font-mono text-xs font-bold tracking-[0.08em] text-accent-700 dark:text-accent-300">{course.data.code}</p>
+					<span class="inline-flex items-center px-2 py-0.5 rounded border border-accent-300/60 bg-accent-50/70 font-mono text-xs font-bold tracking-[0.05em] text-accent-800 dark:border-accent-700/60 dark:bg-accent-950/40 dark:text-accent-200">{course.data.code}</span>
 					<span class="i-mdi:arrow-right text-lg text-accent-600 sm:hidden dark:text-accent-300" aria-hidden="true"></span>
 				  </div>
 				  <div class="space-y-1.5">
 					<h3
-					  class="entry-title text-[1.375rem] transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-200"
+					  class="entry-title text-[1.25rem] transition-colors group-hover:text-accent-700 dark:group-hover:text-accent-300"
 					  transition:name={`teaching-${course.id}-title`}
 					>
 					  {course.data.title}
 					</h3>
-					<p class="entry-summary max-w-[42rem]">{course.data.summary}</p>
+					<p class="entry-summary text-sm max-w-[42rem]">{course.data.summary}</p>
 					<p class="pt-0.5 font-sans text-xs leading-5 text-ink-500 dark:text-paper-400">
 					  Offered <span class="font-bold text-ink-700 dark:text-paper-200">{terms.join(", ")}</span>
 					</p>

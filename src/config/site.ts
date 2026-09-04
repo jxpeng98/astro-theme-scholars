@@ -30,6 +30,7 @@ export interface SiteConfigInput
 	pageTitles?: PageTitlesInput;
 	homeBlocks?: {
 		hero?: { enabled?: boolean };
+		showcase?: HomeSectionInput;
 		publications?: HomeSectionInput;
 		posts?: HomeSectionInput;
 	};
@@ -69,6 +70,11 @@ const defaultPageTitles: SiteConfig["pageTitles"] = {
 const defaultHomeBlocks: SiteConfig["homeBlocks"] = {
 	hero: {
 		enabled: true,
+	},
+	showcase: {
+		enabled: true,
+		title: "Featured Initiatives",
+		description: "Key research infrastructure, systems, and open scholarship",
 	},
 	publications: {
 		enabled: true,
@@ -152,6 +158,13 @@ export function defineSiteConfig(input: SiteConfigInput): SiteConfig {
 			hero: {
 				...defaultHomeBlocks.hero,
 				...input.homeBlocks?.hero,
+			},
+			showcase: {
+				...defaultHomeBlocks.showcase,
+				...input.homeBlocks?.showcase,
+				enabled:
+					input.homeBlocks?.showcase?.enabled ??
+					defaultHomeBlocks.showcase.enabled,
 			},
 			publications: {
 				...defaultHomeBlocks.publications,
