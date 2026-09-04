@@ -2,39 +2,35 @@
 
 # Scholar Pages
 
-一款为学者和研究人员设计的 Astro 主题，让网站保持精致，也让日常更新不必变成前端
-开发工作。
+Scholar Pages 是一个用 Astro 构建的学术主页模板，适合展示个人简介、研究成果、项目、
+教学和博客。页面样式已经配好，平时更新资料和文章基本不需要改动前端组件。
 
-Scholar Pages 将内容与页面样式分开管理：全站信息集中在一个 TypeScript 配置文件中，
-论文使用 BibTeX，个人经历使用 YAML，项目、课程和文章则使用 Markdown。模板自带的
-Mira Latticewell 及其所有经历均为虚构内容，仅用于展示页面效果。
+站点配置与具体内容分开存放：全站信息集中在一个 TypeScript 配置文件中，论文使用
+BibTeX，个人经历使用 YAML，项目、课程和文章使用 Markdown。仓库中的 Mira Latticewell
+以及相关经历都是虚构的，仅供演示。
 
 ![Scholar Pages 桌面端首页](./docs/screenshots/academic-home-desktop.png)
 
-## 核心亮点
+## 模板包含什么
 
-- **完整的学术网站结构**：集中展示个人资料、任职经历、论文、项目、教学、学术服务、
-  奖项和研究随笔。
-- **清晰的内容入口**：论文保存在 BibTeX 中，个人经历写在 YAML 中，较长的项目、
-  课程和文章内容使用 Markdown 或 MDX。
-- **更实用的论文交互**：可按类型筛选论文、就地展开摘要，并在同一弹窗中复制 BibTeX、
-  APA 7、Chicago 或 Harvard 格式的引用。
-- **有独立气质的博客**：支持精选文章、可选封面和自动阅读时长；博客与作品集保持协调，
-  但不再套用完全相同的网格样式。
-- **可组合的首页**：在 `site.config.ts` 中控制个人介绍、精选项目、精选论文和近期文章，
-  无需修改页面组件。
-- **默认适配不同设备**：桌面端与移动端均支持浅色、深色模式，并提供键盘焦点状态和
-  原生无障碍控件。
-- **便于部署和长期维护**：内置 canonical URL、Open Graph、JSON-LD、站点地图、
-  `robots.txt` 与版本化模板更新。
+- 个人资料、任职经历、论文、项目、教学、学术服务、奖项和研究随笔等常用页面。
+- 论文可以按类型筛选，也可以直接展开摘要；Cite 弹窗支持复制 BibTeX、APA 7、
+  Chicago 和 Harvard 四种引用格式。
+- 博客没有沿用项目页的网格，而是单独设计了编辑式版面；可以设置精选文章和封面，阅读
+  时长会自动计算。
+- 首页区块可以在 `site.config.ts` 中开关，包括个人介绍、精选项目、精选论文和近期文章。
+- 桌面端和移动端都支持浅色与深色模式。键盘操作时能看到焦点位置，控件也保留了原生的
+  无障碍支持。
+- 模板内置 canonical URL、Open Graph、JSON-LD、站点地图和 `robots.txt`，也提供
+  版本化的模板更新流程。
 
 ## 更多预览
 
-### 编辑式博客
+### 博客页
 
-![Scholar Pages 编辑式博客](./docs/screenshots/blog-editorial-desktop.png)
+![Scholar Pages 博客页](./docs/screenshots/blog-editorial-desktop.png)
 
-### 论文、摘要与引用
+### 论文页：摘要与引用
 
 ![Scholar Pages 论文页面](./docs/screenshots/publications-unified-desktop.jpg)
 
@@ -45,11 +41,11 @@ Mira Latticewell 及其所有经历均为虚构内容，仅用于展示页面效
 - [Node.js](https://nodejs.org/) 22.13 或更高版本
 - [pnpm](https://pnpm.io/) 11 或更高版本
 
-### 创建自己的站点
+### 从模板创建站点
 
-点击仓库中的
-[**Use this template**](https://github.com/jxpeng98/astro-theme-scholars/generate)
-按钮，或通过命令行创建相同的项目：
+可以点击仓库中的
+[**Use this template**](https://github.com/jxpeng98/astro-theme-scholars/generate)，
+也可以在终端中运行：
 
 ```bash
 pnpm create astro@latest my-scholar-site --template jxpeng98/astro-theme-scholars
@@ -57,9 +53,9 @@ cd my-scholar-site
 pnpm dev
 ```
 
-打开 [http://localhost:4321](http://localhost:4321) 即可预览网站。
+启动后，打开 [http://localhost:4321](http://localhost:4321) 查看网站。
 
-### 开发模板本身
+### 本地开发模板
 
 ```bash
 git clone https://github.com/jxpeng98/astro-theme-scholars.git
@@ -68,21 +64,21 @@ pnpm install
 pnpm dev
 ```
 
-模板中的身份、院校、论文、项目、课程和文章全部是虚构示例。发布自己的站点前，建议按
-以下顺序替换：
+仓库里的姓名、院校、论文、项目、课程和文章都是虚构示例。正式发布前，可以按下面的
+顺序替换：
 
-1. 在 `site.config.ts` 中更新 `author`、`siteUrl` 和 `hero`。
-2. 使用自己的头像替换 `public/profile.svg`，或修改 `hero.profileImage`。
-3. 将论文添加到 `src/data/publications.bib`。
-4. 在 `src/data/about.yml` 中修改个人经历。
-5. 替换 `src/content/` 中的项目、教学和文章条目。
-6. 替换 `src/assets/` 中对应的封面图，或者删除内容中的图片字段。
+1. 先在 `site.config.ts` 中修改 `author`、`siteUrl` 和 `hero`。
+2. 用自己的头像替换 `public/profile.svg`，或修改 `hero.profileImage`。
+3. 把论文写入 `src/data/publications.bib`。
+4. 在 `src/data/about.yml` 中填写个人经历。
+5. 替换 `src/content/` 下的项目、教学和文章。
+6. 换掉 `src/assets/` 中对应的封面图；不需要图片时，删除内容里的图片字段即可。
 
 准备部署时，请先运行 `pnpm verify`。
 
-## 内容修改入口
+## 内容改哪里
 
-| 要修改的内容 | 文件 |
+| 内容 | 文件 |
 | --- | --- |
 | 姓名、个人资料、单位、链接、SEO 和页面简介 | `site.config.ts` |
 | 已发表论文与工作论文 | `src/data/publications.bib` |
@@ -90,15 +86,15 @@ pnpm dev
 | 研究与软件项目 | `src/content/projects/*.md` |
 | 当前和过往教学经历 | `src/content/teaching/*.md` |
 | 博客与研究随笔 | `src/content/posts/*.{md,mdx}` |
-| 头像、favicon 和其他公开文件 | `public/` |
+| 头像、favicon 和其他静态文件 | `public/` |
 | 项目、教学和文章封面 | `src/assets/` |
-| 颜色、字体、图标与复用样式令牌 | `uno.config.ts` |
+| 颜色、字体、图标和共用样式变量 | `uno.config.ts` |
 
 ## 站点配置
 
-全站层面的修改大多从 `site.config.ts` 开始。你只需要填写身份信息和希望自定义的内容，
-`defineSiteConfig` 会为导航、页面标题、页脚文案、图片尺寸和首页区块标题补齐稳定的
-默认值。
+`site.config.ts` 管理全站共用的信息。通常只需要填写身份资料和想要自定义的选项；
+`defineSiteConfig` 会为没有填写的导航、页面标题、页脚文案、图片尺寸和首页区块标题
+提供默认值。
 
 ```ts
 import { defineSiteConfig } from "./src/config/site";
@@ -150,15 +146,15 @@ export const siteConfig = defineSiteConfig({
 export default siteConfig;
 ```
 
-`siteUrl` 是 canonical URL、Open Graph URL、`robots.txt` 和站点地图的统一来源。
-部署前请务必将其设置为最终的生产地址。
+部署前请把 `siteUrl` 改成正式站点地址。canonical URL、Open Graph URL、
+`robots.txt` 和站点地图都会使用这个值。
 
 ## 内容管理
 
 ### 论文
 
-将论文添加到 `src/data/publications.bib`。主题会读取标准 BibTeX 字段，并通过额外的
-`public` 字段在 Research 页面中完成分组。
+论文统一写在 `src/data/publications.bib` 中。除标准 BibTeX 字段外，模板还会读取
+`public`，并据此决定论文在 Research（论文）页面中的分组。
 
 ```bibtex
 @inproceedings{latticewell2026signalatlas,
@@ -180,24 +176,26 @@ export default siteConfig;
 | `wip` | Work in Progress（进行中） |
 | 其他值或未填写 | Other（其他） |
 
-标记为 `public = {yes}` 的论文可以进入首页的精选论文区块。填写 `abstract` 后，读者可
-直接在列表中展开摘要；Cite 按钮会根据同一条记录生成 BibTeX、APA 7、Chicago 和
-Harvard 四种格式。填写 `url` 后，论文标题会变为链接，同时显示紧凑的 PDF 按钮。
+首页的精选论文只会从 `public = {yes}` 的记录中选取。论文带有 `abstract` 时，摘要可以
+直接在列表中展开；点击 Cite 会打开引用弹窗，其中提供 BibTeX、APA 7、Chicago 和
+Harvard 四种格式。填写 `url` 后，标题会链接到对应地址，卡片上也会出现一个紧凑的
+PDF 按钮。
 
 ### 关于
 
-`src/data/about.yml` 负责个人信息、工作经历、教育经历、学术服务，以及奖项、演讲等
-自定义区块。调整条目顺序即可改变页面顺序；删除顶层列表或将其设为 `[]`，即可隐藏整个
-区块。空的可选记录会在渲染时忽略，因此日常维护无需修改 Astro 页面。About 页的标题
-与简介仍在 `site.config.ts` 中编辑；宽屏下，第一个自定义区块会与 Academic Service
-并排显示。
+About 页的个人信息、工作经历、教育经历和学术服务都在 `src/data/about.yml` 中，奖项、
+演讲等内容也可以放进自定义区块。文件里的顺序就是页面上的顺序。不需要某个区块时，
+删除对应的顶层列表或将其设为 `[]`；空的可选记录不会渲染。
+
+页面标题和简介仍在 `site.config.ts` 中修改。宽屏布局下，第一个自定义区块会与
+Academic Service 并排显示。
 
 ### 项目与教学
 
-每个项目或课程对应一个带 YAML frontmatter 的 Markdown 文件，字段会在构建时校验。
-文件分别放在 `src/content/projects/` 或 `src/content/teaching/` 中，文件名会成为详情页
-URL；外部资源统一填写在 `links` 字段中。完整字段、图片、站内链接和旧版 YAML 迁移
-方式请参见[内容编写指南](./docs/content-authoring.md)。
+项目和课程各自使用一个带 YAML frontmatter 的 Markdown 文件，分别放在
+`src/content/projects/` 和 `src/content/teaching/` 中。构建时会检查字段是否有效，文件名
+会成为详情页 URL 的一部分。外部资源写在 `links` 字段中。所有可用字段、图片写法、
+站内链接和旧版 YAML 的迁移方法，见[内容编写指南](./docs/content-authoring.md)。
 
 ### 文章
 
@@ -219,9 +217,9 @@ draft: false
 ---
 ```
 
-将 `draft` 设为 `true`，文章就不会出现在生成的网站中。最新一篇
-`featured: true` 的文章会作为主推内容；如果没有设置精选文章，则自动使用最新发布的
-文章。阅读时长会根据 Markdown 正文计算。只要填写了 `heroImage`，就必须同时提供
+`draft: true` 的文章不会出现在生成的网站中。博客页会把最新一篇标记为
+`featured: true` 的已发布文章放在主推位置；如果没有精选文章，就使用最新发布的一篇。
+阅读时长根据 Markdown 正文自动计算。设置 `heroImage` 时，必须同时填写
 `heroImageAlt`。
 
 ## 内置页面
@@ -230,13 +228,13 @@ draft: false
 | --- | --- |
 | `/` | 个人资料、精选项目、精选论文和近期文章 |
 | `/about` | 个人信息、经历、教育、学术服务与自定义区块 |
-| `/researches` | 按研究状态分组并支持筛选的论文列表 |
-| `/teaching` | 按学期组织的当前与过往教学记录 |
+| `/researches` | 按研究状态分组、支持筛选的论文列表 |
+| `/teaching` | 按学期整理的当前与过往教学记录 |
 | `/teaching/[slug]` | 单门课程详情与外部资源 |
-| `/projects` | 包含元数据与链接的当前和过往项目 |
+| `/projects` | 当前和过往项目，以及各自的元数据与链接 |
 | `/projects/[slug]` | 单个项目详情与外部资源 |
 | `/posts` | 精选文章与编辑式文章归档 |
-| `/posts/[slug]` | 包含阅读信息和分享链接的单篇文章 |
+| `/posts/[slug]` | 文章正文、阅读信息和分享链接 |
 
 ## 项目结构
 
@@ -246,12 +244,12 @@ draft: false
 ├── docs/screenshots/         # README 预览图
 ├── site.config.ts            # 站点主配置
 ├── src/
-│   ├── assets/               # 由 Astro 优化的项目、教学和文章图片
-│   ├── components/           # 页面、卡片与筛选公共组件
+│   ├── assets/               # 交给 Astro 优化的项目、教学和文章图片
+│   ├── components/           # 页面、卡片和筛选组件
 │   ├── config/               # 配置默认值
 │   ├── content/              # 项目、教学和文章内容条目
 │   ├── data/                 # BibTeX 论文与 YAML 个人经历
-│   ├── layouts/              # 页面公共布局
+│   ├── layouts/              # 共用页面布局
 │   ├── lib/                  # 内容处理与 SEO 工具
 │   └── pages/                # Astro 路由
 ├── astro.config.ts
@@ -272,37 +270,38 @@ draft: false
 
 ## 部署
 
-部署前先运行完整验证。该命令会依次执行测试、类型检查，并将静态网站构建到 `dist/`：
+`pnpm verify` 会运行测试和类型检查，并把静态网站构建到 `dist/`。部署前请运行一次：
 
 ```bash
 pnpm verify
 ```
 
-你可以将 `dist/` 部署到 Cloudflare Pages、Vercel、Netlify、GitHub Pages 或其他
-静态托管平台。在平台控制台中，将构建命令设为 `pnpm build`，输出目录设为 `dist`。
+`dist/` 可以直接部署到 Cloudflare Pages、Vercel、Netlify、GitHub Pages 或其他静态
+托管平台。如果由托管平台负责构建，请将构建命令设为 `pnpm build`，输出目录设为
+`dist`。
 
 ## 模板更新
 
-项目使用 `v0.8.0` 这类 SemVer 标签发布版本。通过 GitHub 模板创建的站点拥有独立的
-Git 历史，因此更新会以可审查的 PR 交付，而不是直接合并本仓库。
+模板版本使用 SemVer 标签，例如 `v0.8.0`。通过 GitHub 模板创建的站点有自己的 Git
+历史，因此不直接合并模板仓库。模板更新会以 PR 的形式提交，确认差异后再决定是否合并。
 
-请先检查 `.template-version`。如果该文件不存在或版本低于 `0.6.0`，即使仓库已经
-包含更新工作流，也请使用下面的一次性迁移方式。
+更新前先查看 `.template-version`。如果文件不存在，或其中的版本早于 `0.6.0`，请使用
+后文的一次性迁移方法；即使仓库中已经有更新工作流，也需要这样处理。
 
-`v0.6.x` 站点需要先将 `v0.7.0` 中的
-`.github/workflows/template-update.yml` 复制到默认分支。这个引导步骤只需执行一次，
-因为旧更新器无法使用默认 GitHub token 替换工作流文件。从 `v0.7.0` 开始，更新器会
-执行目标 release 自带的迁移逻辑，之后的数据迁移无需再次替换更新工作流。
+`v0.6.x` 站点还要手动准备一次：先把 `v0.7.0` 中的
+`.github/workflows/template-update.yml` 复制到默认分支。旧版更新器使用 GitHub 默认
+令牌时无法替换工作流文件，所以这一步不能自动完成。操作一次即可；从 `v0.7.0` 开始，
+更新器会运行目标版本自带的迁移逻辑，后续的数据迁移不用再次替换工作流。
 
 ### v0.6.0 或更新版本的站点
 
-自动更新需要以下三个文件：
+自动更新依赖以下三个文件：
 
 - `.github/workflows/template-update.yml`
 - `.template-sync.json`
 - `.template-version`
 
-执行模板更新时：
+更新步骤如下：
 
 1. 打开 **Settings → Actions → General → Workflow permissions**，启用
    **Allow GitHub Actions to create and approve pull requests**。个人账户中新建的
@@ -310,43 +309,43 @@ Git 历史，因此更新会以可审查的 PR 交付，而不是直接合并本
    [工作流权限文档](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#preventing-github-actions-from-creating-or-approving-pull-requests)。
 2. 打开 **Actions → Template Update → Run workflow**。同一工作流也会在每周一
    自动检查新版本。
-3. 审查自动生成的 `chore/template-update-X.Y.Z` PR。更新器会在创建或更新 PR 前安装
-   依赖并运行完整验证；你仍应确认差异符合自己的站点，再进行合并。
+3. 检查自动生成的 `chore/template-update-X.Y.Z` PR。更新器会先安装依赖并运行完整
+   验证，再创建或更新 PR。PR 创建后，仍需确认代码差异适合自己的站点再合并。
 
-运行工作流前，不要提前将 `.template-version` 改成目标版本，否则工作流会认为站点
-已经完成更新。
+不要在运行工作流前把 `.template-version` 改成目标版本，否则更新器会认为该版本已经
+安装。
 
-更新器不会覆盖 `.template-sync.json` 中 `protected` 列出的路径。默认保护范围包括
+`.template-sync.json` 的 `protected` 列表用于标记不应被模板覆盖的路径。默认列表包括
 站点配置、YAML 与 BibTeX 数据、内容条目、项目与教学图片、头像、favicon 和环境变量
-文件；其余由模板维护的文件会替换为发布版本。合并前请检查完整 PR，尤其是自行修改过
-模板代码的站点。
+文件。其余由模板维护的文件会更新到发布版本。如果改过模板代码，合并前尤其要仔细检查
+整份 PR 的改动。
 
-更新到 `v0.7.0` 时，更新器会在同步前检测已停用的 `src/data/projects.yml` 和
-`src/data/teaching.yml`。它会阻止模板示例条目进入更新，将每条个人记录转换为
-Markdown 内容条目，并保留原 YAML 文件用于比较或回滚。已有 Markdown 条目不会被
-覆盖。确认生成的条目和详情页正确后，即可删除旧 YAML 文件。
+升级到 `v0.7.0` 时，更新器会先检查已停用的 `src/data/projects.yml` 和
+`src/data/teaching.yml`。新版模板的演示条目不会混入站点；旧 YAML 中的个人记录会转换
+成 Markdown 内容条目，原文件则保留下来，方便比较或回滚。已有的 Markdown 条目不会
+被覆盖。确认新条目和详情页无误后，再删除旧 YAML 文件。
 
 #### 更新工作流文件时推送被拒绝
 
-仓库内置的 `GITHUB_TOKEN` 属于 GitHub App installation token。推送新增或修改
-`.github/workflows` 下的文件时，GitHub 还要求单独授予 `Workflows` 权限；允许创建
-PR 并不等于拥有该权限。
+仓库内置的 `GITHUB_TOKEN` 是 GitHub App 的安装令牌。要新增或修改
+`.github/workflows` 下的文件，该令牌还必须有单独的 `Workflows` 权限；允许创建 PR
+并不包含这项权限。
 
-因此，未配置 `TEMPLATE_UPDATE_TOKEN` 时，更新器会自动排除
-`.github/workflows/**`。默认 token 仍可更新其余模板文件；工作流差异需要在审查后
-手动应用。
+没有配置 `TEMPLATE_UPDATE_TOKEN` 时，更新器会自动跳过 `.github/workflows/**`，
+其余模板文件仍可使用默认令牌更新。工作流相关的改动需要检查后手动应用。
 
-如需同步 workflow 文件，请创建仅限当前仓库的 fine-grained personal access token，
-并授予 `Contents: Read and write`、`Pull requests: Read and write` 和
-`Workflows: Write` 权限。将其保存为 Actions secret `TEMPLATE_UPDATE_TOKEN`，不要把
-token 本身写进 workflow 文件。更新器会自动检测该 secret。
+如果希望更新器一并同步工作流文件，请创建一个仅限当前仓库的细粒度个人访问令牌（fine-grained personal access token），
+并授予 `Contents: Read and write`、
+`Pull requests: Read and write` 和 `Workflows: Write` 权限。然后将其保存为 Actions
+secret `TEMPLATE_UPDATE_TOKEN`；不要把令牌本身写进工作流文件。更新器会自动检测该
+secret。
 
-如果站点安装的更新器早于 `v0.7.0`，请先完成上面的一次性 workflow 引导，再重新
-运行 **Template Update**。也可以把 `.github/workflows/**` 添加到站点
-`.template-sync.json` 的 `protected` 列表中，继续手动管理 workflow。
+如果站点安装的更新器早于 `v0.7.0`，请先完成上面的手动准备，再重新运行
+**Template Update**。如果打算一直手动维护工作流，也可以把
+`.github/workflows/**` 加入站点 `.template-sync.json` 的 `protected` 列表。
 
-请设置有效期、只授权目标仓库，并在不再需要时撤销令牌。组织仓库可能还需要管理员
-批准令牌。详情参见 GitHub 的
+请为令牌设置有效期，并且只授权目标仓库；不用后及时撤销。组织仓库可能还需要管理员
+批准。具体权限设置见 GitHub 的
 [personal access token 权限文档](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)、
 [Actions secrets 文档](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets)，
 以及 GitHub App 的
@@ -354,9 +353,9 @@ token 本身写进 workflow 文件。更新器会自动检测该 secret。
 
 ### 早于 v0.6.0 的站点
 
-先确保工作区干净，再从旧站点仓库根目录的 Bash 兼容终端中执行一次迁移。同步脚本会将
-旧版个人配置迁移到 `site.config.ts`，安装兼容入口，并清理废弃的内容和 robots 模板
-文件，同时保留个人内容：
+先确认工作区没有未提交的改动，然后在旧站点仓库根目录下使用兼容 Bash 的终端运行以下
+迁移命令。脚本会把旧版个人配置迁移到 `site.config.ts`，补上兼容入口，并清理已废弃、
+由模板维护的内容和 robots 文件；个人内容会保留下来。
 
 ```bash
 git switch -c chore/template-update-v0.8.0
@@ -379,16 +378,16 @@ git status --short
 git diff
 ```
 
-检查并提交迁移结果，然后创建 PR。迁移过程也会安装自动更新文件，后续版本即可使用
-上面的工作流。如果脚本提示旧配置结构不受支持，请手动迁移定制配置，不要强制同步。
-提交前，还要恢复默认保护范围之外的其他个人文件。
+运行完成后，先检查迁移结果，再提交并创建 PR。迁移会同时安装自动更新文件，之后的版本
+可以直接使用前面的工作流。如果脚本提示旧配置结构不受支持，请手动迁移定制配置，不要
+强制同步。提交前，也要恢复默认保护范围之外的其他个人文件。
 
-不要使用 `--allow-unrelated-histories` 直接合并模板仓库；GitHub 文档明确说明
-[通过模板生成的仓库具有不相关的 Git 历史](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-template-repository#about-template-repositories)。
+不要使用 `--allow-unrelated-histories` 直接合并模板仓库。GitHub 文档也说明了
+[通过模板创建的仓库拥有独立的 Git 历史](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-template-repository#about-template-repositories)。
 
 ### 发布模板版本
 
-模板维护者可以使用以下命令检查并发布版本：
+维护模板时，使用以下命令检查并发布版本：
 
 ```bash
 pnpm verify
@@ -398,13 +397,13 @@ git tag -a v0.8.0 -m "v0.8.0"
 git push origin v0.8.0
 ```
 
-发布时请确保 `package.json`、`.template-version` 和 `CHANGELOG.md` 最新条目中的
-版本号一致。推送标签后，发布工作流会自动创建 GitHub Release。
+发布前，确认 `package.json`、`.template-version` 和 `CHANGELOG.md` 最新条目中的
+版本号一致。标签推送后，发布工作流会自动创建 GitHub Release。
 
 ## 参与贡献
 
-欢迎提交 Issue 和 Pull Request。对于影响范围较大的改动，请先创建 Issue，方便提前
-确认预期行为和实现范围。
+欢迎提交 Issue 和 Pull Request。改动范围较大时，请先开一个 Issue，说明预期行为和
+大致范围。
 
 ## 开源协议
 
