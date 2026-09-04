@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import {
 	defineConfig,
 	presetIcons,
@@ -7,10 +8,15 @@ import {
 } from 'unocss';
 import siteConfig from './src/side.config';
 
-// Dynamic icon names from configuration need to be available to UnoCSS at build time.
-const iconSafelist = siteConfig.socialLinks
-	.map((link) => link.icon)
-	.filter((icon): icon is string => Boolean(icon && icon.startsWith('i-')));
+// Dynamic icon names from editable data need to be available to UnoCSS at build time.
+const aboutIcons =
+	readFileSync(new URL('./src/data/about.yml', import.meta.url), 'utf8').match(
+		/\bi-[\w:-]+/g,
+	) ?? [];
+const iconSafelist = [
+	...siteConfig.socialLinks.map((link) => link.icon),
+	...aboutIcons,
+].filter((icon): icon is string => Boolean(icon && icon.startsWith('i-')));
 
 iconSafelist.push(
 	// Theme and navigation icons
@@ -24,7 +30,6 @@ iconSafelist.push(
 	'i-mdi:school',
 	'i-mdi:briefcase',
 	'i-mdi:account-group',
-	'i-mdi:trophy-award',
 	'i-mdi:trophy',
 	'i-mdi:sparkles',
 	'i-mdi:tag-outline',
@@ -183,7 +188,7 @@ export default defineConfig({
 				200: '#ebe4d8',
 				300: '#ddd2c2',
 				400: '#c1b3a0',
-				500: '#a39480',
+				500: '#aca08e',
 			},
 			// Warm neutral compatibility scale used throughout existing pages
 			gray: {
@@ -204,8 +209,8 @@ export default defineConfig({
 				100: '#ececea',
 				200: '#d7d6d2',
 				300: '#b8b6b0',
-				400: '#929089',
-				500: '#74726c',
+				400: '#86847d',
+				500: '#67655f',
 				600: '#5c5a55',
 				700: '#45433f',
 				800: '#302f2c',

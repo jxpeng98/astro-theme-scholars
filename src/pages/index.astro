@@ -280,7 +280,9 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
               </div>
 
               <div class="mt-5 pt-4 border-t border-paper-200/90 dark:border-ink-700/80 flex items-center justify-between text-xs">
-                <span class="scholarly-pill">{secondaryProject.data.tech[0]}</span>
+                {secondaryProject.data.tech[0] && (
+                  <span class="scholarly-pill">{secondaryProject.data.tech[0]}</span>
+                )}
                 <a href={`/projects/${secondaryProject.id}`} class="action-link text-xs font-semibold px-0">
                   <span>Details</span>
                   <span class="i-mdi:arrow-right text-sm transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true"></span>

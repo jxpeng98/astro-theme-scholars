@@ -1,8 +1,6 @@
-hero:
-  title: About
-  description: >
-    An entirely fictional scholar profile created to demonstrate the theme. No appointment,
-    institution, award, or service record below refers to a real person or organization.
+# Edit the /about records here; edit its page title and introduction in site.config.ts.
+# Delete a top-level list (or set it to []) to hide that block. Empty sections stay hidden.
+# Keep every field shown in profile, experience, education, and structured service records.
 
 profile:
   - label: Current Role
@@ -28,13 +26,6 @@ experience:
       - Designed prototype dashboards for invented community partners.
       - Developed fictional methods for studying knowledge exchange in simulated communities.
 
-service:
-  - role: Program Chair
-    organization: Symposium on Shared Signals (fictional)
-    period: 2023 - 2024
-  - Editorial Board - Journal of Imaginary Learning Systems (fictional)
-  - Organizer - Synthetic Archives Workshop (fictional)
-
 education:
   - degree: Ph.D., Speculative Informatics
     institution: Northstar Commons University (fictional)
@@ -46,6 +37,15 @@ education:
     institution: Moonbridge College (fictional)
     year: 2014
 
+service:
+  - role: Program Chair
+    organization: Symposium on Shared Signals (fictional)
+    period: 2023 - 2024
+  - Editorial Board - Journal of Imaginary Learning Systems (fictional)
+  - Organizer - Synthetic Archives Workshop (fictional)
+
+# The first custom section sits beside Service on wide screens; later sections follow below.
+# An item may be plain text or a detailed record; add a title when it needs a heading.
 sections:
   - title: Awards
     icon: i-mdi:trophy-award
@@ -59,6 +59,11 @@ sections:
           - Demo record
         highlights:
           - Demonstrates how a highlighted award description appears on the page.
+        # link: https://example.com
+        # links:
+        #   - label: Related record
+        #     href: https://example.com
+        #     icon: i-mdi:open-in-new
       - title: Northstar Graduate Demo Fellowship
         date: 2016 - 2021
       - Demo Academic Distinction, Moonbridge College (2010-2014)

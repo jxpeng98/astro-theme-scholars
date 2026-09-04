@@ -9,4 +9,13 @@ describe("content normalization", () => {
 			}).success,
 		).toBe(false);
 	});
+
+	test("keeps existing partial about records compatible", () => {
+		expect(
+			aboutDataSchema.safeParse({
+				experience: [{ role: "Researcher", period: "2026" }],
+				sections: [{ title: "Talks", items: [{}] }],
+			}).success,
+		).toBe(true);
+	});
 });

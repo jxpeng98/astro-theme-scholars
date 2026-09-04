@@ -30,6 +30,7 @@ const customItemSchema = z
 
 export const aboutDataSchema = z
 	.object({
+		// Kept for compatibility; visible page copy is configured in site.config.ts.
 		hero: z
 			.object({ title: optionalText, description: optionalText })
 			.strict()

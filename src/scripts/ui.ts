@@ -32,15 +32,15 @@ function setActiveButton(buttons: NodeListOf<HTMLElement>, activeButton: HTMLEle
 
 		if (icon) {
 			toggleClasses(icon, isActive, ["text-accent-700", "dark:text-accent-300"]);
-			toggleClasses(icon, !isActive, ["text-gray-500", "dark:text-gray-300"]);
+			toggleClasses(icon, !isActive, ["text-ink-500", "dark:text-paper-400"]);
 		}
 		if (count) {
 			toggleClasses(count, isActive, ["text-accent-700", "dark:text-accent-300"]);
-			toggleClasses(count, !isActive, ["text-gray-500", "dark:text-gray-300"]);
+			toggleClasses(count, !isActive, ["text-ink-500", "dark:text-paper-400"]);
 		}
 		if (label) {
 			toggleClasses(label, isActive, ["text-accent-800", "dark:text-accent-200"]);
-			toggleClasses(label, !isActive, ["text-gray-700", "dark:text-gray-200"]);
+			toggleClasses(label, !isActive, ["text-ink-700", "dark:text-paper-300"]);
 		}
 	});
 }
