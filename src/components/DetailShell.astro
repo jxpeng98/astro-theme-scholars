@@ -1,5 +1,6 @@
 ---
 import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
 
 interface Fact {
   label: string;
@@ -65,8 +66,11 @@ const {
       class="overflow-hidden rounded-2xl bg-paper-200 dark:bg-ink-800"
       transition:name={`${transitionKey}-cover`}
     >
-      <img
-        src={cover.src}
+      <Image
+        src={cover}
+        format="webp"
+        widths={[480, 960, 1440]}
+        sizes="(min-width: 1152px) 1088px, calc(100vw - 48px)"
         alt={coverAlt}
         width={cover.width}
         height={cover.height}

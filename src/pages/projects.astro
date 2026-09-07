@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
 import FilterBar from "../components/FilterBar.astro";
 import Layout from "../layouts/Layout.astro";
 import siteConfig from "../side.config";
@@ -104,8 +105,11 @@ const pageDescription = siteConfig.pageTitles.projects.description ||
                         class="overflow-hidden rounded-lg border border-paper-300/80 bg-paper-200 aspect-[16/9] sm:aspect-[21/9] dark:border-ink-700 dark:bg-ink-800"
                         transition:name={`project-${project.id}-cover`}
                       >
-                        <img
-                          src={project.data.cover.src}
+                        <Image
+                          src={project.data.cover}
+                          format="webp"
+                          widths={[400, 800, 1200]}
+                          sizes="(min-width: 1152px) 700px, (min-width: 768px) calc(100vw - 112px), calc(100vw - 80px)"
                           alt={project.data.coverAlt}
                           width={project.data.cover.width}
                           height={project.data.cover.height}

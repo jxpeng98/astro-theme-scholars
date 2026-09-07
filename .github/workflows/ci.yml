@@ -34,3 +34,18 @@ jobs:
 
       - name: Verify site
         run: pnpm verify
+
+      - name: Install browser engines
+        run: pnpm exec playwright install --with-deps chromium firefox webkit
+
+      - name: Verify browser interactions
+        run: pnpm test:browser
+
+      - name: Upload browser report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: browser-report
+          path: playwright-report/
+          if-no-files-found: ignore
+          retention-days: 14

@@ -181,6 +181,11 @@ export default siteConfig;
 Harvard 四种格式。填写 `url` 后，标题会链接到对应地址，卡片上也会出现一个紧凑的
 PDF 按钮。
 
+BibTeX 导出会保留原始条目中的大小写保护花括号、DOI、卷期、页码和自定义字段，条目
+之间可以添加注释。机构作者需要额外一层花括号，例如
+`author = {{Research and Policy Group} and de la Cruz, Juan}`。`@string` 宏请先定义再引用。
+格式化引用覆盖常用论文元数据；特殊文献类型和 LaTeX 命令仍需在正式提交前核对。
+
 ### 关于
 
 About 页的个人信息、工作经历、教育经历和学术服务都在 `src/data/about.yml` 中，奖项、
@@ -222,6 +227,9 @@ draft: false
 阅读时长根据 Markdown 正文自动计算。设置 `heroImage` 时，必须同时填写
 `heroImageAlt`。
 
+三类内容都支持子目录，例如 `posts/2026/note.mdx` 会生成 `/posts/2026/note`，原有单层
+URL 保持不变。封面会生成响应式 WebP 图片；没有封面的条目会使用完整卡片宽度。
+
 ## 内置页面
 
 | 路径 | 用途 |
@@ -230,11 +238,11 @@ draft: false
 | `/about` | 个人信息、经历、教育、学术服务与自定义区块 |
 | `/researches` | 按研究状态分组、支持筛选的论文列表 |
 | `/teaching` | 按学期整理的当前与过往教学记录 |
-| `/teaching/[slug]` | 单门课程详情与外部资源 |
+| `/teaching/[...slug]` | 单门课程详情与外部资源 |
 | `/projects` | 当前和过往项目，以及各自的元数据与链接 |
-| `/projects/[slug]` | 单个项目详情与外部资源 |
+| `/projects/[...slug]` | 单个项目详情与外部资源 |
 | `/posts` | 精选文章与编辑式文章归档 |
-| `/posts/[slug]` | 文章正文、阅读信息和分享链接 |
+| `/posts/[...slug]` | 文章正文、阅读信息和分享链接 |
 
 ## 项目结构
 
@@ -265,8 +273,19 @@ draft: false
 | `pnpm build` | 将静态网站构建到 `dist/` |
 | `pnpm preview` | 在本地预览生产构建 |
 | `pnpm test` | 运行单元测试 |
+| `pnpm test:content` | 在隔离副本中验证嵌套路由、MDX、草稿、无封面和空内容 |
+| `pnpm test:browser` | 构建隔离内容，在 Chromium、Firefox 和 WebKit 中验证交互 |
 | `pnpm astro check` | 运行 Astro 与 TypeScript 检查 |
-| `pnpm verify` | 依次运行测试、检查、构建和生成结果断言 |
+| `pnpm verify` | 依次运行测试、检查、构建、生成结果断言和隔离内容回归 |
+
+首次运行浏览器回归前，执行 `pnpm exec playwright install chromium firefox webkit`
+安装对应引擎，然后运行 `pnpm test:browser`。Linux 安装时加上 `--with-deps`。
+CI 会依次运行 `pnpm verify` 和浏览器检查；使用 `pnpm exec playwright show-report`
+查看报告，失败时包含截图和操作轨迹。测试使用临时内容和本地预览，不修改个人内容或
+当前 `dist/`。WebKit 检查不能代替真实 Apple 设备上的 Safari 测试。
+macOS 27 上 Firefox 可能因[上游应用数据权限问题](https://bugzilla.mozilla.org/show_bug.cgi?id=2060476)
+无法启动。可显式运行 `pnpm test:browser --project=chromium --project=webkit`
+验证其他引擎；默认命令和 CI 仍要求三种引擎全部通过。
 
 ## 部署
 
@@ -282,7 +301,7 @@ pnpm verify
 
 ## 模板更新
 
-模板版本使用 SemVer 标签，例如 `v0.8.0`。通过 GitHub 模板创建的站点有自己的 Git
+模板版本使用 SemVer 标签，例如 `v0.9.0`。通过 GitHub 模板创建的站点有自己的 Git
 历史，因此不直接合并模板仓库。模板更新会以 PR 的形式提交，确认差异后再决定是否合并。
 
 更新前先查看 `.template-version`。如果文件不存在，或其中的版本早于 `0.6.0`，请使用
@@ -358,11 +377,11 @@ secret。
 由模板维护的内容和 robots 文件；个人内容会保留下来。
 
 ```bash
-git switch -c chore/template-update-v0.8.0
+git switch -c chore/template-update-v0.9.0
 
 template_dir="$(mktemp -d)"
 template_dir="$(cd "$template_dir" && pwd -P)"
-git clone --depth 1 --branch v0.8.0 \
+git clone --depth 1 --branch v0.9.0 \
   https://github.com/jxpeng98/astro-theme-scholars.git \
   "$template_dir"
 
@@ -391,11 +410,22 @@ git diff
 
 ```bash
 pnpm verify
-node scripts/check-release.mjs --tag v0.8.0
+pnpm exec playwright install chromium firefox webkit
+pnpm test:browser
+node scripts/check-release.mjs --tag v0.9.0
 git push origin main
-git tag -a v0.8.0 -m "v0.8.0"
-git push origin v0.8.0
 ```
+
+推送前先提交已审核的变更。等待**同一提交**的 Verify 工作流通过，包含三种浏览器
+检查，然后再创建和推送标签：
+
+```bash
+git tag -a v0.9.0 -m "v0.9.0"
+git push origin v0.9.0
+```
+
+下游更新器直接读取 Git 标签，因此发布工作流失败也不会隐藏已经推送的标签。发布
+工作流会再次运行站点与浏览器检查，仅在全部通过后创建 GitHub Release。
 
 发布前，确认 `package.json`、`.template-version` 和 `CHANGELOG.md` 最新条目中的
 版本号一致。标签推送后，发布工作流会自动创建 GitHub Release。

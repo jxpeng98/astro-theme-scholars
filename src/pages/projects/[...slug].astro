@@ -18,6 +18,7 @@ const status = data.status[0].toUpperCase() + data.status.slice(1);
 ---
 
 <Layout
+  contentSource={project.filePath}
   title={data.title}
   description={data.summary}
   image={data.cover?.src}

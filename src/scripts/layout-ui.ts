@@ -223,6 +223,10 @@ function setupLayoutUiWhenReady() {
 	setupThemeToggles(document, signal);
 	setupSystemThemeListener(document, signal);
 	setupBackToTop(signal);
+	// Keep wide Markdown tables keyboard-scrollable without replacing their native table semantics.
+	document.querySelectorAll<HTMLElement>(".prose table:not([tabindex])").forEach((table) => {
+		table.tabIndex = 0;
+	});
 }
 
 export function setupLayoutUi() {

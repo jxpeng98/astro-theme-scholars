@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { Image } from 'astro:assets';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import { getReadingTimeMinutes } from '../../lib/reading-time';
 import { buildCanonicalUrl } from '../../lib/site-url';
@@ -23,6 +24,7 @@ const heroImage = post.data.heroImage;
 ---
 
 <Layout
+	contentSource={post.filePath}
 	title={post.data.title}
 	description={post.data.description}
 	image={heroImage?.src}
@@ -103,8 +105,11 @@ const heroImage = post.data.heroImage;
 
 		{heroImage && (
 			<figure class="mx-auto mb-0 mt-8 max-w-4xl overflow-hidden rounded-xl bg-paper-100 dark:bg-ink-800">
-				<img
-					src={heroImage.src}
+				<Image
+					src={heroImage}
+					format="webp"
+					widths={[480, 960, 1440]}
+					sizes="(min-width: 960px) 896px, calc(100vw - 48px)"
 					alt={post.data.heroImageAlt || post.data.title}
 					width={heroImage.width}
 					height={heroImage.height}
@@ -143,7 +148,7 @@ const heroImage = post.data.heroImage;
 					Back to all posts
 				</a>
 
-				<div class="flex items-center gap-2 text-xs font-medium text-ink-600 dark:text-paper-400">
+				<div class="flex flex-wrap items-center gap-2 text-xs font-medium text-ink-600 dark:text-paper-400">
 					<span class="mr-1">Share this note</span>
 					<a
 						href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.data.title)}&url=${encodeURIComponent(canonicalUrl)}`}

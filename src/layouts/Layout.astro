@@ -15,6 +15,7 @@ import {
 import siteConfig from "../side.config";
 
 export interface Props {
+  contentSource?: string;
   title?: string;
   description?: string;
   image?: string;
@@ -31,6 +32,7 @@ export interface Props {
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 const isHomePage = currentPath === "/";
 const {
+  contentSource,
   title,
   description,
   image,
@@ -131,6 +133,7 @@ function isActiveNav(href: string): boolean {
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
     <meta name="generator" content={Astro.generator} />
+    {contentSource && <meta name="content-source" content={encodeURIComponent(contentSource)} />}
     <link
       rel="sitemap"
       href={buildAbsoluteUrl("/sitemap-index.xml", siteConfig.siteUrl)}
@@ -301,10 +304,18 @@ function isActiveNav(href: string): boolean {
         font-synthesis: none;
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;
+        overflow-wrap: anywhere;
       }
 
       :where(.page-title, .section-heading) {
         text-wrap: balance;
+      }
+
+      .prose table {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+        overflow-wrap: normal;
       }
 
       .site-header {
@@ -643,7 +654,7 @@ function isActiveNav(href: string): boolean {
   >
     <a
       href="#main-content"
-      class="fixed left-4 top-3 z-[100] inline-flex min-h-11 -translate-y-20 items-center rounded-lg bg-accent-800 px-4 py-2 text-sm font-bold text-white no-underline shadow-lg transition-transform focus:translate-y-0"
+      class="fixed left-4 top-0 z-[100] inline-flex min-h-11 -translate-y-full items-center rounded-lg bg-accent-800 px-4 py-2 text-sm font-bold text-white no-underline shadow-lg transition-transform focus:translate-y-3"
     >
       Skip to main content
     </a>

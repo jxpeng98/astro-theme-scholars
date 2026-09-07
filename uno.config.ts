@@ -126,7 +126,7 @@ export default defineConfig({
 		'entry-meta':
 			'font-sans text-sm font-normal leading-[1.375rem] text-ink-600 dark:text-paper-300',
 		'entry-index':
-			'font-mono text-xs font-semibold leading-[1.125rem] tabular-nums text-accent-700 dark:text-accent-300',
+			'whitespace-nowrap font-mono text-xs font-semibold leading-[1.125rem] tabular-nums text-accent-700 dark:text-accent-300',
 
 		// Restrained materials. Only the site chrome and mobile popover use real blur.
 		'glass-panel':
@@ -229,6 +229,7 @@ export default defineConfig({
 				700: '#2f5363',
 				800: '#294652',
 				900: '#243b45',
+				950: '#172b34',
 			},
 			emerald: {
 				50: '#ecfdf5',

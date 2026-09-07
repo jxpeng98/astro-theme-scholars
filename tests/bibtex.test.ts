@@ -4,6 +4,45 @@ import { getAllPapers, getFeaturedPapers } from "../src/lib/papers";
 import siteConfig from "../site.config";
 
 describe("parseBibtex", () => {
+	test("keeps entries separate across comments and preserves raw citations", () => {
+		const first = '@article{one,title={One {DNA} study},year={2024},doi={10.1234/test},volume={12},number={3},pages={20--30}}';
+		const entries = parseBibtex(`${first}\n% between entries\n@article(two,title="Two",year=2025)\n% end`);
+		expect(entries.map(({ id, title }) => [id, title])).toEqual([
+			["two", "Two"], ["one", "One DNA study"],
+		]);
+		expect(formatCitations(entries[1]).bibtex).toBe(first);
+		expect(formatCitations(entries[1]).apa).toContain("12(3), 20–30");
+		expect(formatCitations(entries[1]).apa).toContain("https://doi.org/10.1234/test");
+	});
+
+	test("preserves organization authors, family particles, and suffixes", () => {
+		const [paper] = parseBibtex('@article{names,title={Names},author={{Research and Development Group} and de la Cruz, Jr., Juan and Ada van Rossum},year=2025}');
+		expect(paper.authors).toEqual(["Research and Development Group", "Juan de la Cruz, Jr.", "Ada van Rossum"]);
+		expect(formatCitations(paper).apa).toContain("Research and Development Group, de la Cruz, J., Jr., & van Rossum, A.");
+	});
+
+	test("rejects malformed or duplicate records instead of publishing partial data", () => {
+		expect(() => parseBibtex('@article{bad,title={Unclosed}')).toThrow(/bad|unterminated/i);
+		expect(() => parseBibtex('@article{x,title={One}}\n@article{x,title={Two}}')).toThrow(/duplicate.*x/i);
+		expect(() => parseBibtex('@article{missing,year=2025}')).toThrow(/title/i);
+		expect(parseBibtex('% Empty library\n')).toEqual([]);
+	});
+
+	test("handles string macros, escaped delimiters, and comments between fields", () => {
+		const [paper] = parseBibtex(String.raw`@string{venue = "Journal"}
+		@article{escaped,
+		  title = {A \{literal\} and {nested} title},
+		  % a field comment with @ and }
+		  journal = venue # " of Tests", year = 2025,
+		  abstract = "A {braced} and \"quoted\" example"
+		}
+		% trailing comment`);
+		expect(paper.venue).toBe("Journal of Tests");
+		expect(paper.title).toBe("A {literal} and nested title");
+		expect(paper.abstract).toContain('quoted');
+		expect(formatCitations(paper).bibtex).toContain('@string{venue = "Journal"}');
+		expect(() => parseBibtex('@article{x,title=undefinedmacro}')).toThrow(/undefined.*string/i);
+	});
 	test("parses nested braces in titles and abstracts", () => {
 		const entries = parseBibtex(`
       @article{smith2025nested,

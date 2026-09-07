@@ -70,7 +70,8 @@ const pageDescription = siteConfig.pageTitles.researches.description ||
 	  />
     </header>
 
-    <div class="space-y-6 sm:space-y-7" id="papers-container">
+    <div class="space-y-6 sm:space-y-7" id="papers-container" data-publication-total={totalPapers}>
+      {papers.length === 0 && <p data-empty-publications class="body-copy">No publications to display yet.</p>}
       {
         orderedCategories.map((category) => {
           const categoryPapers = grouped.get(category);

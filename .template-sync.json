@@ -22,6 +22,9 @@
 		".pnpm-store/**"
 	],
 	"remove": [
+		"src/pages/posts/[slug].astro",
+		"src/pages/projects/[slug].astro",
+		"src/pages/teaching/[slug].astro",
 		"src/components/projects.ts",
 		"src/lib/projects.ts",
 		"tests/project-status.test.ts"

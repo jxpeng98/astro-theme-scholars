@@ -209,7 +209,7 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
                 </time>
               </div>
 
-              <div class="grid gap-5 sm:grid-cols-[1fr_160px] items-start">
+              <div class:list={["grid gap-5 items-start", featuredProject.data.cover && "sm:grid-cols-[1fr_160px]"]}>
                 <div class="space-y-2.5">
                   <h3 class="entry-title text-2xl font-semibold">
                     <a href={`/projects/${featuredProject.id}`} class="no-underline text-inherit hover:text-accent-700 dark:hover:text-accent-300 transition-colors">
@@ -228,8 +228,11 @@ const profileAlt = siteConfig.hero.profileAlt || about.name;
 
                 {featuredProject.data.cover && (
                   <div class="hidden sm:block overflow-hidden rounded-xl border border-paper-300/90 aspect-[4/3] bg-paper-100 dark:border-ink-700 dark:bg-ink-800 shadow-sm">
-                    <img
-                      src={featuredProject.data.cover.src}
+                    <Image
+                      src={featuredProject.data.cover}
+                      format="webp"
+                      widths={[160, 320]}
+                      sizes="160px"
                       alt={featuredProject.data.coverAlt || featuredProject.data.title}
                       width={featuredProject.data.cover.width}
                       height={featuredProject.data.cover.height}

@@ -193,6 +193,13 @@ expand it without leaving the list. The Cite action prepares BibTeX, APA 7,
 Chicago, and Harvard versions from the same record. Add a `url` to link the
 title and show the compact PDF action.
 
+BibTeX export preserves the original entry, including capitalization braces,
+DOI, volume, issue, pages, and custom fields. Comments between entries are
+supported. Wrap institutional authors in an extra pair of braces, for example
+`author = {{Research and Policy Group} and de la Cruz, Juan}`. Define `@string`
+macros before using them. Formatted citations cover common article metadata;
+review specialized entry types and LaTeX commands before submission.
+
 ### About
 
 `src/data/about.yml` holds profile facts, experience, education, service, and
@@ -236,6 +243,10 @@ Set `draft: true` to keep a post out of the generated site. The newest post with
 published post is used. Reading time is calculated from the Markdown body. A
 `heroImageAlt` value is required whenever `heroImage` is present.
 
+All three collections support subfolders: `posts/2026/note.mdx` generates
+`/posts/2026/note`. Existing single-file URLs stay the same. Covers are generated
+as responsive WebP images; entries without a cover use the available card width.
+
 ## Included pages
 
 | Route | Purpose |
@@ -244,11 +255,11 @@ published post is used. Reading time is calculated from the Markdown body. A
 | `/about` | Profile facts, experience, education, service, and custom sections |
 | `/researches` | Filterable publications grouped by research status |
 | `/teaching` | Current and past teaching grouped by term |
-| `/teaching/[slug]` | Individual course details and external resources |
+| `/teaching/[...slug]` | Individual course details and external resources |
 | `/projects` | Active and past projects with metadata and links |
-| `/projects/[slug]` | Individual project details and external resources |
+| `/projects/[...slug]` | Individual project details and external resources |
 | `/posts` | Featured story and editorial post archive |
-| `/posts/[slug]` | Individual article with reading metadata and sharing links |
+| `/posts/[...slug]` | Individual article with reading metadata and sharing links |
 
 ## Project structure
 
@@ -279,8 +290,22 @@ published post is used. Reading time is calculated from the Markdown body. A
 | `pnpm build` | Build the static site into `dist/` |
 | `pnpm preview` | Preview the production build locally |
 | `pnpm test` | Run unit tests |
+| `pnpm test:content` | Build isolated content variants and check nested routes, MDX, drafts, missing covers, and empty content |
+| `pnpm test:browser` | Build isolated content and verify interactions in Chromium, Firefox, and WebKit |
 | `pnpm astro check` | Run Astro and TypeScript checks |
-| `pnpm verify` | Run tests, checks, build, and generated-site assertions |
+| `pnpm verify` | Run tests, checks, build, generated-site assertions, and isolated content regressions |
+
+For browser regressions, install the matching engines once with
+`pnpm exec playwright install chromium firefox webkit`, then run `pnpm test:browser`.
+On Linux, add `--with-deps` to the installation command. CI runs both `pnpm verify`
+and the browser checks. Open the report with `pnpm exec playwright show-report`;
+failures include screenshots and traces. Tests use temporary content and a local
+preview, leaving your content and `dist/` untouched. WebKit coverage does not
+replace testing Safari on real Apple devices.
+On macOS 27, Firefox may fail to start because of the
+[upstream app-data permission issue](https://bugzilla.mozilla.org/show_bug.cgi?id=2060476).
+To check the other engines explicitly, run
+`pnpm test:browser --project=chromium --project=webkit`; the default and CI still require all three.
 
 ## Deployment
 
@@ -297,7 +322,7 @@ and the output directory to `dist`.
 
 ## Template updates
 
-Template releases use SemVer tags such as `v0.8.0`. A site created from the
+Template releases use SemVer tags such as `v0.9.0`. A site created from the
 GitHub template has its own history, so updates arrive as pull requests that you
 can review instead of direct merges from this repository.
 
@@ -389,11 +414,11 @@ entry, and removes obsolete template-owned content and robots files without
 changing personal content:
 
 ```bash
-git switch -c chore/template-update-v0.8.0
+git switch -c chore/template-update-v0.9.0
 
 template_dir="$(mktemp -d)"
 template_dir="$(cd "$template_dir" && pwd -P)"
-git clone --depth 1 --branch v0.8.0 \
+git clone --depth 1 --branch v0.9.0 \
   https://github.com/jxpeng98/astro-theme-scholars.git \
   "$template_dir"
 
@@ -425,11 +450,23 @@ Template maintainers can validate and publish a release with:
 
 ```bash
 pnpm verify
-node scripts/check-release.mjs --tag v0.8.0
+pnpm exec playwright install chromium firefox webkit
+pnpm test:browser
+node scripts/check-release.mjs --tag v0.9.0
 git push origin main
-git tag -a v0.8.0 -m "v0.8.0"
-git push origin v0.8.0
 ```
+
+Commit the reviewed changes before pushing. Wait for the **Verify** workflow to
+pass on that exact commit, including all three browser engines, before tagging:
+
+```bash
+git tag -a v0.9.0 -m "v0.9.0"
+git push origin v0.9.0
+```
+
+The downstream updater reads Git tags directly, so a failed release workflow
+does not hide an already-pushed tag from downstream sites. The release workflow
+repeats the site and browser checks before creating the GitHub Release.
 
 Keep `package.json`, `.template-version`, and the latest `CHANGELOG.md` entry on
 the same version. Pushing the tag runs the release workflow and creates the

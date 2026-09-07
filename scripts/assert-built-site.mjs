@@ -1,6 +1,9 @@
 import { readdir, readFile } from "node:fs/promises";
+import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
+import { parse } from "yaml";
 
-const root = new URL("../dist/", import.meta.url);
+const root = process.argv[2] ? pathToFileURL(`${resolve(process.argv[2])}/`) : new URL("../dist/", import.meta.url);
 
 async function readDist(path) {
 	return readFile(new URL(path, root), "utf8");
@@ -113,7 +116,7 @@ function assertFilterGroup(html, pageName) {
 }
 
 function assertOptionalFilterGroup(html, pageName) {
-	if (html.includes('role="group"')) {
+	if (html.includes('data-filter="')) {
 		assertFilterGroup(html, pageName);
 	} else {
 		assert(
@@ -168,104 +171,76 @@ assert(
 	"research filters should not duplicate section navigation and abstracts should work natively when rendered",
 );
 assert(
-	main(research).includes("data-publication-list"),
-	"research categories should use the shared publication list",
+	(main(research).includes("data-publication-list") && !research.includes("data-empty-publications")) ||
+		(research.includes('data-publication-total="0"') && research.includes("data-empty-publications") && !main(research).includes("data-publication-list")),
+	"research should render publication lists or an explicit empty state",
 );
-
-const postEntries = await readdir(new URL("posts/", root), {
-	withFileTypes: true,
-});
-const firstPost = postEntries.find((entry) => entry.isDirectory());
-if (firstPost) {
-	const post = await readDist(`posts/${firstPost.name}/index.html`);
-	assertPageMetadata(post, "post");
-	assert(
-		post.includes('meta property="og:type" content="article"') &&
-			post.includes('"@type":"BlogPosting"') &&
-			post.includes('"@type":"BreadcrumbList"'),
-		"post pages should render article metadata and structured data",
-	);
-}
 
 const about = await readDist("about/index.html");
 const aboutCanonical = assertPageMetadata(about, "about");
 assert(
-	footer(index) === footer(about) &&
-		footer(index).includes(`&copy; ${new Date().getFullYear()}`),
+	footer(index) === footer(about) && footer(index).includes(`&copy; ${new Date().getFullYear()}`),
 	"all pages should render the same configured copyright footer",
 );
 
-const projects = await readDist("projects/index.html");
-assertPageMetadata(projects, "projects");
-assertOptionalFilterGroup(projects, "projects");
-const projectEntries = await readdir(new URL("projects/", root), {
-	withFileTypes: true,
-});
-const firstProject = projectEntries.find((entry) => entry.isDirectory());
-let projectDetailCanonical = "";
-if (firstProject) {
-	assert(
-		main(projects).includes(`href="/projects/${firstProject.name}"`) &&
-			!main(projects).includes('target="_blank"'),
-		"project index cards should link to internal details without embedding external resources",
-	);
-	const projectDetail = await readDist(
-		`projects/${firstProject.name}/index.html`,
-	);
-	projectDetailCanonical = assertPageMetadata(projectDetail, "project detail");
-	assert(
-		main(projectDetail).includes('href="/projects"') &&
-			(!main(projectDetail).includes('target="_blank"') ||
-				main(projectDetail).includes('rel="noopener noreferrer"')),
-		"project detail pages should separate internal navigation from safe external resources",
-	);
-}
-
-const teaching = await readDist("teaching/index.html");
-assertPageMetadata(teaching, "teaching");
-assertOptionalFilterGroup(teaching, "teaching");
-const teachingEntries = await readdir(new URL("teaching/", root), {
-	withFileTypes: true,
-});
-const firstTeaching = teachingEntries.find((entry) => entry.isDirectory());
-assert(
-	!teaching.includes('aria-label="Page sections"') &&
-		(!firstTeaching ||
-			main(teaching).includes(`href="/teaching/${firstTeaching.name}"`)) &&
-		!main(teaching).includes('target="_blank"'),
-	"teaching index rows should use internal details without duplicating external resources",
-);
-let teachingDetailCanonical = "";
-for (const entry of teachingEntries.filter((item) => item.isDirectory())) {
-	const detail = await readDist(`teaching/${entry.name}/index.html`);
-	if (!teachingDetailCanonical) {
-		teachingDetailCanonical = assertPageMetadata(detail, "teaching detail");
-		assert(
-			main(detail).includes('href="/teaching"') &&
-				(!main(detail).includes('target="_blank"') ||
-					main(detail).includes('rel="noopener noreferrer"')),
-			"teaching detail pages should render safe external course resources",
-		);
+const detailCanonicals = [];
+for (const collection of ["posts", "projects", "teaching"]) {
+	const listing = await readDist(`${collection}/index.html`);
+	assertPageMetadata(listing, collection);
+	if (collection !== "posts") {
+		assertOptionalFilterGroup(listing, collection);
+		assert(!main(listing).includes('target="_blank"'), `${collection} listings should link to internal details`);
+	}
+	if (collection === "teaching") {
+		assert(!listing.includes('aria-label="Page sections"'), "teaching filters should not duplicate section navigation");
+	}
+	const builtSources = new Set();
+	const detailFiles = (await readdir(new URL(`${collection}/`, root), { recursive: true }))
+		.map((file) => file.replaceAll("\\", "/"))
+		.filter((file) => file.endsWith("/index.html"));
+	for (const file of detailFiles) {
+		const detail = await readDist(`${collection}/${file}`);
+		if (collection !== "teaching") {
+			assert(main(listing).includes(`href="/${collection}/${file.slice(0, -11)}"`), `${collection}/${file} needs a link from its index`);
+		}
+		detailCanonicals.push(assertPageMetadata(detail, `${collection}/${file}`));
+		const source = decodeURIComponent(readAttribute(detail, /<meta name="content-source" content="([^"]+)"/));
+		assert(source && !builtSources.has(source), `detail ${collection}/${file} needs a unique content source`);
+		builtSources.add(source);
+		assert(main(detail).includes(`href="/${collection}"`), `${collection}/${file} needs a link back to its index`);
+		assert(!main(detail).includes('target="_blank"') || main(detail).includes('rel="noopener noreferrer"'), `${collection}/${file} needs safe external links`);
+		if (collection === "posts") {
+			assert(detail.includes('meta property="og:type" content="article"') && detail.includes('"@type":"BlogPosting"') && detail.includes('"@type":"BreadcrumbList"'), "posts should render article metadata and structured data");
+		}
+		const otherOfferings = detail.match(/<section aria-labelledby="other-offerings">[\s\S]*?<\/section>/)?.[0];
+		if (otherOfferings) {
+			assert(otherOfferings.includes('href="/teaching/') && !otherOfferings.includes(`href="/teaching/${file.slice(0, -11)}"`), "other offerings should link to related courses, not themselves");
+		}
 	}
 
-	const otherOfferings =
-		detail.match(
-			/<section aria-labelledby="other-offerings">[\s\S]*?<\/section>/,
-		)?.[0] ?? "";
-	if (otherOfferings) {
-		assert(
-			otherOfferings.includes("Other offerings") &&
-				otherOfferings.includes('href="/teaching/') &&
-				!otherOfferings.includes(`href="/teaching/${entry.name}"`),
-			"teaching detail pages should link related internal offerings",
-		);
-		break;
+	// Compare files to pages, so an unsupported extension or duplicate ID cannot silently disappear.
+	const contentRoot = new URL(`../src/content/${collection}/`, root);
+	const sourceFiles = await readdir(contentRoot, { recursive: true }).catch((error) => {
+		if (error.code === "ENOENT") return [];
+		throw error;
+	});
+	let publishedCount = 0;
+	for (const file of sourceFiles.filter((file) => /\.mdx?$/.test(file))) {
+		const text = await readFile(new URL(file.split(/[\\/]/).map(encodeURIComponent).join("/"), contentRoot), "utf8");
+		const frontmatter = text.match(/^\uFEFF?---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/)?.[1];
+		assert(frontmatter !== undefined, `${collection}/${file} needs YAML frontmatter`);
+		const data = parse(frontmatter);
+		const source = `src/content/${collection}/${file.replaceAll("\\", "/")}`;
+		const draft = data?.draft === true;
+		assert(builtSources.has(source) === !draft, `${source} ${draft ? "must not publish a draft" : "has no generated detail page"}`);
+		if (!draft) publishedCount++;
 	}
+	assert(builtSources.size === publishedCount, `${collection} has unexpected or missing detail pages`);
 }
 
 const sitemap = await readDist("sitemap-0.xml");
 assert(
-	[indexCanonical, aboutCanonical, researchCanonical, projectDetailCanonical, teachingDetailCanonical]
+	[indexCanonical, aboutCanonical, researchCanonical, ...detailCanonicals]
 		.filter(Boolean)
 		.every((url) => sitemap.includes(url)),
 	"sitemap should use the configured production URL",
@@ -301,3 +276,10 @@ assert(
 		js.includes("AbortController"),
 	"layout browser behavior should be bundled in generated JavaScript",
 );
+
+assert(css.includes("bg-accent-950"), "dark accent backgrounds must be generated from a defined color token");
+for (const html of [index, research]) {
+	for (const dialog of html.matchAll(/<dialog[^>]+id="([^"]+)"[^>]*>/g)) {
+		assert(dialog[0].includes(`aria-labelledby="${dialog[1]}-title"`) && html.includes(`id="${dialog[1]}-title"`), "citation dialogs should have an accessible name");
+	}
+}

@@ -2,6 +2,46 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.9.0 - 2026-09-08
+
+### Features
+
+- Added MDX rendering and nested content paths for posts, projects, and teaching
+  entries while preserving existing top-level URLs.
+- Added isolated browser regressions for navigation, themes, filters, citations,
+  keyboard scrolling, enlarged text, and delayed network resources.
+
+### Fixes
+
+- Fixed BibTeX parsing of nested braces, comments, string macros, and author names,
+  and preserved the original entries when exporting BibTeX citations.
+- Fixed missing-cover layouts, empty publication libraries, and dark-mode accent
+  styles; gave citation dialogs accessible names.
+- Kept long text, wide tables, and enlarged detail headings within narrow screens;
+  made tables keyboard-focusable and preserved single-line publication indexes.
+- Kept the skip link fully hidden until focused, including with enlarged text.
+- Optimized content covers with responsive WebP images through Astro assets.
+
+### Maintenance
+
+- Updated Astro to 7.3.1, MDX to 8.0.0, Sharp to 0.35.4, UnoCSS to 66.10.0,
+  Vitest to 5.0.0, and compatible integrations and transitive dependencies.
+- Added Playwright 1.63.0 as a development dependency. CI and tagged releases
+  require Chromium, Firefox, and WebKit checks before completion or publication.
+- Added content regressions for nested routes, drafts, missing covers, and empty
+  collections to the shared verification command.
+
+### Upgrade notes
+
+- Run `pnpm install --frozen-lockfile` and `pnpm verify` after updating.
+- The template updater removes the obsolete `[slug].astro` route files. For a
+  manual update, replace them with `[...slug].astro` in all three collections;
+  do not keep both files. Existing content and configuration remain supported.
+- Browser checks additionally require `pnpm exec playwright install chromium
+  firefox webkit` (add `--with-deps` on Linux), followed by `pnpm test:browser`.
+- TypeScript remains on version 6 to satisfy the Astro check integration's peer
+  requirements. WebKit tests do not replace Safari testing on real devices.
+
 ## 0.8.0 - 2026-09-04
 
 ### Features

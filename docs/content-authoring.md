@@ -1,11 +1,12 @@
 # Content authoring
 
-Posts, projects, and courses are Astro Content Collection entries. Each entry is one Markdown file with YAML frontmatter followed by the long-form detail content.
+Posts, projects, and courses are Astro Content Collection entries. Each entry is one Markdown file with YAML frontmatter followed by the long-form detail content. Posts also support MDX through the included Astro MDX integration.
 
 - Posts live in `src/content/posts/`.
 - Projects live in `src/content/projects/`.
 - Teaching entries live in `src/content/teaching/`.
 - The filename becomes the internal detail URL. For example, `scholars-portal.md` is published at `/projects/scholars-portal`.
+- Subfolders are supported in all three collections: `posts/2026/field-note.mdx` becomes `/posts/2026/field-note`. Image paths remain relative to the entry file, so add another `../` for each folder level.
 - Do not add that internal URL to frontmatter. Index pages generate it automatically.
 - `order` controls list order. Lower numbers appear first.
 - `draft: true` hides an entry from both the index and generated routes.
@@ -107,7 +108,17 @@ links:
 Write the course overview, learning goals, and assessment details here.
 ```
 
-Required teaching fields are `title`, `code`, `summary`, `term`, `status`, and `order`. `status` accepts `current` or `past`.
+Required teaching fields are `title`, `code`, `summary`, `term`, `status`, and `order`. `status` accepts `current`, `recent`, or `past`.
+
+## Verify content changes
+
+Run `pnpm verify` after editing content. It checks that every published source entry has a generated detail page, that drafts stay hidden, and that metadata and navigation remain valid, then runs the isolated content regression checks. Empty collections and an empty bibliography are supported.
+
+`pnpm build` clears Astro's content cache before building. This prevents previously published entries from surviving in the cache after the last file in a collection is deleted.
+
+Run `pnpm test:content` for a focused check after changing content loaders, routes, or shared templates. It builds isolated copies with its own entries and generated image, covering nested entries, MDX expressions and tables, drafts, missing covers, a single publication category, and empty collections. It also verifies that the checker rejects a missing detail page. The command leaves your actual content untouched and does not depend on keeping the demo entries or covers. CI, releases, and template updates include it through `pnpm verify`.
+
+Long URLs in article bodies wrap within the reading column. Wide Markdown tables scroll horizontally within their own area; keyboard users can focus a table and use the arrow keys. This behavior is shared by posts, projects, and teaching details.
 
 ## Internal and external links
 
